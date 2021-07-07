@@ -111,12 +111,13 @@ University Marketplace is one-stop-shop for college students to buy and sell the
     
 
 ## Wireframes
-[Add picture of your hand sketched wireframes in this section]
 ![image](https://user-images.githubusercontent.com/61126997/124189056-22439e00-da8e-11eb-933a-bdc3e94d8328.png)
 
 ### [BONUS] Digital Wireframes & Mockups
+https://www.figma.com/file/YpCxirYonq54XBNBdL7OXN/University-Marketplace?node-id=0%3A1
 
 ### [BONUS] Interactive Prototype
+![App Walkthrough](screenshots/Marketplace_App_Design_Walkthrough.gif)
 
 ## Schema 
 [This section will be completed in Unit 9]
