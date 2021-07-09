@@ -113,16 +113,71 @@ University Marketplace is one-stop-shop for college students to buy and sell the
 ## Wireframes
 ![image](https://user-images.githubusercontent.com/61126997/124189056-22439e00-da8e-11eb-933a-bdc3e94d8328.png)
 
-### [BONUS] Digital Wireframes & Mockups
+### Digital Wireframes & Mockups
 https://www.figma.com/file/YpCxirYonq54XBNBdL7OXN/University-Marketplace?node-id=0%3A1
 
-### [BONUS] Interactive Prototype
+### Interactive Prototype
 ![App Walkthrough](screenshots/Marketplace_App_Design_Walkthrough.gif)
 
 ## Schema 
-[This section will be completed in Unit 9]
 ### Models
-[Add table of models]
+
+#### Listing
+
+|   Property  |       Type      |              Description             |
+|:-----------:|:---------------:|:------------------------------------:|
+| objectId    | String          | Unique id for the listing            |
+| user        | Pointer to User | The user who posted the listing      |
+| images      | File Array      | Array of images uploaded by the user |
+| title       | String          | Title for listing                    |
+| description | String          | Description of item being sold       |
+| price       | Number          | Price set for the item by the user   |
+| course      | String          | Course (if any) the item is for      |
+
+### Resource
+
+|    Property   |       Type      |              Description             |
+|:-------------:|:---------------:|:------------------------------------:|
+| objectId      | String          | Unique id for the listing            |
+| user          | Pointer to User | The user who posted the listing      |
+| images        | File Array      | Array of images uploaded by the user |
+| title         | String          | Title for listing                    |
+| course        | String          | Course (if any) the item is for      |
+| resource_type | String          | Textbook, studyguide, other          |
+| file          | File            | The uploaded PDF or image file       |
+| file_preview  | File            | Image preview of the PDF uploaded    |
+
+### User
+
+|  Property |            Type           |                Description               |
+|:---------:|:-------------------------:|:----------------------------------------:|
+| objectId  | String                    | Unique id for user                       |
+| name      | String                    | Name of user                             |
+| school    | String                    | School the user attends                  |
+| email     | String                    | User’s email                             |
+| username  | String                    | User’s username                          |
+| password  | String                    | User’s password                          |
+| listings  | Pointer to Listing Array  | List of the listings posted by the user  |
+| resources | Pointer to Resource Array | List of the resources posted by the user |
+
+### Message
+
+| Property |       Type      |          Description          |
+|:--------:|:---------------:|:-----------------------------:|
+| objectId | String          | Unique id for message         |
+| user     | Pointer to User | The user who sent the message |
+| body     | String          | The message itself (the text) |
+
+### Conversation
+
+| Property |           Type           |                   Description                   |
+|:--------:|:------------------------:|:-----------------------------------------------:|
+| objectId | String                   | Unique id for conversation                      |
+| user1    | Pointer to User          | Pointer to one of the users in the conversation |
+| user2    | Pointer to User          | Pointer to the other user in the conversation   |
+| messages | Pointer to Message Array | Array of messages between the two users         |
+
+   
 ### Networking
 - [Add list of network requests by screen ]
 - [Create basic snippets for each Parse network request]
