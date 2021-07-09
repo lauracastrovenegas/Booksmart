@@ -134,7 +134,7 @@ https://www.figma.com/file/YpCxirYonq54XBNBdL7OXN/University-Marketplace?node-id
 | price       | Number          | Price set for the item by the user   |
 | course      | String          | Course (if any) the item is for      |
 
-### Resource
+#### Resource
 
 |    Property   |       Type      |              Description             |
 |:-------------:|:---------------:|:------------------------------------:|
@@ -147,7 +147,7 @@ https://www.figma.com/file/YpCxirYonq54XBNBdL7OXN/University-Marketplace?node-id
 | file          | File            | The uploaded PDF or image file       |
 | file_preview  | File            | Image preview of the PDF uploaded    |
 
-### User
+#### User
 
 |  Property |            Type           |                Description               |
 |:---------:|:-------------------------:|:----------------------------------------:|
@@ -160,7 +160,7 @@ https://www.figma.com/file/YpCxirYonq54XBNBdL7OXN/University-Marketplace?node-id
 | listings  | Pointer to Listing Array  | List of the listings posted by the user  |
 | resources | Pointer to Resource Array | List of the resources posted by the user |
 
-### Message
+#### Message
 
 | Property |       Type      |          Description          |
 |:--------:|:---------------:|:-----------------------------:|
@@ -168,7 +168,7 @@ https://www.figma.com/file/YpCxirYonq54XBNBdL7OXN/University-Marketplace?node-id
 | user     | Pointer to User | The user who sent the message |
 | body     | String          | The message itself (the text) |
 
-### Conversation
+#### Conversation
 
 | Property |           Type           |                   Description                   |
 |:--------:|:------------------------:|:-----------------------------------------------:|
@@ -178,7 +178,26 @@ https://www.figma.com/file/YpCxirYonq54XBNBdL7OXN/University-Marketplace?node-id
 | messages | Pointer to Message Array | Array of messages between the two users         |
 
    
-### Networking
-- [Add list of network requests by screen ]
-- [Create basic snippets for each Parse network request]
-- [OPTIONAL: List endpoints if using existing API such as Yelp]
+### Networking -  Network Requests by Screen
+#### Listings Timeline
+- (Read/GET) Query all Listings
+#### Listings Detail View
+- (Delete) Delete listing 
+#### Resources Page
+- (Read/GET) Query all Textbook Resources
+- (Read/GET) Query all Study Guide Resources
+- (Read/GET) Query all Other Resources
+#### Resources Detail View
+- (Delete) Delete Resource
+#### User Profile
+- (Read/GET) Query all Listings the user has posted
+- (Read/GET) Query all Resources the user has posted
+#### Listings Post Form
+- (Create/POST) Create a new Listing object
+#### Resources Post Form
+- (Create/POST) Create a new Resource Object
+#### Sign in
+- (Create/POST) Create a new User Object
+
+
+
