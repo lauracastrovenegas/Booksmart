@@ -81,6 +81,7 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHold
             if (image != null){
                 Glide.with(context)
                         .load(image.getUrl())
+                        .centerCrop()
                         .into(ivImage);
             }
 
@@ -88,6 +89,7 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHold
             if (profileImage != null){
                 Glide.with(context)
                         .load(profileImage.getUrl())
+                        .circleCrop()
                         .into(ivUserProfileImage);
             }
         }
