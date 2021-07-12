@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">BookSmart</string>
     <string name="back4app_server_url">https://parseapi.back4app.com/</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_listings">Listings</string>
+    <string name="title_resources">Resources</string>
+    <string name="title_profile">Profile</string>
 </resources>
