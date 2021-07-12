@@ -1,4 +1,4 @@
-# University Marketplace
+# Booksmart
 
 ## Table of Contents
 1. [Overview](#Overview)
