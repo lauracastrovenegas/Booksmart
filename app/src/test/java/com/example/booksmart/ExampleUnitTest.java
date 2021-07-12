@@ -1,4 +1,4 @@
-package com.example.universitymarketplace;
+package com.example.booksmart;
 
 import org.junit.Test;
 
