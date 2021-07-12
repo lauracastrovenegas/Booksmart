@@ -10,6 +10,7 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.util.Date;
+import java.util.List;
 
 @ParseClassName("Listing")
 public class Listing extends ParseObject {
@@ -19,6 +20,7 @@ public class Listing extends ParseObject {
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_PRICE = "price";
     public static final String KEY_IMAGE = "image";
+    public static final String KEY_ALL_IMAGES = "images";
     public static final String KEY_COURSE = "course";
 
     private static final String DATE_FORMAT = "MMMM dd, yyyy";
@@ -63,8 +65,26 @@ public class Listing extends ParseObject {
         put(KEY_IMAGE, image);
     }
 
+    public List<ParseFile> getAllImages(){
+        return getList(KEY_ALL_IMAGES);
+    }
+
+    public void addImage(ParseFile image){
+        add(KEY_ALL_IMAGES, image);
+    }
+
+    public void addAllImages(List<ParseFile> images){
+        for (int i = 0; i < images.size(); i++){
+            add(KEY_ALL_IMAGES, images.get(i));
+        }
+    }
+
     public String getCourse(){
         return getString(KEY_COURSE);
+    }
+
+    public void setCourse(String course){
+        put(KEY_COURSE, course);
     }
 
     public String getCreatedAtDate(Listing listing){
