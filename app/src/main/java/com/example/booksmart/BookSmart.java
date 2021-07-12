@@ -2,7 +2,9 @@ package com.example.booksmart;
 
 import android.app.Application;
 
+import com.example.booksmart.models.Listing;
 import com.parse.Parse;
+import com.parse.ParseObject;
 
 public class BookSmart extends Application {
 
@@ -13,6 +15,8 @@ public class BookSmart extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        ParseObject.registerSubclass(Listing.class);
 
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(APP_ID)
