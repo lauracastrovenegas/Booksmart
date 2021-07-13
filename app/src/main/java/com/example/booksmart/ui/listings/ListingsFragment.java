@@ -1,6 +1,7 @@
 package com.example.booksmart.ui.listings;
 
 import android.os.Bundle;
+import android.service.controls.actions.FloatAction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -17,6 +19,7 @@ import com.example.booksmart.helpers.ItemClickSupport;
 import com.example.booksmart.R;
 import com.example.booksmart.adapters.ListingAdapter;
 import com.example.booksmart.models.Listing;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -39,11 +42,13 @@ public class ListingsFragment extends Fragment {
     RecyclerView rvListings;
     ListingAdapter adapter;
     GridLayoutManager gridLayoutManager;
+    FloatingActionButton btnCompose;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_listings, container, false);
 
+        btnCompose = view.findViewById(R.id.btnAddListing);
         listings = new ArrayList<>();
         adapter = new ListingAdapter(getContext(), listings);
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_SPAN);
@@ -71,6 +76,13 @@ public class ListingsFragment extends Fragment {
                 android.R.color.holo_red_light);
 
         queryListings();
+
+        btnCompose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goListingForm();
+            }
+        });
 
         return view;
     }
@@ -129,6 +141,18 @@ public class ListingsFragment extends Fragment {
                 swipeContainer.setRefreshing(false);
             }
         });
+    }
+
+    private void goListingForm(){
+        Fragment fragment = new ListingFormFragment();
+        replaceFragment(fragment);
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.nav_host_fragment_activity_main, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
 }
