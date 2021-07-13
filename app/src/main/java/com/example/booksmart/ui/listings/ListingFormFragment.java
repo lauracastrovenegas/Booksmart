@@ -1,10 +1,20 @@
 package com.example.booksmart.ui.listings;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.booksmart.BuildConfig;
 import com.example.booksmart.R;
 import com.example.booksmart.models.Listing;
 import com.parse.Parse;
@@ -23,7 +34,10 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ListingFormFragment extends Fragment {
@@ -32,7 +46,13 @@ public class ListingFormFragment extends Fragment {
     public static final String EMPTY_FIELD = "All fields must be complete!";
     public static final String NO_IMAGE = "There is no image!";
     public static final String SAVING_ERROR = "Error while saving";
+    public static final String SUCCESS_MSG = "Success!";
+    public static final String FAILURE_MSG = "Failure: ";
+    public static final String CAMERA_FAILURE = "Picture wasn't taken!";
+    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
+    public static final int RESULT_OK           = -1;
 
+    public String photoFileName;
     EditText etTitle;
     EditText etDescription;
     EditText etCourse;
@@ -47,6 +67,7 @@ public class ListingFormFragment extends Fragment {
 
     public ListingFormFragment() {}
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,6 +83,10 @@ public class ListingFormFragment extends Fragment {
         btnPost = view.findViewById(R.id.btnListingPost);
         ivCloseForm = view.findViewById(R.id.ivPostClose);
         ivImage = view.findViewById(R.id.ivListingImagePreview);
+
+        photoFileName = "photo.jpg";
+        // TODO: uncomment when user implemented ->
+        //photoFileName = ParseUser.getCurrentUser().getUsername() + LocalDate.now().toString() + "_photo.jpg";
 
         btnCapturePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +179,49 @@ public class ListingFormFragment extends Fragment {
     }
 
     private void onLaunchCamera() {
-        //TODO
+        // create intent to take a picture and return control to the calling application
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        photoFile = getPhotoFileUri(photoFileName);
+
+        // wrap file object into a content provider
+        Uri fileProvider = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".provider", photoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null){
+            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                // Load the taken image into a preview
+                ivImage.setImageBitmap(takenImage);
+            } else {
+                Toast.makeText(getContext(), CAMERA_FAILURE, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    // Returns the File for a photo stored on disk given the fileName
+    private File getPhotoFileUri(String fileName) {
+        // Get safe storage directory for photos
+        // Use `getExternalFilesDir` on Context to access package-specific directories.
+        // This way, we don't need to request external read/write runtime permissions.
+        File mediaStorageDir = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+            Log.d(TAG, FAILURE_MSG);
+        }
+
+        // Return the file target for the photo based on filename
+        return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
     private void goListingTimeline(){
