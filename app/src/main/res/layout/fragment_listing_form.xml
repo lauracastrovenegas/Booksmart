@@ -179,4 +179,13 @@
         android:src="?attr/actionModeCloseDrawable"
         app:tint="@color/purple_500" />
 
+    <ImageView
+        android:id="@+id/ivListingImagePreview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnListingSelect"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        tools:src="@tools:sample/avatars" />
+
 </RelativeLayout>
