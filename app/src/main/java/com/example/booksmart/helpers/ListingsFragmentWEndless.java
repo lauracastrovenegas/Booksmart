@@ -1,4 +1,4 @@
-package com.example.booksmart.ui.listings;
+package com.example.booksmart.helpers;
 
 import android.os.Bundle;
 import android.util.Log;
