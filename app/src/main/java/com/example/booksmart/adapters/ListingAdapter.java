@@ -85,7 +85,7 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHold
                         .into(ivImage);
             }
 
-            ParseFile profileImage = listing.getUser().getParseFile("image");
+            ParseFile profileImage = listing.getUser().getParseFile(Listing.KEY_IMAGE);
             if (profileImage != null){
                 Glide.with(context)
                         .load(profileImage.getUrl())
