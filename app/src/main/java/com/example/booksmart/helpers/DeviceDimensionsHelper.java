@@ -1,4 +1,4 @@
-package com.example.booksmart;
+package com.example.booksmart.helpers;
 
 import android.content.Context;
 import android.content.res.Resources;

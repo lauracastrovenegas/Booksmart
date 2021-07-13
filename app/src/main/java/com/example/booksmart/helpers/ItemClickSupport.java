@@ -1,8 +1,10 @@
-package com.example.booksmart;
+package com.example.booksmart.helpers;
 
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.booksmart.R;
 
 /*
   Source: http://www.littlerobots.nl/blog/Handle-Android-RecyclerView-Clicks/

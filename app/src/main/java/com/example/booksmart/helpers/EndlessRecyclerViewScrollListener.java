@@ -1,4 +1,4 @@
-package com.example.booksmart;
+package com.example.booksmart.helpers;
 
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
