@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingStart="5dp"
-    android:paddingTop="5dp"
-    android:paddingEnd="5dp"
-    android:paddingBottom="5dp">
+    android:layout_marginStart="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginEnd="5dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/roundstyle_square"
+    android:elevation="5dp">
 
     <ImageView
         android:id="@+id/ivListingImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/roundstyle_square"
+        android:layout_marginTop="-5dp"
+        android:backgroundTint="#FFFFFF"
         tools:srcCompat="@tools:sample/avatars" />
 
     <RelativeLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/ivListingImage"
         android:layout_alignParentStart="true"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/ivListingImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_marginTop="0dp"
+        android:background="@drawable/roundstyle_square">
 
         <TextView
             android:id="@+id/tvListingTitle"
@@ -34,7 +36,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:fontFamily="@font/work_sans"
             android:text="Biology Textbook"
             android:textColor="@color/black" />
@@ -45,8 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
             android:fontFamily="@font/work_sans"
             android:text="$10"
             android:textColor="@color/black"
@@ -59,7 +61,7 @@
             android:layout_below="@+id/tvListingTitle"
             android:layout_alignParentStart="true"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="2dp"
             android:layout_marginBottom="10dp"
             app:srcCompat="@android:drawable/sym_def_app_icon" />
 
@@ -69,10 +71,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvListingTitle"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="3dp"
             android:layout_toEndOf="@+id/ivListingUser"
             android:fontFamily="@font/work_sans"
             android:text="TextView"
             android:textSize="12sp" />
     </RelativeLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>

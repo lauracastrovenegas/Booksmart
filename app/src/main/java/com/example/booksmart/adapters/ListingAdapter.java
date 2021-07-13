@@ -1,6 +1,7 @@
 package com.example.booksmart.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.example.booksmart.DeviceDimensionsHelper;
 import com.example.booksmart.R;
 import com.example.booksmart.models.Listing;
 import com.parse.ParseFile;
@@ -20,6 +26,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHolder> {
+
+    public static final String TAG = "ListingAdapter";
 
     List<Listing> listings;
     Context context;
@@ -77,11 +85,16 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHold
             tvPrice.setText("$" + String.valueOf(listing.getPrice()));
             tvUserUsername.setText(listing.getUser().getUsername());
 
+            int screenWidth = DeviceDimensionsHelper.getDisplayWidth(context);
+
+            Log.d(TAG, String.valueOf((screenWidth/2) - 200) + String.valueOf(screenWidth/2));
+
             ParseFile image = listing.getImage();
             if (image != null){
                 Glide.with(context)
                         .load(image.getUrl())
-                        .centerCrop()
+                        .override(screenWidth/2,(screenWidth/2) - 200)
+                        .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(45, 45, 0, 0)))
                         .into(ivImage);
             }
 
