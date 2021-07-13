@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.booksmart.ItemClickSupport;
 import com.example.booksmart.R;
 import com.example.booksmart.adapters.ListingAdapter;
 import com.example.booksmart.databinding.FragmentListingsBinding;
@@ -36,6 +37,7 @@ public class ListingsFragment extends Fragment {
     public static final String DESCENDING_ORDER_KEY = "createdAt";
     public static final String KEY_SCHOOL = "school";
     public static final String QUERY_ERROR = "Error getting listings";
+    public static final String KEY = "detail_listing";
 
     SwipeRefreshLayout swipeContainer;
     List<Listing> listings;
@@ -76,6 +78,32 @@ public class ListingsFragment extends Fragment {
         queryListings();
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Leveraging ItemClickSupport decorator to handle clicks on items in our recyclerView
+        ItemClickSupport.addTo(rvListings).setOnItemClickListener(
+                new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        Listing listing = listings.get(position);
+                        String listing_id = listing.getObjectId();
+
+                        Fragment fragment = new ListingDetailFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(KEY, listing_id);
+                        fragment.setArguments(bundle);
+
+                        getFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.nav_host_fragment_activity_main, fragment)
+                                .addToBackStack(null).commit();
+                    }
+                }
+        );
     }
 
     private void queryListings() {

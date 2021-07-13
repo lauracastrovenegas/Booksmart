@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.listings.ListingDetailFragment">
+
+    <ImageView
+        android:id="@+id/ivListingImageDetail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivClose"
+        android:layout_marginTop="10dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvListingTitleDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivListingUserDetail"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/work_sans"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        tools:text="Biology Textbook" />
+
+    <TextView
+        android:id="@+id/tvListingPriceDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivListingUserDetail"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/work_sans"
+        android:textColor="@color/black"
+        android:textSize="34sp"
+        tools:text="$10" />
+
+    <ImageView
+        android:id="@+id/ivListingUserDetail"
+        android:layout_width="17dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/ivListingImageDetail"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        tools:srcCompat="@drawable/ic_dashboard_black_24dp" />
+
+    <TextView
+        android:id="@+id/tvListingUserDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivListingImageDetail"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="22dp"
+        android:layout_toEndOf="@+id/ivListingUserDetail"
+        android:fontFamily="@font/work_sans"
+        android:textSize="12sp"
+        tools:text="TextView" />
+
+    <Button
+        android:id="@+id/btnListingCourse"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/tvListingTitleDetail"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/roundstyle_button"
+        tools:text="BIO1304" />
+
+    <TextView
+        android:id="@+id/tvListingDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnListingCourse"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:textColor="@color/black"
+        tools:text="Description of listing goes here!" />
+
+    <Button
+        android:id="@+id/btnMessageSeller"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/tvListingDescription"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/roundstyle_button"
+        android:backgroundTint="@color/orange_500"
+        android:text="Message Seller" />
+
+    <ImageView
+        android:id="@+id/ivClose"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:src="?attr/actionModeCloseDrawable" />
+
+</RelativeLayout>
