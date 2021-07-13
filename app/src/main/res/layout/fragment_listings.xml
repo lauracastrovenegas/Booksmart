@@ -35,10 +35,11 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="30dp"
-        android:backgroundTint="@color/orange_500"
+        android:backgroundTint="@color/purple_500"
         android:clickable="true"
         android:src="@android:drawable/ic_input_add"
-        android:tint="@color/white" />
+        app:backgroundTint="@color/purple_500"
+        app:tint="@color/white" />
 
 
 </RelativeLayout>
