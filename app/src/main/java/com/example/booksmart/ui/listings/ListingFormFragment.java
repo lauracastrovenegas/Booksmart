@@ -157,7 +157,7 @@ public class ListingFormFragment extends Fragment {
         listing.setImage(new ParseFile(photoFile));
         List<ParseFile> images = new ArrayList<>();
         images.add(new ParseFile((photoFile)));
-        listing.setUser(currentUser);
+        //listing.setUser(currentUser);
 
         listing.saveInBackground(new SaveCallback() {
             @Override
