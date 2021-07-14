@@ -10,14 +10,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+        android:layout_marginVertical="@dimen/activity_vertical_margin">
 
         <include
             android:id="@+id/fragment_logo"
             layout="@layout/booksmart_logo"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp" />
+            android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/textView3"
@@ -27,22 +28,20 @@
             android:layout_marginTop="25dp"
             android:fontFamily="@font/work_sans_semibold"
             android:gravity="center"
-            android:text="Post a Listing"
+            android:text="@string/post_listing_title"
             android:textColor="@color/black"
-            android:textSize="24sp" />
+            android:textSize="@dimen/font_size_heading"/>
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView3"
-            android:layout_marginStart="30dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="30dp"
             android:fontFamily="@font/work_sans"
-            android:text="Sell Textbooks, Clickers, Lab Manuals, or any other course materials you don’t need anymore. "
+            android:text="@string/post_listing_instructions"
             android:textColor="@color/black"
-            android:textSize="13sp" />
+            android:textSize="@dimen/font_size_medium" />
 
         <TextView
             android:id="@+id/textView6"
@@ -50,11 +49,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/etListingCourseInput"
             android:layout_centerHorizontal="true"
-            android:layout_marginStart="30dp"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="30dp"
             android:fontFamily="@font/work_sans"
-            android:text="Upload an Image"
+            android:text="@string/upload_image_text"
             android:textColor="@color/black"
             android:textSize="13sp" />
 
@@ -63,11 +60,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="30dp"
             app:counterEnabled="true"
-            app:counterMaxLength="40"
+            app:counterMaxLength="@dimen/title_char_count"
             app:counterTextColor="@color/black"
             app:counterOverflowTextAppearance="@style/Overflow"
             app:counterTextAppearance="@style/Normal"
@@ -78,13 +72,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:background="#00FFFFFF"
+                android:background="@color/transparent"
                 android:fontFamily="@font/work_sans"
-                android:hint="Title"
+                android:hint="@string/title_hint"
                 android:inputType="textPersonName"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
-                android:textSize="14sp" />
+                android:textSize="@dimen/font_size_medium"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -92,11 +86,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginStart="30dp"
             android:layout_marginTop="-15dp"
-            android:layout_marginEnd="30dp"
             app:counterEnabled="true"
-            app:counterMaxLength="280"
+            app:counterMaxLength="@dimen/description_char_count"
             app:counterTextColor="@color/black"
             app:counterOverflowTextAppearance="@style/Overflow"
             app:counterTextAppearance="@style/Normal"
@@ -106,14 +98,13 @@
                 android:id="@+id/etListingDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#00FFFFFF"
-                android:ems="10"
+                android:backgroundTint="@color/transparent"
                 android:fontFamily="@font/work_sans"
-                android:hint="Description (Author, edition, brand, etc...)"
+                android:hint="@string/description_hint"
                 android:inputType="textMultiLine"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
-                android:textSize="14sp" />
+                android:textSize="@dimen/font_size_medium" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -122,21 +113,19 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/etListingDescriptionInput"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="-15dp"
-            android:layout_marginEnd="30dp">
+            android:layout_marginTop="-15dp">
 
             <EditText
                 android:id="@+id/etListingPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#00FFFFFF"
+                android:background="@color/transparent"
                 android:fontFamily="@font/work_sans"
-                android:hint="Price"
+                android:hint="@string/price_hint"
                 android:inputType="number"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
-                android:textSize="14sp" />
+                android:textSize="@dimen/font_size_medium" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -145,80 +134,74 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/etListingPriceInput"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="30dp">
+            android:layout_below="@+id/etListingPriceInput">
 
             <EditText
                 android:id="@+id/etListingCourse"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#00FFFFFF"
+                android:backgroundTint="@color/transparent"
                 android:fontFamily="@font/work_sans"
-                android:hint="Course (Ex. CHEM1402)"
+                android:hint="@string/course_hint"
                 android:inputType="textShortMessage"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
-                android:textSize="14sp" />
+                android:textSize="@dimen/font_size_medium" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btnListingSelect"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="@dimen/button_height_small"
             android:layout_below="@+id/textView6"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="40dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/roundstyle_button"
             android:fontFamily="@font/work_sans"
-            android:text="Select Photo"
+            android:text="@string/select_photo"
             android:textAllCaps="false"
-            android:textSize="12sp"
+            android:textSize="@dimen/font_size_medium"
             android:theme="@style/Button.Orange" />
 
         <Button
             android:id="@+id/btnListingPost"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/button_height"
             android:layout_below="@+id/ivListingImagePreview"
             android:layout_alignParentStart="false"
             android:layout_centerHorizontal="true"
-            android:layout_marginStart="0dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/roundstyle_button"
             android:fontFamily="@font/work_sans"
             android:foregroundGravity="center_horizontal"
-            android:text="Post Listing"
+            android:text="@string/post_listing_button"
             android:textAllCaps="false"
-            android:textSize="16sp"
+            android:textSize="@dimen/font_size_large"
             android:theme="@style/Button.Orange" />
 
         <Button
             android:id="@+id/btnListingCapture"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="@dimen/button_height_small"
             android:layout_below="@+id/textView6"
             android:layout_alignParentEnd="true"
             android:layout_marginTop="10dp"
-            android:layout_marginEnd="40dp"
+            android:layout_marginEnd="20dp"
             android:background="@drawable/roundstyle_button"
             android:backgroundTint="@color/black"
             android:fontFamily="@font/work_sans"
-            android:text="Capture Photo"
+            android:text="@string/capture_photo"
             android:textAllCaps="false"
-            android:textSize="12sp" />
+            android:textSize="@dimen/font_size_medium" />
 
         <ImageView
             android:id="@+id/ivPostClose"
-            android:layout_width="37dp"
-            android:layout_height="34dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="30dp"
             android:src="?attr/actionModeCloseDrawable"
             app:tint="@color/purple_500" />
 
