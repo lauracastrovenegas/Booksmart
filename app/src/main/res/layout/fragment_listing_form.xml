@@ -53,7 +53,7 @@
             android:fontFamily="@font/work_sans"
             android:text="@string/upload_image_text"
             android:textColor="@color/black"
-            android:textSize="13sp" />
+            android:textSize="@dimen/font_size_small" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/etListingTitleInput"
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             app:counterEnabled="true"
-            app:counterMaxLength="@dimen/title_char_count"
+            app:counterMaxLength="40"
             app:counterTextColor="@color/black"
             app:counterOverflowTextAppearance="@style/Overflow"
             app:counterTextAppearance="@style/Normal"
@@ -88,7 +88,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="-15dp"
             app:counterEnabled="true"
-            app:counterMaxLength="@dimen/description_char_count"
+            app:counterMaxLength="280"
             app:counterTextColor="@color/black"
             app:counterOverflowTextAppearance="@style/Overflow"
             app:counterTextAppearance="@style/Normal"
