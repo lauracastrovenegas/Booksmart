@@ -20,6 +20,8 @@
     <string name="capture_photo">Capture Photo</string>
     <string name="post_listing_button">Post Listing</string>
     <string name="message_seller">Message Seller</string>
+    <string name="login">Log in</string>
+    <string name="signup">Sign Up</string>
 
     <!-- Placeholder Strings -->
     <string name="long_text_placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vulputate ultrices neque, vel ultricies orci auctor eget. Phasellus ac dignissim enim, eu pulvinar urna. Etiam vel tempus sapien. Quisque efficitur hendrerit aliquet. Sed dictum consectetur pharetra. Proin bibendum egestas risus, vitae cursus ipsum elementum non.</string>
@@ -27,4 +29,6 @@
     <string name="title_placeholder">Biology Textbook</string>
     <string name="username_placeholder">laura.castro.test</string>
     <string name="price_placeholder">$10</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
