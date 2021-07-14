@@ -7,4 +7,5 @@
     <string name="title_profile">Profile</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="description_hint">Include relevant details such as the brand, publisher, edition, or author... </string>
 </resources>

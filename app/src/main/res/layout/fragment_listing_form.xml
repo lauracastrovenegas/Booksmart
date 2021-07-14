@@ -37,10 +37,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView3"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="30dp"
             android:fontFamily="@font/work_sans"
-            android:text="Sell Textbooks, Clickers, Lab Manuals, and any other course materials you don’t need anymore. "
+            android:text="Sell Textbooks, Clickers, Lab Manuals, or any other course materials you don’t need anymore. "
             android:textColor="@color/black"
             android:textSize="13sp" />
 
@@ -48,7 +48,7 @@
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/etListingCourse"
+            android:layout_below="@+id/etListingCourseInput"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="30dp"
             android:layout_marginTop="10dp"
@@ -58,74 +58,110 @@
             android:textColor="@color/black"
             android:textSize="13sp" />
 
-        <EditText
-            android:id="@+id/etListingTitle"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etListingTitleInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/textView4"
             android:layout_centerHorizontal="true"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="0dp"
             android:layout_marginEnd="30dp"
-            android:backgroundTint="@color/black"
-            android:ems="10"
-            android:fontFamily="@font/work_sans"
-            android:hint="Title"
-            android:inputType="textPersonName"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="14sp" />
+            app:counterEnabled="true"
+            app:counterMaxLength="40"
+            app:counterTextColor="@color/black"
+            app:counterOverflowTextAppearance="@style/Overflow"
+            app:counterTextAppearance="@style/Normal"
+            android:layout_below="@+id/textView4">
 
-        <EditText
-            android:id="@+id/etListingDescription"
+            <EditText
+                android:id="@+id/etListingTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:background="#00FFFFFF"
+                android:fontFamily="@font/work_sans"
+                android:hint="Title"
+                android:inputType="textPersonName"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="14sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etListingDescriptionInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/etListingTitle"
+            android:layout_centerHorizontal="true"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="-15dp"
             android:layout_marginEnd="30dp"
-            android:backgroundTint="@color/black"
-            android:ems="10"
-            android:fontFamily="@font/work_sans"
-            android:hint="Description"
-            android:inputType="textMultiLine"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="14sp" />
+            app:counterEnabled="true"
+            app:counterMaxLength="280"
+            app:counterTextColor="@color/black"
+            app:counterOverflowTextAppearance="@style/Overflow"
+            app:counterTextAppearance="@style/Normal"
+            android:layout_below="@+id/etListingTitleInput">
 
-        <EditText
-            android:id="@+id/etListingCourse"
+            <EditText
+                android:id="@+id/etListingDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#00FFFFFF"
+                android:ems="10"
+                android:fontFamily="@font/work_sans"
+                android:hint="Description (Author, edition, brand, etc...)"
+                android:inputType="textMultiLine"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="14sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etListingPriceInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/etListingPrice"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/etListingDescriptionInput"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="30dp"
-            android:backgroundTint="@color/black"
-            android:ems="10"
-            android:fontFamily="@font/work_sans"
-            android:hint="Course"
-            android:inputType="textShortMessage"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="14sp" />
+            android:layout_marginTop="-15dp"
+            android:layout_marginEnd="30dp">
 
-        <EditText
-            android:id="@+id/etListingPrice"
+            <EditText
+                android:id="@+id/etListingPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                android:fontFamily="@font/work_sans"
+                android:hint="Price"
+                android:inputType="number"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="14sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/etListingCourseInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/etListingDescription"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/etListingPriceInput"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="30dp"
-            android:backgroundTint="@color/black"
-            android:ems="10"
-            android:fontFamily="@font/work_sans"
-            android:hint="Price"
-            android:inputType="number"
-            android:textColor="@color/black"
-            android:textColorHint="@color/black"
-            android:textSize="14sp" />
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="30dp">
+
+            <EditText
+                android:id="@+id/etListingCourse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#00FFFFFF"
+                android:fontFamily="@font/work_sans"
+                android:hint="Course (Ex. CHEM1402)"
+                android:inputType="textShortMessage"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="14sp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btnListingSelect"
