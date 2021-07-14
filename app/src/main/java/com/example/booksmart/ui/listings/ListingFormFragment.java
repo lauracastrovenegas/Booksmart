@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.booksmart.BuildConfig;
+import com.example.booksmart.Camera;
 import com.example.booksmart.R;
 import com.example.booksmart.models.Listing;
 import com.parse.Parse;
@@ -67,6 +68,7 @@ public class ListingFormFragment extends Fragment {
     ImageView ivCloseForm;
     ImageView ivImage;
     File photoFile;
+    Camera camera;
 
 
     public ListingFormFragment() {}
@@ -88,6 +90,8 @@ public class ListingFormFragment extends Fragment {
         ivCloseForm = view.findViewById(R.id.ivPostClose);
         ivImage = view.findViewById(R.id.ivListingImagePreview);
 
+        camera = new Camera(getContext(), getActivity());
+
         photoFileName = "photo.jpg";
         // TODO: uncomment when user implemented ->
         //photoFileName = ParseUser.getCurrentUser().getUsername() + LocalDate.now().toString() + "_photo.jpg";
@@ -95,14 +99,14 @@ public class ListingFormFragment extends Fragment {
         btnCapturePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onLaunchCamera();
+                camera.onLaunchCamera();
             }
         });
 
         btnSelectPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onOpenGallery();
+                camera.onOpenGallery();
             }
         });
 
@@ -178,28 +182,8 @@ public class ListingFormFragment extends Fragment {
 
     }
 
-    private void onLaunchCamera() {
-        // create intent to take a picture and return control to the calling application
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        photoFile = getPhotoFileUri(photoFileName);
-
-        // wrap file object into a content provider
-        Uri fileProvider = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".provider", photoFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null){
-            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-        }
-    }
-
-    private void onOpenGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(intent, GET_FROM_GALLERY);
-    }
-
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+    public void onActivityResult (int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) { // User took image
@@ -226,24 +210,8 @@ public class ListingFormFragment extends Fragment {
                     Log.e(TAG, e.getMessage());
                     e.printStackTrace();
                 }
-
             }
         }
-    }
-
-    // Returns the File for a photo stored on disk given the fileName
-    private File getPhotoFileUri(String fileName) {
-        // Get safe storage directory for photos
-        // Use `getExternalFilesDir` on Context to access package-specific directories.
-        File mediaStorageDir = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
-
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
-            Log.d(TAG, FAILURE_MSG);
-        }
-
-        // Return the file target for the photo based on filename
-        return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
     private void goListingTimeline(){
