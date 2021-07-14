@@ -54,6 +54,7 @@ public class ListingFormFragment extends Fragment {
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private static final int GET_FROM_GALLERY = 3;
     public static final int RESULT_OK = -1;
+    public static final int IMAGE_PREVIEW_DIMENSION = 400;
 
     public String photoFileName;
     EditText etTitle;
@@ -205,6 +206,7 @@ public class ListingFormFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 // Load the taken image into a preview
+                setImageViewDimensions(IMAGE_PREVIEW_DIMENSION,IMAGE_PREVIEW_DIMENSION, ivImage);
                 ivImage.setImageBitmap(takenImage);
             } else {
                 Toast.makeText(getContext(), CAMERA_FAILURE, Toast.LENGTH_SHORT).show();
@@ -215,6 +217,7 @@ public class ListingFormFragment extends Fragment {
                 Bitmap selectedImage = null;
                 try {
                     selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), image);
+                    setImageViewDimensions(IMAGE_PREVIEW_DIMENSION,IMAGE_PREVIEW_DIMENSION, ivImage);
                     ivImage.setImageBitmap(selectedImage);
                 } catch (FileNotFoundException e) {
                     Log.e(TAG, e.getMessage());
@@ -253,5 +256,11 @@ public class ListingFormFragment extends Fragment {
         transaction.replace(R.id.nav_host_fragment_activity_main, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    private void setImageViewDimensions(int width, int height, ImageView image){
+        image.requestLayout();
+        image.getLayoutParams().height = height;
+        image.getLayoutParams().width = width;
     }
 }
