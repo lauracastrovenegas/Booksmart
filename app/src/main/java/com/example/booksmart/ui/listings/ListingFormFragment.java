@@ -69,6 +69,7 @@ public class ListingFormFragment extends Fragment {
     ImageView ivImage;
     File photoFile;
     Camera camera;
+    Bitmap selectedImage;
 
 
     public ListingFormFragment() {}
@@ -186,23 +187,12 @@ public class ListingFormFragment extends Fragment {
     public void onActivityResult (int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) { // User took image
-            if (resultCode == RESULT_OK) {
-                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
-                // Load the taken image into a preview
-                setImageViewDimensions(IMAGE_PREVIEW_DIMENSION,IMAGE_PREVIEW_DIMENSION, ivImage);
-                ivImage.setImageBitmap(takenImage);
-            } else {
-                Toast.makeText(getContext(), CAMERA_FAILURE, Toast.LENGTH_SHORT).show();
-            }
-        } else if (requestCode == GET_FROM_GALLERY){ // User selected an image
-            if (resultCode == RESULT_OK){
-                Uri image = data.getData();
-                Bitmap selectedImage = null;
+        if (resultCode == RESULT_OK){
+            if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) { // User took image
+                selectedImage = (Bitmap) data.getExtras().get("data");
+            } else if (requestCode == GET_FROM_GALLERY){ // User selected an image
                 try {
-                    selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), image);
-                    setImageViewDimensions(IMAGE_PREVIEW_DIMENSION,IMAGE_PREVIEW_DIMENSION, ivImage);
-                    ivImage.setImageBitmap(selectedImage);
+                    selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
                 } catch (FileNotFoundException e) {
                     Log.e(TAG, e.getMessage());
                     e.printStackTrace();
@@ -211,6 +201,12 @@ public class ListingFormFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
+
+            // Load the taken image into a preview
+            setImageViewDimensions(IMAGE_PREVIEW_DIMENSION,IMAGE_PREVIEW_DIMENSION, ivImage);
+            ivImage.setImageBitmap(selectedImage);
+        } else {
+            Toast.makeText(getContext(), CAMERA_FAILURE, Toast.LENGTH_SHORT).show();
         }
     }
 
