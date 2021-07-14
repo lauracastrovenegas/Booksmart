@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.booksmart.helpers.EndlessRecyclerViewScrollListener;
 import com.example.booksmart.helpers.ItemClickSupport;
 import com.example.booksmart.R;
 import com.example.booksmart.adapters.ListingAdapter;
@@ -38,15 +39,20 @@ public class ListingsFragment extends Fragment {
     public static final String KEY = "detail_listing";
 
     SwipeRefreshLayout swipeContainer;
+    EndlessRecyclerViewScrollListener scrollListener;
     List<Listing> listings;
     RecyclerView rvListings;
     ListingAdapter adapter;
     GridLayoutManager gridLayoutManager;
     FloatingActionButton btnCompose;
 
+    private int skip;
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_listings, container, false);
+
+        skip = 0;
 
         btnCompose = view.findViewById(R.id.btnAddListing);
         listings = new ArrayList<>();
@@ -57,25 +63,9 @@ public class ListingsFragment extends Fragment {
         rvListings.setLayoutManager(gridLayoutManager);
         rvListings.setAdapter(adapter);
 
-        // Lookup the swipe container view
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                queryListings();
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+        setEndlessScrollListener();
 
-        queryListings();
+        setSwipeContainer(view);
 
         btnCompose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +73,8 @@ public class ListingsFragment extends Fragment {
                 goListingForm();
             }
         });
+
+        queryListings();
 
         return view;
     }
@@ -129,7 +121,7 @@ public class ListingsFragment extends Fragment {
                     return;
                 }
 
-                Log.d(TAG, "queryListings(): Loaded 20 Listings");
+                Log.d(TAG, "queryListings(): Loaded " + String.valueOf(allListings.size()) + " Listings");
 
                 // CLEAR OUT old items before appending in the new ones for refresh
                 listings.clear();
@@ -138,9 +130,70 @@ public class ListingsFragment extends Fragment {
 
                 Log.d(TAG, "Size: " + String.valueOf(listings.size()));
 
+                skip = listings.size() - 1;
+
                 swipeContainer.setRefreshing(false);
             }
         });
+    }
+
+    private void queryMoreListings(){
+        ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
+        query.include(Listing.KEY_USER);
+        // TODO: Add following when user login set up:
+        //  query.whereEqualTo(KEY_SCHOOL, ParseUser.getCurrentUser().get("school"));
+        query.setSkip(skip);
+        query.setLimit(LISTING_LIMIT);
+        query.addDescendingOrder(DESCENDING_ORDER_KEY);
+        query.findInBackground(new FindCallback<Listing>() {
+
+            @Override
+            public void done(List<Listing> allListings, ParseException e) {
+                if (e != null){
+                    Log.e(TAG, QUERY_ERROR, e);
+                    return;
+                }
+
+                Log.d(TAG, "queryMoreListings(): Loaded " + String.valueOf(allListings.size()) + " Listings");
+
+                listings.addAll(allListings);
+                adapter.notifyDataSetChanged();
+                scrollListener.resetState();
+
+                Log.d(TAG, "Size: " + String.valueOf(listings.size()));
+
+                skip = listings.size() - 1;
+            }
+        });
+    }
+
+    private void setEndlessScrollListener() {
+        scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                Log.i(TAG, String.valueOf(page));
+                queryMoreListings();
+            }
+        };
+
+        rvListings.addOnScrollListener(scrollListener);
+    }
+
+    private void setSwipeContainer(View view){
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                queryListings();
+            }
+        });
+
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     private void goListingForm(){
