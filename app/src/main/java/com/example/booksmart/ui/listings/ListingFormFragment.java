@@ -34,6 +34,8 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -50,7 +52,8 @@ public class ListingFormFragment extends Fragment {
     public static final String FAILURE_MSG = "Failure: ";
     public static final String CAMERA_FAILURE = "Picture wasn't taken!";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
-    public static final int RESULT_OK           = -1;
+    private static final int GET_FROM_GALLERY = 3;
+    public static final int RESULT_OK = -1;
 
     public String photoFileName;
     EditText etTitle;
@@ -98,7 +101,7 @@ public class ListingFormFragment extends Fragment {
         btnSelectPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO
+                onOpenGallery();
             }
         });
 
@@ -141,10 +144,6 @@ public class ListingFormFragment extends Fragment {
         }
 
         ParseUser currentUser = ParseUser.getCurrentUser();
-        /*ParseUser currentUser = new ParseUser();
-        currentUser.put("username", "test_user");
-        currentUser.put("password", "test_user");
-        currentUser.put("name", "test user");*/
         saveListing(title, description, price, course, photoFile, currentUser);
     }
 
@@ -193,17 +192,38 @@ public class ListingFormFragment extends Fragment {
         }
     }
 
+    private void onOpenGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(intent, GET_FROM_GALLERY);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
+        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) { // User took image
             if (resultCode == RESULT_OK) {
                 Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
                 // Load the taken image into a preview
                 ivImage.setImageBitmap(takenImage);
             } else {
                 Toast.makeText(getContext(), CAMERA_FAILURE, Toast.LENGTH_SHORT).show();
+            }
+        } else if (requestCode == GET_FROM_GALLERY){ // User selected an image
+            if (resultCode == RESULT_OK){
+                Uri image = data.getData();
+                Bitmap selectedImage = null;
+                try {
+                    selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), image);
+                    ivImage.setImageBitmap(selectedImage);
+                } catch (FileNotFoundException e) {
+                    Log.e(TAG, e.getMessage());
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    Log.e(TAG, e.getMessage());
+                    e.printStackTrace();
+                }
+
             }
         }
     }
@@ -212,7 +232,6 @@ public class ListingFormFragment extends Fragment {
     private File getPhotoFileUri(String fileName) {
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` on Context to access package-specific directories.
-        // This way, we don't need to request external read/write runtime permissions.
         File mediaStorageDir = new File(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
 
         // Create the storage directory if it does not exist
