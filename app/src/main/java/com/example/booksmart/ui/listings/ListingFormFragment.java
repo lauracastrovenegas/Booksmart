@@ -56,6 +56,7 @@ public class ListingFormFragment extends Fragment {
     private static final int GET_FROM_GALLERY = 3;
     public static final int RESULT_OK = -1;
     public static final int IMAGE_PREVIEW_DIMENSION = 400;
+    public static final String DATA_KEY = "data";
 
     public String photoFileName;
     EditText etTitle;
@@ -189,7 +190,7 @@ public class ListingFormFragment extends Fragment {
 
         if (resultCode == RESULT_OK){
             if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) { // User took image
-                selectedImage = (Bitmap) data.getExtras().get("data");
+                selectedImage = (Bitmap) data.getExtras().get(DATA_KEY);
             } else if (requestCode == GET_FROM_GALLERY){ // User selected an image
                 try {
                     selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
