@@ -102,7 +102,8 @@
             android:background="@drawable/roundstyle_button"
             android:backgroundTint="@color/orange_500"
             android:fontFamily="@font/work_sans"
-            android:text="Message Seller" />
+            android:text="Message Seller"
+            android:textAllCaps="false"/>
 
     <ImageView
         android:id="@+id/ivClose"
