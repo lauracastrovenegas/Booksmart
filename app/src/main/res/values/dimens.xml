@@ -17,4 +17,5 @@
     <dimen name="description_char_count">280</dimen>
     <dimen name="button_height">40dp</dimen>
     <dimen name="button_height_small">35dp</dimen>
+    <dimen name="button_corner_radius">20dp</dimen>
 </resources>

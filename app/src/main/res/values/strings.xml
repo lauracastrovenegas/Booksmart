@@ -15,6 +15,15 @@
     <string name="price_hint">Price</string>
     <string name="course_hint">Course (Ex. CHEM1402)</string>
 
+    <!-- Sign up Form -->
+    <string name="signup_title">Join booksmart</string>
+    <string name="signup_name">Name</string>
+    <string name="signup_school">Choose your school</string>
+    <string name="signup_email">E-mail</string>
+    <string name="signup_username">Username</string>
+    <string name="signup_password">Password</string>
+    <string name="upload_profile_image">Upload a profile photo</string>
+
     <!-- Button Text -->
     <string name="select_photo">Select Photo</string>
     <string name="capture_photo">Capture Photo</string>
@@ -22,6 +31,7 @@
     <string name="message_seller">Message Seller</string>
     <string name="login">Log in</string>
     <string name="signup">Sign Up</string>
+    <string name="create_account">Create Account</string>
 
     <!-- Placeholder Strings -->
     <string name="long_text_placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vulputate ultrices neque, vel ultricies orci auctor eget. Phasellus ac dignissim enim, eu pulvinar urna. Etiam vel tempus sapien. Quisque efficitur hendrerit aliquet. Sed dictum consectetur pharetra. Proin bibendum egestas risus, vitae cursus ipsum elementum non.</string>
