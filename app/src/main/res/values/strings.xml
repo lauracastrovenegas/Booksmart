@@ -5,7 +5,26 @@
     <string name="title_listings">Listings</string>
     <string name="title_resources">Resources</string>
     <string name="title_profile">Profile</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="description_hint">Include relevant details such as the brand, publisher, edition, or author... </string>
+
+    <!-- Listing Post Form -->
+    <string name="post_listing_title">Post a Listing</string>
+    <string name="post_listing_instructions">Sell Textbooks, Clickers, Lab Manuals, or any other course materials you don’t need anymore. </string>
+    <string name="upload_image_text">Upload an Image</string>
+    <string name="title_hint">Title</string>
+    <string name="description_hint">Description (Author, edition, brand, etc...) </string>
+    <string name="price_hint">Price</string>
+    <string name="course_hint">Course (Ex. CHEM1402)</string>
+
+    <!-- Button Text -->
+    <string name="select_photo">Select Photo</string>
+    <string name="capture_photo">Capture Photo</string>
+    <string name="post_listing_button">Post Listing</string>
+    <string name="message_seller">Message Seller</string>
+
+    <!-- Placeholder Strings -->
+    <string name="long_text_placeholder">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vulputate ultrices neque, vel ultricies orci auctor eget. Phasellus ac dignissim enim, eu pulvinar urna. Etiam vel tempus sapien. Quisque efficitur hendrerit aliquet. Sed dictum consectetur pharetra. Proin bibendum egestas risus, vitae cursus ipsum elementum non.</string>
+    <string name="course_name_placeholder">CHEM1402</string>
+    <string name="title_placeholder">Biology Textbook</string>
+    <string name="username_placeholder">laura.castro.test</string>
+    <string name="price_placeholder">$10</string>
 </resources>
