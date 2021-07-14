@@ -86,8 +86,6 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHold
 
             int screenWidth = DeviceDimensionsHelper.getDisplayWidth(context);
 
-            Log.d(TAG, String.valueOf((screenWidth/2) - 200) + String.valueOf(screenWidth/2));
-
             ParseFile image = listing.getImage();
             if (image != null){
                 Glide.with(context)
