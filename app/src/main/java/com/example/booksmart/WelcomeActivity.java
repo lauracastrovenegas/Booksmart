@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.example.booksmart.ui.welcome.SignupFragment;
 import com.example.booksmart.ui.welcome.WelcomeFragment;
+import com.parse.ParseUser;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -17,6 +18,10 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
+        if (ParseUser.getCurrentUser() != null){
+            goMainActivity();
+        }
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.placeholder_activity_welcome, new WelcomeFragment());
@@ -36,5 +41,11 @@ public class WelcomeActivity extends AppCompatActivity {
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    public void goMainActivity(){
+        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
