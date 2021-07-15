@@ -26,7 +26,11 @@ import com.example.booksmart.Camera;
 import com.example.booksmart.R;
 import com.example.booksmart.WelcomeActivity;
 import com.example.booksmart.ui.listings.ListingsFragment;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.SignUpCallback;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -44,6 +48,10 @@ public class SignupFragment extends Fragment {
     public static final int IMAGE_PREVIEW_DIMENSION = 400;
     public static final String DATA_KEY = "data";
     public static final String PHOTO_NAME_SUFFIX = "_profile_photo.jpg";
+    public static final String NAME_KEY = "name";
+    public static final String SCHOOL_KEY = "name";
+    public static final String IMAGE_KEY = "image";
+    private static final String SIGN_UP_FAILURE = "Unable to create account for user!";
 
     ImageView ivBack;
     EditText etName;
@@ -114,9 +122,27 @@ public class SignupFragment extends Fragment {
     }
 
     private void signUpUser() {
-        //TODO
+        ParseUser user = new ParseUser();
+        user.setUsername(etUsername.getText().toString());
+        user.setPassword(etPassword.getText().toString());
+        user.setEmail(etEmail.getText().toString());
+        user.put(NAME_KEY, etName.getText().toString());
+        user.put(SCHOOL_KEY, etSchool.getText().toString());
+        //user.put(IMAGE_KEY, new ParseFile(photoFile));
+
+        user.signUpInBackground(new SignUpCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null){
+                    Toast.makeText(getContext(), SIGN_UP_FAILURE, Toast.LENGTH_SHORT).show();
+                } else {
+                    ((WelcomeActivity) getActivity()).loginUser(etUsername.getText().toString(), etPassword.getText().toString());
+                }
+            }
+        });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void onActivityResult (int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
