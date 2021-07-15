@@ -178,6 +178,7 @@ public class SignupFragment extends Fragment {
             } else if (requestCode == GET_FROM_GALLERY){ // User selected an image
                 try {
                     selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+                    photoFile = camera.scaleImage(selectedImage, Camera.SCALE_WIDTH);
                 } catch (FileNotFoundException e) {
                     Log.e(TAG, e.getMessage());
                     e.printStackTrace();
