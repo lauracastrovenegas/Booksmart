@@ -169,49 +169,51 @@
             <Button
                 android:id="@+id/btnListingSelect"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_height_small"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/textView6"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/roundstyle_button"
+                android:backgroundTint="@color/purple_500"
                 android:fontFamily="@font/work_sans"
                 android:text="@string/select_photo"
                 android:textAllCaps="false"
+                android:textColor="@color/white"
                 android:textSize="@dimen/font_size_medium"
-                android:theme="@style/Button.Orange" />
+                app:cornerRadius="@dimen/button_corner_radius" />
 
             <Button
                 android:id="@+id/btnListingPost"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_height"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/ivListingImagePreview"
                 android:layout_alignParentStart="false"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:background="@drawable/roundstyle_button"
+                android:backgroundTint="@color/purple_500"
                 android:fontFamily="@font/work_sans"
-                android:foregroundGravity="center_horizontal"
                 android:text="@string/post_listing_button"
                 android:textAllCaps="false"
+                android:textColor="@color/white"
                 android:textSize="@dimen/font_size_large"
-                android:theme="@style/Button.Orange" />
+                app:cornerRadius="@dimen/button_corner_radius"/>
 
             <Button
                 android:id="@+id/btnListingCapture"
                 android:layout_width="wrap_content"
-                android:layout_height="@dimen/button_height_small"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/textView6"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/roundstyle_button"
-                android:backgroundTint="@color/black"
+                android:backgroundTint="@color/purple_500"
                 android:fontFamily="@font/work_sans"
                 android:text="@string/capture_photo"
                 android:textAllCaps="false"
-                android:textSize="@dimen/font_size_medium" />
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_size_medium"
+                app:cornerRadius="@dimen/button_corner_radius" />
 
             <ImageView
                 android:id="@+id/ivListingImagePreview"
