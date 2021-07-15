@@ -137,6 +137,7 @@ public class ListingsFragment extends Fragment {
         });
     }
 
+    // TODO fix double query at beginning
     private void queryMoreListings(){
         ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
         query.include(Listing.KEY_USER);

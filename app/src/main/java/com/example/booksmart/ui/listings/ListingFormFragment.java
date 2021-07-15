@@ -65,6 +65,7 @@ public class ListingFormFragment extends Fragment {
     public static final String DATA_KEY = "data";
     public static final String PHOTO_NAME_SUFFIX = "_photo.jpg";
     private static final String ERROR_SAVING_IMAGE = "Could not save image to parse";
+    public static final String BLANK = "";
 
     public String photoFileName;
     EditText etTitle;
@@ -194,12 +195,10 @@ public class ListingFormFragment extends Fragment {
                     Toast.makeText(getContext(), SAVING_ERROR, Toast.LENGTH_SHORT).show();
                 }
 
-                Log.d(TAG, "Saved listing");
-
-                etTitle.setText("");
-                etDescription.setText("");
-                etCourse.setText("");
-                etPrice.setText("");
+                etTitle.setText(BLANK);
+                etDescription.setText(BLANK);
+                etCourse.setText(BLANK);
+                etPrice.setText(BLANK);
                 ivImage.setImageResource(0);
                 goListingTimeline();
             }

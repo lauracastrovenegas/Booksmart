@@ -33,6 +33,7 @@ public class Camera {
     private static final int GET_FROM_GALLERY = 3;
     public static final int IMAGE_QUALITY = 80;
     public static final int SCALE_WIDTH = 200;
+    public static final String PROVIDER = BuildConfig.APPLICATION_ID + ".provider";
 
     Context context;
     Activity activity;
@@ -50,7 +51,7 @@ public class Camera {
         photoFile = getPhotoFileUri(photoFileName);
 
         // wrap file object into a content provider
-        Uri fileProvider = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(context, PROVIDER, photoFile);
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
         activity.startActivityForResult(cameraIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
@@ -77,6 +78,7 @@ public class Camera {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
+    /* Method taken from CodePath Guide: https://guides.codepath.com/android/Accessing-the-Camera-and-Stored-Media */
     public File scaleImage(Bitmap rawTakenImage, int width) throws IOException {
         Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(rawTakenImage, width);
         // Configure byte output stream
