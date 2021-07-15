@@ -254,24 +254,4 @@ public class ListingFormFragment extends Fragment {
         image.getLayoutParams().height = height;
         image.getLayoutParams().width = width;
     }
-
-    public void saveBitmapToFile(Bitmap bMap, ParseFile file) { // File name like "image.png"
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        // Compress image to lower quality scale 1 - 100
-        bMap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] image = stream.toByteArray();
-
-        file = new ParseFile(image);
-        file.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    Log.d(TAG, "Image saved");
-                } else {
-                    e.printStackTrace();
-                    Log.e(TAG, "Image not saved", e);
-                }
-            }
-        });
-    }
 }
