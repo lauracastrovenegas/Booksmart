@@ -1,6 +1,8 @@
 package com.example.booksmart.ui.listings;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -31,11 +33,14 @@ import com.example.booksmart.models.Listing;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -57,6 +62,7 @@ public class ListingFormFragment extends Fragment {
     public static final int RESULT_OK = -1;
     public static final int IMAGE_PREVIEW_DIMENSION = 400;
     public static final String DATA_KEY = "data";
+    public static final String PHOTO_NAME_SUFFIX = "_photo.jpg";
 
     public String photoFileName;
     EditText etTitle;
@@ -71,7 +77,8 @@ public class ListingFormFragment extends Fragment {
     File photoFile;
     Camera camera;
     Bitmap selectedImage;
-
+    ParseFile file;
+    ParseObject imgupload;
 
     public ListingFormFragment() {}
 
@@ -93,15 +100,12 @@ public class ListingFormFragment extends Fragment {
         ivImage = view.findViewById(R.id.ivListingImagePreview);
 
         camera = new Camera(getContext(), getActivity());
-
-        photoFileName = "photo.jpg";
-        // TODO: uncomment when user implemented ->
-        //photoFileName = ParseUser.getCurrentUser().getUsername() + LocalDate.now().toString() + "_photo.jpg";
+        photoFileName = ParseUser.getCurrentUser().getUsername() + LocalDate.now().toString() + PHOTO_NAME_SUFFIX;
 
         btnCapturePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                camera.onLaunchCamera();
+                camera.onLaunchCamera(photoFileName);
             }
         });
 
@@ -145,7 +149,7 @@ public class ListingFormFragment extends Fragment {
             return;
         }
 
-        if (photoFile ==  null || ivImage.getDrawable() == null){
+        if (photoFile == null || ivImage.getDrawable() == null){
             Toast.makeText(getContext(), NO_IMAGE, Toast.LENGTH_SHORT).show();
             return;
         }
@@ -161,9 +165,7 @@ public class ListingFormFragment extends Fragment {
         listing.setPrice(Integer.parseInt(price));
         listing.setCourse(course);
         listing.setImage(new ParseFile(photoFile));
-        List<ParseFile> images = new ArrayList<>();
-        images.add(new ParseFile((photoFile)));
-        //listing.setUser(currentUser);
+        listing.setUser(currentUser);
 
         listing.saveInBackground(new SaveCallback() {
             @Override
@@ -172,6 +174,8 @@ public class ListingFormFragment extends Fragment {
                     Log.e(TAG, SAVING_ERROR, e);
                     Toast.makeText(getContext(), SAVING_ERROR, Toast.LENGTH_SHORT).show();
                 }
+
+                Log.d(TAG, "Saved listing");
 
                 etTitle.setText("");
                 etDescription.setText("");
@@ -190,10 +194,39 @@ public class ListingFormFragment extends Fragment {
 
         if (resultCode == RESULT_OK){
             if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) { // User took image
-                selectedImage = (Bitmap) data.getExtras().get(DATA_KEY);
+                selectedImage = BitmapFactory.decodeFile(camera.getPhotoFile().getAbsolutePath());
+                photoFile = camera.getPhotoFile();
             } else if (requestCode == GET_FROM_GALLERY){ // User selected an image
                 try {
                     selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+                    //saveBitmapToFile(selectedImage, newFile);
+
+                    // ------------------------------
+                    // Convert it to byte
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    // Compress image to lower quality scale 1 - 100
+                    selectedImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] image = stream.toByteArray();
+
+                    // Create the ParseFile
+                    file = new ParseFile(photoFileName, image);
+                    // Upload the image into Parse Cloud
+                    file.saveInBackground();
+
+                    // Create a New Class called "ImageUpload" in Parse
+                    imgupload = new ParseObject("ImageUpload");
+
+                    // Create a column named "ImageName" and set the string
+                    imgupload.put("ImageName", "AndroidBegin Logo");
+
+                    // Create a column named "ImageFile" and insert the image
+                    imgupload.put("ImageFile", file);
+
+                    // Create the class and the columns
+                    imgupload.saveInBackground();
+                    //-----------------------------
+
+                    //photoFile = camera.getPhotoFile();
                 } catch (FileNotFoundException e) {
                     Log.e(TAG, e.getMessage());
                     e.printStackTrace();
@@ -227,5 +260,25 @@ public class ListingFormFragment extends Fragment {
         image.requestLayout();
         image.getLayoutParams().height = height;
         image.getLayoutParams().width = width;
+    }
+
+    public void saveBitmapToFile(Bitmap bMap, ParseFile file) { // File name like "image.png"
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        // Compress image to lower quality scale 1 - 100
+        bMap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] image = stream.toByteArray();
+
+        file = new ParseFile("androidbegin.png", image);
+        file.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    Log.d(TAG, "Image saved");
+                } else {
+                    e.printStackTrace();
+                    Log.e(TAG, "Image not saved", e);
+                }
+            }
+        });
     }
 }
