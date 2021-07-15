@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +26,13 @@ import android.widget.Toast;
 import com.example.booksmart.Camera;
 import com.example.booksmart.R;
 import com.example.booksmart.WelcomeActivity;
+import com.example.booksmart.models.User;
 import com.example.booksmart.ui.listings.ListingsFragment;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 import java.io.File;
@@ -52,6 +55,8 @@ public class SignupFragment extends Fragment {
     public static final String SCHOOL_KEY = "name";
     public static final String IMAGE_KEY = "image";
     private static final String SIGN_UP_FAILURE = "Unable to create account for user!";
+    public static final int SCALE_WIDTH = 200;
+    private static final String ERROR_SAVING_IMAGE = "Could not save image to parse";
 
     ImageView ivBack;
     EditText etName;
@@ -67,6 +72,8 @@ public class SignupFragment extends Fragment {
     Bitmap selectedImage;
     String photoFileName;
     File photoFile;
+    User user;
+    ParseFile parseImage;
 
     public SignupFragment() {}
 
@@ -114,27 +121,41 @@ public class SignupFragment extends Fragment {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signUpUser();
+                saveImageToParse();
             }
         });
 
         return view;
     }
 
-    private void signUpUser() {
-        ParseUser user = new ParseUser();
+    private void saveImageToParse(){
+        ParseFile photo = new ParseFile(photoFile);
+        photo.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null){
+                    Log.e(TAG, ERROR_SAVING_IMAGE, e);
+                } else {
+                    signUpUser(photo);
+                }
+            }
+        });
+    }
+
+    private void signUpUser(ParseFile savedImage) {
+        user = new User();
         user.setUsername(etUsername.getText().toString());
         user.setPassword(etPassword.getText().toString());
         user.setEmail(etEmail.getText().toString());
         user.put(NAME_KEY, etName.getText().toString());
         user.put(SCHOOL_KEY, etSchool.getText().toString());
-        //user.put(IMAGE_KEY, new ParseFile(photoFile));
+        user.setImage(savedImage);
 
         user.signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null){
-                    Toast.makeText(getContext(), SIGN_UP_FAILURE, Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, SIGN_UP_FAILURE, e);
                 } else {
                     ((WelcomeActivity) getActivity()).loginUser(etUsername.getText().toString(), etPassword.getText().toString());
                 }
@@ -148,8 +169,13 @@ public class SignupFragment extends Fragment {
 
         if (resultCode == RESULT_OK){
             if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) { // User took image
-                selectedImage = BitmapFactory.decodeFile(camera.getPhotoFile().getAbsolutePath());
-                photoFile = camera.getPhotoFile();
+                //selectedImage = BitmapFactory.decodeFile(camera.getPhotoFile().getAbsolutePath());
+                try {
+                    photoFile = camera.scaleImage(SCALE_WIDTH);
+                    selectedImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else if (requestCode == GET_FROM_GALLERY){ // User selected an image
                 try {
                     selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
