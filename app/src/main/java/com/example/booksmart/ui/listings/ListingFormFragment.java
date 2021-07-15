@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.example.booksmart.BuildConfig;
 import com.example.booksmart.Camera;
 import com.example.booksmart.R;
+import com.example.booksmart.helpers.BitmapScaler;
 import com.example.booksmart.models.Listing;
 import com.parse.Parse;
 import com.parse.ParseException;
@@ -63,6 +64,7 @@ public class ListingFormFragment extends Fragment {
     public static final int IMAGE_PREVIEW_DIMENSION = 400;
     public static final String DATA_KEY = "data";
     public static final String PHOTO_NAME_SUFFIX = "_photo.jpg";
+    private static final String ERROR_SAVING_IMAGE = "Could not save image to parse";
 
     public String photoFileName;
     EditText etTitle;
@@ -77,8 +79,11 @@ public class ListingFormFragment extends Fragment {
     File photoFile;
     Camera camera;
     Bitmap selectedImage;
-    ParseFile file;
-    ParseObject imgupload;
+    String title;
+    String description;
+    String price;
+    String course;
+    ParseUser currentUser;
 
     public ListingFormFragment() {}
 
@@ -99,6 +104,7 @@ public class ListingFormFragment extends Fragment {
         ivCloseForm = view.findViewById(R.id.ivPostClose);
         ivImage = view.findViewById(R.id.ivListingImagePreview);
 
+        currentUser = ParseUser.getCurrentUser();
         camera = new Camera(getContext(), getActivity());
         photoFileName = ParseUser.getCurrentUser().getUsername() + LocalDate.now().toString() + PHOTO_NAME_SUFFIX;
 
@@ -139,10 +145,10 @@ public class ListingFormFragment extends Fragment {
     }
 
     private void onPost() {
-        String title = etTitle.getText().toString();
-        String description = etDescription.getText().toString();
-        String price = etPrice.getText().toString();
-        String course = etCourse.getText().toString();
+        title = etTitle.getText().toString();
+        description = etDescription.getText().toString();
+        price = etPrice.getText().toString();
+        course = etCourse.getText().toString();
 
         if (title.isEmpty() || description.isEmpty() || price.isEmpty() || course.isEmpty()){
             Toast.makeText(getContext(), EMPTY_FIELD, Toast.LENGTH_SHORT).show();
@@ -154,17 +160,30 @@ public class ListingFormFragment extends Fragment {
             return;
         }
 
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        saveListing(title, description, price, course, photoFile, currentUser);
+        saveImageToParse();
     }
 
-    private void saveListing(String title, String description, String price, String course, File photoFile, ParseUser currentUser) {
+    private void saveImageToParse(){
+        ParseFile photo = new ParseFile(photoFile);
+        photo.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null){
+                    Log.e(TAG, ERROR_SAVING_IMAGE, e);
+                } else {
+                    saveListing(title, description, price, course, photo, currentUser);
+                }
+            }
+        });
+    }
+
+    private void saveListing(String title, String description, String price, String course, ParseFile photoFile, ParseUser currentUser) {
         Listing listing = new Listing();
         listing.setTitle(title);
         listing.setDescription(description);
         listing.setPrice(Integer.parseInt(price));
         listing.setCourse(course);
-        listing.setImage(new ParseFile(photoFile));
+        listing.setImage(photoFile);
         listing.setUser(currentUser);
 
         listing.saveInBackground(new SaveCallback() {
@@ -188,6 +207,7 @@ public class ListingFormFragment extends Fragment {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onActivityResult (int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -199,34 +219,7 @@ public class ListingFormFragment extends Fragment {
             } else if (requestCode == GET_FROM_GALLERY){ // User selected an image
                 try {
                     selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
-                    //saveBitmapToFile(selectedImage, newFile);
-
-                    // ------------------------------
-                    // Convert it to byte
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    // Compress image to lower quality scale 1 - 100
-                    selectedImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    byte[] image = stream.toByteArray();
-
-                    // Create the ParseFile
-                    file = new ParseFile(photoFileName, image);
-                    // Upload the image into Parse Cloud
-                    file.saveInBackground();
-
-                    // Create a New Class called "ImageUpload" in Parse
-                    imgupload = new ParseObject("ImageUpload");
-
-                    // Create a column named "ImageName" and set the string
-                    imgupload.put("ImageName", "AndroidBegin Logo");
-
-                    // Create a column named "ImageFile" and insert the image
-                    imgupload.put("ImageFile", file);
-
-                    // Create the class and the columns
-                    imgupload.saveInBackground();
-                    //-----------------------------
-
-                    //photoFile = camera.getPhotoFile();
+                    photoFile = camera.scaleImage(selectedImage, Camera.SCALE_WIDTH);
                 } catch (FileNotFoundException e) {
                     Log.e(TAG, e.getMessage());
                     e.printStackTrace();
@@ -268,7 +261,7 @@ public class ListingFormFragment extends Fragment {
         bMap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         byte[] image = stream.toByteArray();
 
-        file = new ParseFile("androidbegin.png", image);
+        file = new ParseFile(image);
         file.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {

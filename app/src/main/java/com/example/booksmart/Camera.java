@@ -32,6 +32,7 @@ public class Camera {
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private static final int GET_FROM_GALLERY = 3;
     public static final int IMAGE_QUALITY = 80;
+    public static final int SCALE_WIDTH = 200;
 
     Context context;
     Activity activity;
@@ -61,7 +62,7 @@ public class Camera {
     }
 
     // Returns the File for a photo stored on disk given the fileName
-    private File getPhotoFileUri(String fileName) {
+    public File getPhotoFileUri(String fileName) {
         // Get safe storage directory for photos
         // Use `getExternalFilesDir` on Context to access package-specific directories.
         // This way, we don't need to request external read/write runtime permissions.
@@ -76,9 +77,7 @@ public class Camera {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
-    public File scaleImage(int width) throws IOException {
-        Bitmap rawTakenImage = BitmapFactory.decodeFile(photoFile.getPath());
-        // See BitmapScaler.java: https://gist.github.com/nesquena/3885707fd3773c09f1bb
+    public File scaleImage(Bitmap rawTakenImage, int width) throws IOException {
         Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(rawTakenImage, width);
         // Configure byte output stream
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
