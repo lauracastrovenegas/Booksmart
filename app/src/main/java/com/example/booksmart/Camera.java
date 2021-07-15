@@ -3,6 +3,8 @@ package com.example.booksmart;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -12,9 +14,13 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 
+import com.example.booksmart.helpers.BitmapScaler;
 import com.parse.ParseUser;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.LocalDate;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -25,6 +31,7 @@ public class Camera {
 
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private static final int GET_FROM_GALLERY = 3;
+    public static final int IMAGE_QUALITY = 80;
 
     Context context;
     Activity activity;
@@ -67,6 +74,29 @@ public class Camera {
 
         // Return the file target for the photo based on filename
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
+    }
+
+    public File scaleImage(int width) throws IOException {
+        Bitmap rawTakenImage = BitmapFactory.decodeFile(photoFile.getPath());
+        // See BitmapScaler.java: https://gist.github.com/nesquena/3885707fd3773c09f1bb
+        Bitmap resizedBitmap = BitmapScaler.scaleToFitWidth(rawTakenImage, width);
+        // Configure byte output stream
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        // Compress the image further
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, IMAGE_QUALITY, bytes);
+        // Create a new file for the resized bitmap (`getPhotoFileUri` defined above)
+        File resizedFile = getPhotoFileUri(photoFileName + "_resized");
+        try {
+            resizedFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        FileOutputStream fos = new FileOutputStream(resizedFile);
+        // Write the bytes of the bitmap to file
+        fos.write(bytes.toByteArray());
+        fos.close();
+
+        return resizedFile;
     }
 
     public File getPhotoFile(){
