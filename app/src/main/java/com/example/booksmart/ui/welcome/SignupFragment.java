@@ -80,7 +80,7 @@ public class SignupFragment extends Fragment {
         btnSignUp = view.findViewById(R.id.btnCreateAccount);
 
         camera = new Camera(getContext(), getActivity());
-        photoFileName = ParseUser.getCurrentUser().getUsername() + LocalDate.now().toString() + PHOTO_NAME_SUFFIX;
+        photoFileName = PHOTO_NAME_SUFFIX;
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override

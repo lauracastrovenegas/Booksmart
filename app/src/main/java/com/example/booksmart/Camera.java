@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 
 import com.parse.ParseUser;
@@ -15,6 +17,7 @@ import com.parse.ParseUser;
 import java.io.File;
 import java.time.LocalDate;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class Camera {
 
     public static final String TAG = "camera";
@@ -26,7 +29,7 @@ public class Camera {
     Context context;
     Activity activity;
     File photoFile;
-    String photoFileName = ParseUser.getCurrentUser().getUsername() + LocalDate.now().toString();
+    String photoFileName = LocalDate.now().toString();
 
     public Camera(Context context, Activity activity){
         this.context = context;
