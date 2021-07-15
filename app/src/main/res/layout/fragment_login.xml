@@ -1,14 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ui.welcome.LoginFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ImageView
+        android:id="@+id/ivLoginBack"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="@dimen/activity_horizontal_margin"
+        android:src="?attr/actionModeCloseDrawable"
+        app:tint="@color/orange_500" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_below="@+id/ivLoginBack"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingBottom="20dp">
 
-</FrameLayout>
+        <include
+            android:id="@+id/login_fragment_logo"
+            layout="@layout/booksmart_logo_orange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp" />
+
+        <TextView
+            android:id="@+id/tvLoginTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/etLoginUsername"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/work_sans"
+            android:gravity="center"
+            android:text="@string/welcome_back"
+            android:textColor="@color/orange_500"
+            android:textSize="@dimen/font_size_heading" />
+
+        <EditText
+            android:id="@+id/etLoginUsername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/etLoginPassword"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/orange_500"
+            android:fontFamily="@font/work_sans"
+            android:hint="@string/signup_username"
+            android:importantForAutofill="no"
+            android:inputType="textShortMessage|text"
+            android:textColor="@color/orange_500"
+            android:textColorHint="@color/orange_500"
+            android:textSize="@dimen/font_size_medium" />
+
+        <EditText
+            android:id="@+id/etLoginPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:backgroundTint="@color/orange_500"
+            android:fontFamily="@font/work_sans"
+            android:hint="@string/signup_password"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:textColor="@color/orange_500"
+            android:textColorHint="@color/orange_500"
+            android:textSize="@dimen/font_size_medium" />
+
+        <Button
+            android:id="@+id/btnSignIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etLoginPassword"
+            android:layout_alignParentStart="false"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/orange_500"
+            android:fontFamily="@font/work_sans"
+            android:text="@string/signin"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_large"
+            app:cornerRadius="@dimen/button_corner_radius" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -24,6 +24,8 @@
     <string name="signup_password">Password</string>
     <string name="upload_profile_image">Upload a profile photo</string>
 
+    <string name="welcome_back">Welcome back!</string>
+
     <!-- Button Text -->
     <string name="select_photo">Select Photo</string>
     <string name="capture_photo">Capture Photo</string>
@@ -31,6 +33,7 @@
     <string name="message_seller">Message Seller</string>
     <string name="login">Log in</string>
     <string name="signup">Sign Up</string>
+    <string name="signin">Sign in</string>
     <string name="create_account">Create Account</string>
 
     <!-- Placeholder Strings -->
