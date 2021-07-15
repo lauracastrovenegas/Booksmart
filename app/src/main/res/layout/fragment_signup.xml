@@ -106,7 +106,7 @@
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/work_sans"
                 android:hint="@string/signup_username"
-                android:inputType="textShortMessage|text"
+                android:inputType="text|textNoSuggestions"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:textSize="@dimen/font_size_medium" />

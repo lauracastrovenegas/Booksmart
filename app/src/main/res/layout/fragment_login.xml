@@ -56,7 +56,7 @@
             android:fontFamily="@font/work_sans"
             android:hint="@string/signup_username"
             android:importantForAutofill="no"
-            android:inputType="textShortMessage|text"
+            android:inputType="text|textNoSuggestions"
             android:textColor="@color/orange_500"
             android:textColorHint="@color/orange_500"
             android:textSize="@dimen/font_size_medium" />
