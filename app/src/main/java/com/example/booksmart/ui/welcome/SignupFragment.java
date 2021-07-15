@@ -55,7 +55,6 @@ public class SignupFragment extends Fragment {
     public static final String SCHOOL_KEY = "name";
     public static final String IMAGE_KEY = "image";
     private static final String SIGN_UP_FAILURE = "Unable to create account for user!";
-    public static final int SCALE_WIDTH = 200;
     private static final String ERROR_SAVING_IMAGE = "Could not save image to parse";
 
     ImageView ivBack;
@@ -171,8 +170,8 @@ public class SignupFragment extends Fragment {
             if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) { // User took image
                 //selectedImage = BitmapFactory.decodeFile(camera.getPhotoFile().getAbsolutePath());
                 try {
-                    photoFile = camera.scaleImage(SCALE_WIDTH);
-                    selectedImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                    selectedImage = BitmapFactory.decodeFile(camera.getPhotoFile().getAbsolutePath());
+                    photoFile = camera.scaleImage(selectedImage, Camera.SCALE_WIDTH);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
