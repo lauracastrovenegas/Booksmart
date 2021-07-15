@@ -61,28 +61,10 @@ public class LoginFragment extends Fragment {
     }
 
     private void loginUser(String username, String password) {
-        ParseUser.logInInBackground(username, password, new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException e) {
-                if (e != null){
-                    // TODO Better error handling
-                    Log.e(TAG, "Issue with login", e);
-                    return;
-                }
-
-                goMainActivity();
-                Toast.makeText(getContext(), "Success!", Toast.LENGTH_SHORT).show();
-            }
-        });
+        ((WelcomeActivity) getActivity()).loginUser(username, password);
     }
 
     public void goWelcomeFragment(){
         ((WelcomeActivity)getActivity()).replaceFragment(new WelcomeFragment());
-    }
-
-    public void goMainActivity(){
-        Intent intent = new Intent(getContext(), MainActivity.class);
-        getActivity().finish();
-        startActivity(intent);
     }
 }
