@@ -61,7 +61,7 @@
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/work_sans"
                 android:hint="@string/signup_name"
-                android:inputType="textPersonName"
+                android:inputType="textPersonName|textCapWords"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:textSize="@dimen/font_size_medium" />
@@ -76,7 +76,7 @@
                 android:backgroundTint="@color/white"
                 android:fontFamily="@font/work_sans"
                 android:hint="@string/signup_school"
-                android:inputType="textPersonName"
+                android:inputType="textPersonName|textCapWords"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:textSize="@dimen/font_size_medium" />
