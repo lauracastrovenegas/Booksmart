@@ -53,10 +53,13 @@ public class SignupFragment extends Fragment {
     public static final int IMAGE_PREVIEW_DIMENSION = 400;
     public static final String PHOTO_NAME_SUFFIX = "_profile_photo.jpg";
     public static final String NAME_KEY = "name";
-    public static final String SCHOOL_KEY = "name";
+    public static final String SCHOOL_KEY = "school";
     private static final String SIGN_UP_FAILURE = "Unable to create account for user!";
     private static final String ERROR_SAVING_IMAGE = "Could not save image to parse";
-    public static final String LOGIN_FAILURE = "Unable to login. Please try again.";
+    public static final String LOGIN_FAILURE = "Unable to login. ";
+    public static final String EMPTY_FIELDS = "Oops, you forgot to fill in some fields!";
+    private static final String USERNAME_TAKEN_MSG = "Sorry, that username is already taken.";
+    public static final String EMAIL_TAKEN_MSG = "An account already exists for that email.";
 
     ImageView ivBack;
     EditText etName;
@@ -72,7 +75,6 @@ public class SignupFragment extends Fragment {
     Bitmap selectedImage;
     String photoFileName;
     File photoFile;
-    User user;
     ProgressBar pb;
 
     public SignupFragment() {}
@@ -130,8 +132,8 @@ public class SignupFragment extends Fragment {
     }
 
     private void saveImageToParse(){
+        pb.setVisibility(View.VISIBLE);
         if (photoFile != null) {
-            pb.setVisibility(View.VISIBLE);
             ParseFile photo = new ParseFile(photoFile);
             photo.saveInBackground(new SaveCallback() {
                 @Override
@@ -149,26 +151,47 @@ public class SignupFragment extends Fragment {
     }
 
     private void signUpUser(ParseFile savedImage) {
-        user = new User();
-        user.setUsername(etUsername.getText().toString());
-        user.setPassword(etPassword.getText().toString());
-        user.setEmail(etEmail.getText().toString());
-        user.put(NAME_KEY, etName.getText().toString());
-        user.put(SCHOOL_KEY, etSchool.getText().toString());
-        if (savedImage != null){
-            user.setImage(savedImage);
-        }
+        String username = etUsername.getText().toString();
+        String password = etPassword.getText().toString();
+        String email = etEmail.getText().toString();
+        String name = etName.getText().toString();
+        String school = etSchool.getText().toString();
 
-        user.signUpInBackground(new SignUpCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null){
-                    Log.e(TAG, SIGN_UP_FAILURE, e);
-                } else {
-                    loginUser(etUsername.getText().toString(), etPassword.getText().toString());
-                }
+        if (isAnyStringNullOrEmpty(username, password, name, email, school)) {
+            pb.setVisibility(View.INVISIBLE);
+            Toast.makeText(getContext(), EMPTY_FIELDS, Toast.LENGTH_SHORT).show();
+        } else {
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(password);
+            user.setEmail(email);
+            user.put(NAME_KEY, name);
+            user.put(SCHOOL_KEY, school);
+            if (savedImage != null) {
+                user.setImage(savedImage);
             }
-        });
+
+            user.signUpInBackground(new SignUpCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        pb.setVisibility(View.INVISIBLE);
+                        switch (e.getCode()){
+                            case ParseException.USERNAME_TAKEN:
+                                Toast.makeText(getContext(), USERNAME_TAKEN_MSG, Toast.LENGTH_SHORT).show();
+                                break;
+                            case ParseException.EMAIL_TAKEN:
+                                Toast.makeText(getContext(), EMAIL_TAKEN_MSG, Toast.LENGTH_SHORT).show();
+                                break;
+                            default:
+                                break;
+                        }
+                    } else {
+                        loginUser(username, password);
+                    }
+                }
+            });
+        }
     }
 
     private void loginUser(String username, String password){
@@ -176,7 +199,7 @@ public class SignupFragment extends Fragment {
             @Override
             public void done(ParseUser user, ParseException e) {
                 if (e != null){
-                    Toast.makeText(getContext(), LOGIN_FAILURE, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), LOGIN_FAILURE + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
                 ((WelcomeActivity) getActivity()).goMainActivity();
@@ -234,5 +257,12 @@ public class SignupFragment extends Fragment {
         transaction.replace(R.id.placeholder_activity_welcome, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    public static boolean isAnyStringNullOrEmpty(String... strings) {
+        for (String s : strings)
+            if (s == null || s.isEmpty())
+                return true;
+        return false;
     }
 }
