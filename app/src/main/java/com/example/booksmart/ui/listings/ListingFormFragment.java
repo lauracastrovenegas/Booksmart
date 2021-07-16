@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.booksmart.BuildConfig;
@@ -85,6 +86,7 @@ public class ListingFormFragment extends Fragment {
     String price;
     String course;
     ParseUser currentUser;
+    ProgressBar pb;
 
     public ListingFormFragment() {}
 
@@ -104,6 +106,7 @@ public class ListingFormFragment extends Fragment {
         btnPost = view.findViewById(R.id.btnListingPost);
         ivCloseForm = view.findViewById(R.id.ivPostClose);
         ivImage = view.findViewById(R.id.ivListingImagePreview);
+        pb = view.findViewById(R.id.pbLoading);
 
         currentUser = ParseUser.getCurrentUser();
         camera = new Camera(getContext(), getActivity());
@@ -165,6 +168,8 @@ public class ListingFormFragment extends Fragment {
     }
 
     private void saveImageToParse(){
+        pb.setVisibility(ProgressBar.VISIBLE);
+
         ParseFile photo = new ParseFile(photoFile);
         photo.saveInBackground(new SaveCallback() {
             @Override
@@ -200,6 +205,7 @@ public class ListingFormFragment extends Fragment {
                 etCourse.setText(BLANK);
                 etPrice.setText(BLANK);
                 ivImage.setImageResource(0);
+                pb.setVisibility(ProgressBar.INVISIBLE);
                 goListingTimeline();
             }
         });
