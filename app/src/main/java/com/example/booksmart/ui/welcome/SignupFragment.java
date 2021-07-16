@@ -130,18 +130,22 @@ public class SignupFragment extends Fragment {
     }
 
     private void saveImageToParse(){
-        pb.setVisibility(View.VISIBLE);
-        ParseFile photo = new ParseFile(photoFile);
-        photo.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null){
-                    Log.e(TAG, ERROR_SAVING_IMAGE, e);
-                } else {
-                    signUpUser(photo);
+        if (photoFile != null) {
+            pb.setVisibility(View.VISIBLE);
+            ParseFile photo = new ParseFile(photoFile);
+            photo.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        Log.e(TAG, ERROR_SAVING_IMAGE, e);
+                    } else {
+                        signUpUser(photo);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            signUpUser(null);
+        }
     }
 
     private void signUpUser(ParseFile savedImage) {
@@ -151,7 +155,9 @@ public class SignupFragment extends Fragment {
         user.setEmail(etEmail.getText().toString());
         user.put(NAME_KEY, etName.getText().toString());
         user.put(SCHOOL_KEY, etSchool.getText().toString());
-        user.setImage(savedImage);
+        if (savedImage != null){
+            user.setImage(savedImage);
+        }
 
         user.signUpInBackground(new SignUpCallback() {
             @Override
