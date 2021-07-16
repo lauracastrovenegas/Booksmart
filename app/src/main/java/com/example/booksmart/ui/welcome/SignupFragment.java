@@ -29,6 +29,7 @@ import com.example.booksmart.R;
 import com.example.booksmart.WelcomeActivity;
 import com.example.booksmart.models.User;
 import com.example.booksmart.ui.listings.ListingsFragment;
+import com.parse.LogInCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -50,13 +51,12 @@ public class SignupFragment extends Fragment {
     private static final int GET_FROM_GALLERY = 3;
     public static final int RESULT_OK = -1;
     public static final int IMAGE_PREVIEW_DIMENSION = 400;
-    public static final String DATA_KEY = "data";
     public static final String PHOTO_NAME_SUFFIX = "_profile_photo.jpg";
     public static final String NAME_KEY = "name";
     public static final String SCHOOL_KEY = "name";
-    public static final String IMAGE_KEY = "image";
     private static final String SIGN_UP_FAILURE = "Unable to create account for user!";
     private static final String ERROR_SAVING_IMAGE = "Could not save image to parse";
+    public static final String LOGIN_FAILURE = "Unable to login. Please try again.";
 
     ImageView ivBack;
     EditText etName;
@@ -159,9 +159,22 @@ public class SignupFragment extends Fragment {
                 if (e != null){
                     Log.e(TAG, SIGN_UP_FAILURE, e);
                 } else {
-                    pb.setVisibility(View.VISIBLE);
-                    ((WelcomeActivity) getActivity()).loginUser(etUsername.getText().toString(), etPassword.getText().toString());
+                    loginUser(etUsername.getText().toString(), etPassword.getText().toString());
                 }
+            }
+        });
+    }
+
+    private void loginUser(String username, String password){
+        ParseUser.logInInBackground(username, password, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if (e != null){
+                    Toast.makeText(getContext(), LOGIN_FAILURE, Toast.LENGTH_SHORT).show();
+                }
+
+                ((WelcomeActivity) getActivity()).goMainActivity();
+                pb.setVisibility(View.INVISIBLE);
             }
         });
     }
