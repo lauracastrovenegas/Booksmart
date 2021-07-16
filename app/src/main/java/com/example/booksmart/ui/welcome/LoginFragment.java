@@ -73,10 +73,10 @@ public class LoginFragment extends Fragment {
     }
 
     private void loginUser(String username, String password) {
-        if (username.equals(EMPTY_STRING)){
+        if (username.isEmpty() || username == null){
             pb.setVisibility(View.INVISIBLE);
             Toast.makeText(getContext(), NO_USERNAME_MSG, Toast.LENGTH_SHORT).show();
-        } else if (password.equals(EMPTY_STRING)){
+        } else if (password.isEmpty() || password == null){
             pb.setVisibility(View.INVISIBLE);
             Toast.makeText(getContext(), NO_PASSWORD_MSG, Toast.LENGTH_SHORT).show();
         } else {
