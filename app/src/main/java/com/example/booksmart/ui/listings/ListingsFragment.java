@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,6 +46,7 @@ public class ListingsFragment extends Fragment {
     ListingAdapter adapter;
     GridLayoutManager gridLayoutManager;
     FloatingActionButton btnCompose;
+    ProgressBar pb;
 
     private int skip;
 
@@ -59,6 +61,10 @@ public class ListingsFragment extends Fragment {
         adapter = new ListingAdapter(getContext(), listings);
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_SPAN);
         rvListings = view.findViewById(R.id.rvListing);
+        pb = view.findViewById(R.id.pbLoadingListings);
+
+        rvListings.setVisibility(View.GONE);
+        pb.setVisibility(View.VISIBLE);
 
         rvListings.setLayoutManager(gridLayoutManager);
         rvListings.setAdapter(adapter);
@@ -129,11 +135,15 @@ public class ListingsFragment extends Fragment {
                 listings.addAll(allListings);
                 adapter.notifyDataSetChanged();
 
+                rvListings.setVisibility(View.VISIBLE);
+                pb.setVisibility(View.GONE);
+
                 Log.d(TAG, "Size: " + String.valueOf(listings.size()));
 
                 skip = listings.size() - 1;
 
                 swipeContainer.setRefreshing(false);
+                pb.setVisibility(View.INVISIBLE);
             }
         });
     }
