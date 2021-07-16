@@ -11,59 +11,86 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
         android:layout_marginVertical="@dimen/activity_vertical_margin">
+
+        <ProgressBar
+            android:id="@+id/pbListingDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/purple_500"
+            android:indeterminateTintMode="src_atop"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"
+            tools:visibility="visible"/>
+
+        <ImageView
+            android:id="@+id/ivClose"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:src="?attr/actionModeCloseDrawable"
+            app:tint="@color/purple_500"/>
 
         <ImageView
             android:id="@+id/ivListingImageDetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ivClose"
-            android:layout_marginTop="10dp"
-            tools:srcCompat="@tools:sample/avatars" />
-
-        <TextView
-            android:id="@+id/tvListingTitleDetail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ivListingUserDetail"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/work_sans"
-            android:textColor="@color/black"
-            android:textSize="@dimen/font_size_heading"
-            tools:text="@string/title_placeholder" />
-
-        <TextView
-            android:id="@+id/tvListingPriceDetail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ivListingUserDetail"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
-            android:fontFamily="@font/work_sans"
-            android:textColor="@color/black"
-            android:textSize="@dimen/font_size_price"
-            tools:text="@string/price_placeholder" />
+            android:layout_marginTop="11dp"
+            android:layout_marginEnd="0dp"
+            tools:src="@drawable/image_placeholder" />
 
-        <ImageView
-            android:id="@+id/ivListingUserDetail"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_below="@+id/ivListingImageDetail"
-            android:layout_marginTop="20dp"
-            tools:srcCompat="@drawable/ic_dashboard_black_24dp" />
-
-        <TextView
-            android:id="@+id/tvListingUserDetail"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/ivListingImageDetail"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="22dp"
-            android:layout_toEndOf="@+id/ivListingUserDetail"
-            android:fontFamily="@font/work_sans"
-            android:textSize="@dimen/font_size_small"
-            tools:text="@string/username_placeholder" />
+            android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="0dp">
+
+            <TextView
+                android:id="@+id/tvListingTitleDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ivListingUserDetail"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/work_sans"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_heading"
+                tools:text="@string/title_placeholder" />
+
+            <TextView
+                android:id="@+id/tvListingPriceDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ivListingUserDetail"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/work_sans"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_price"
+                tools:text="@string/price_placeholder" />
+
+            <ImageView
+                android:id="@+id/ivListingUserDetail"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="20dp"
+                tools:srcCompat="@drawable/ic_dashboard_black_24dp" />
+
+            <TextView
+                android:id="@+id/tvListingUserDetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="22dp"
+                android:layout_toEndOf="@+id/ivListingUserDetail"
+                android:fontFamily="@font/work_sans"
+                android:textSize="@dimen/font_size_small"
+                tools:text="@string/username_placeholder" />
 
             <Button
                 android:id="@+id/btnListingCourse"
@@ -72,22 +99,22 @@
                 android:layout_below="@+id/tvListingTitleDetail"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/roundstyle_button"
                 android:fontFamily="@font/work_sans"
                 android:textSize="@dimen/font_size_medium"
-                android:background="@drawable/roundstyle_button"
                 tools:text="@string/course_name_placeholder" />
 
-        <TextView
-            android:id="@+id/tvListingDescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/btnListingCourse"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/work_sans"
-            android:textSize="@dimen/font_size_medium"
-            tools:text="@string/long_text_placeholder" />
+            <TextView
+                android:id="@+id/tvListingDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnListingCourse"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/work_sans"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_medium"
+                tools:text="@string/long_text_placeholder" />
 
             <Button
                 android:id="@+id/btnMessageSeller"
@@ -99,18 +126,11 @@
                 android:background="@drawable/roundstyle_button"
                 android:backgroundTint="@color/orange_500"
                 android:fontFamily="@font/work_sans"
-                android:textSize="@dimen/font_size_large"
                 android:text="@string/message_seller"
-                android:textAllCaps="false"/>
+                android:textAllCaps="false"
+                android:textSize="@dimen/font_size_large" />
 
-        <ImageView
-            android:id="@+id/ivClose"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:src="?attr/actionModeCloseDrawable"
-            app:tint="@color/purple_500"/>
+        </RelativeLayout>
 
     </RelativeLayout>
 

@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.booksmart.R;
+import com.example.booksmart.helpers.DeviceDimensionsHelper;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -43,6 +45,7 @@ public class ListingDetailFragment extends Fragment {
     Button btnCourse;
     TextView tvDescription;
     Button btnMessageSeller;
+    ProgressBar progressBar;
 
     public ListingDetailFragment() {}
 
@@ -60,6 +63,11 @@ public class ListingDetailFragment extends Fragment {
         tvDescription = itemView.findViewById(R.id.tvListingDescription);
         btnMessageSeller = itemView.findViewById(R.id.btnMessageSeller);
         ivClose = itemView.findViewById(R.id.ivClose);
+        progressBar = itemView.findViewById(R.id.pbListingDetail);
+
+        btnCourse.setVisibility(View.GONE);
+        btnMessageSeller.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
@@ -97,18 +105,14 @@ public class ListingDetailFragment extends Fragment {
                     parseException.printStackTrace();
                 }
 
-                tvTitle.setText(listing.getString(Listing.KEY_TITLE));
-                tvPrice.setText("$" + String.valueOf(listing.getInt(Listing.KEY_PRICE)));
-                tvUserUsername.setText(listing.getParseUser(Listing.KEY_USER).getUsername());
-                btnCourse.setText(listing.getString(Listing.KEY_COURSE));
-                tvDescription.setText(listing.getString(Listing.KEY_DESCRIPTION));
-
                 ParseFile image = listing.getParseFile(Listing.KEY_IMAGE);
                 if (image != null){
+                    int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getContext());
+
                     Glide.with(getContext())
                             .load(image.getUrl())
-                            .override(500,500)
-                            .transform(new MultiTransformation(new CenterCrop(), new RoundedCorners(50)))
+                            .override(screenWidth,800)
+                            .centerCrop()
                             .into(ivImage);
                 }
 
@@ -119,6 +123,17 @@ public class ListingDetailFragment extends Fragment {
                             .circleCrop()
                             .into(ivUserProfileImage);
                 }
+
+                tvTitle.setText(listing.getString(Listing.KEY_TITLE));
+                tvPrice.setText("$" + String.valueOf(listing.getInt(Listing.KEY_PRICE)));
+                tvUserUsername.setText(listing.getParseUser(Listing.KEY_USER).getUsername());
+                btnCourse.setText(listing.getString(Listing.KEY_COURSE));
+                tvDescription.setText(listing.getString(Listing.KEY_DESCRIPTION));
+
+                btnCourse.setVisibility(View.VISIBLE);
+                btnMessageSeller.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+
             } else {
                 Log.e(TAG, FAIL_MSG, e);
                 Toast.makeText(getContext(), FAIL_MSG, Toast.LENGTH_SHORT).show();
