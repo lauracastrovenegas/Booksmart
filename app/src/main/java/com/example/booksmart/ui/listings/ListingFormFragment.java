@@ -54,7 +54,7 @@ public class ListingFormFragment extends Fragment {
 
     public static final String TAG = "ListingFragmentForm";
     public static final String EMPTY_FIELD = "All fields must be complete!";
-    public static final String NO_IMAGE = "There is no image!";
+    public static final String NO_IMAGE = "Please include an image in your listing!";
     public static final String SAVING_ERROR = "Error while saving";
     public static final String SUCCESS_MSG = "Success!";
     public static final String FAILURE_MSG = "Failure: ";
@@ -63,9 +63,8 @@ public class ListingFormFragment extends Fragment {
     private static final int GET_FROM_GALLERY = 3;
     public static final int RESULT_OK = -1;
     public static final int IMAGE_PREVIEW_DIMENSION = 400;
-    public static final String DATA_KEY = "data";
     public static final String PHOTO_NAME_SUFFIX = "_photo.jpg";
-    private static final String ERROR_SAVING_IMAGE = "Could not save image to parse";
+    private static final String ERROR_SAVING_IMAGE = "Could not save image uploaded. Please try again!";
     public static final String BLANK = "";
 
     public String photoFileName;
@@ -175,7 +174,9 @@ public class ListingFormFragment extends Fragment {
             @Override
             public void done(ParseException e) {
                 if (e != null){
-                    Log.e(TAG, ERROR_SAVING_IMAGE, e);
+                    pb.setVisibility(ProgressBar.INVISIBLE);
+                    Toast.makeText(getContext(), ERROR_SAVING_IMAGE, Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, e.getMessage(), e);
                 } else {
                     saveListing(title, description, price, course, photo, currentUser);
                 }
