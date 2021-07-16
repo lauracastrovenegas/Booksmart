@@ -92,6 +92,19 @@
             android:textSize="@dimen/font_size_large"
             app:cornerRadius="@dimen/button_corner_radius" />
 
+        <ProgressBar
+            android:id="@+id/pbLoadingLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/etLoginPassword"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_toEndOf="@+id/btnSignIn"
+            android:visibility="invisible"
+            android:indeterminate="true"
+            android:indeterminateTintMode="src_atop"
+            android:indeterminateTint="@color/orange_500"/>
+
     </RelativeLayout>
 
 </RelativeLayout>

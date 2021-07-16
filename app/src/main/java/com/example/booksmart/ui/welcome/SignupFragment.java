@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.booksmart.Camera;
@@ -72,6 +73,7 @@ public class SignupFragment extends Fragment {
     String photoFileName;
     File photoFile;
     User user;
+    ProgressBar pb;
 
     public SignupFragment() {}
 
@@ -91,6 +93,7 @@ public class SignupFragment extends Fragment {
         btnCapturePhoto = view.findViewById(R.id.btnSignupCapture);
         ivProfilePhoto = view.findViewById(R.id.ivProfileImagePreview);
         btnSignUp = view.findViewById(R.id.btnCreateAccount);
+        pb = view.findViewById(R.id.pbLoadingSignup);
 
         camera = new Camera(getContext(), getActivity());
         photoFileName = PHOTO_NAME_SUFFIX;
@@ -127,6 +130,7 @@ public class SignupFragment extends Fragment {
     }
 
     private void saveImageToParse(){
+        pb.setVisibility(View.VISIBLE);
         ParseFile photo = new ParseFile(photoFile);
         photo.saveInBackground(new SaveCallback() {
             @Override
@@ -155,6 +159,7 @@ public class SignupFragment extends Fragment {
                 if (e != null){
                     Log.e(TAG, SIGN_UP_FAILURE, e);
                 } else {
+                    pb.setVisibility(View.VISIBLE);
                     ((WelcomeActivity) getActivity()).loginUser(etUsername.getText().toString(), etPassword.getText().toString());
                 }
             }

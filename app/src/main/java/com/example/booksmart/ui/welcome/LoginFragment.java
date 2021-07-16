@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.booksmart.MainActivity;
@@ -29,6 +30,7 @@ public class LoginFragment extends Fragment {
     EditText etUsername;
     EditText etPassword;
     Button btnSignin;
+    ProgressBar pb;
 
     public LoginFragment() {}
 
@@ -41,6 +43,7 @@ public class LoginFragment extends Fragment {
         etUsername = view.findViewById(R.id.etLoginUsername);
         etPassword = view.findViewById(R.id.etLoginPassword);
         btnSignin = view.findViewById(R.id.btnSignIn);
+        pb = view.findViewById(R.id.pbLoadingLogin);
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +55,7 @@ public class LoginFragment extends Fragment {
         btnSignin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pb.setVisibility(View.VISIBLE);
                 String username = etUsername.getText().toString();
                 String password = etPassword.getText().toString();
                 loginUser(username, password);
