@@ -1,21 +1,15 @@
 package com.example.booksmart.ui.listings;
 
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,28 +21,18 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.booksmart.BuildConfig;
 import com.example.booksmart.Camera;
 import com.example.booksmart.R;
-import com.example.booksmart.helpers.BitmapScaler;
 import com.example.booksmart.models.Listing;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class ListingFormFragment extends Fragment {
 
@@ -56,16 +40,14 @@ public class ListingFormFragment extends Fragment {
     public static final String EMPTY_FIELD = "All fields must be complete!";
     public static final String NO_IMAGE = "Please include an image in your listing!";
     public static final String SAVING_ERROR = "Error while saving";
-    public static final String SUCCESS_MSG = "Success!";
-    public static final String FAILURE_MSG = "Failure: ";
     public static final String CAMERA_FAILURE = "Picture wasn't taken!";
+    public static final String PHOTO_NAME_SUFFIX = "_photo.jpg";
+    private static final String ERROR_SAVING_IMAGE = "Could not save image uploaded. Please try again!";
+    public static final String BLANK = "";
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
     private static final int GET_FROM_GALLERY = 3;
     public static final int RESULT_OK = -1;
     public static final int IMAGE_PREVIEW_DIMENSION = 400;
-    public static final String PHOTO_NAME_SUFFIX = "_photo.jpg";
-    private static final String ERROR_SAVING_IMAGE = "Could not save image uploaded. Please try again!";
-    public static final String BLANK = "";
 
     public String photoFileName;
     EditText etTitle;
@@ -177,9 +159,10 @@ public class ListingFormFragment extends Fragment {
                     pb.setVisibility(ProgressBar.INVISIBLE);
                     Toast.makeText(getContext(), ERROR_SAVING_IMAGE, Toast.LENGTH_SHORT).show();
                     Log.e(TAG, e.getMessage(), e);
-                } else {
-                    saveListing(title, description, price, course, photo, currentUser);
+                    return;
                 }
+
+                saveListing(title, description, price, course, photo, currentUser);
             }
         });
     }

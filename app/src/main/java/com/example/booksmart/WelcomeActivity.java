@@ -6,17 +6,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.Switch;
-import android.widget.Toast;
 
-import com.example.booksmart.ui.welcome.LoginFragment;
-import com.example.booksmart.ui.welcome.SignupFragment;
 import com.example.booksmart.ui.welcome.WelcomeFragment;
-import com.parse.LogInCallback;
-import com.parse.ParseException;
 import com.parse.ParseUser;
 
 public class WelcomeActivity extends AppCompatActivity {

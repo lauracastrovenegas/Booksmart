@@ -1,7 +1,6 @@
 package com.example.booksmart.ui.listings;
 
 import android.os.Bundle;
-import android.service.controls.actions.FloatAction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,7 +88,7 @@ public class ListingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Leveraging ItemClickSupport decorator to handle clicks on items in our recyclerView
+        // Handles clicks for items in RecyclerView
         ItemClickSupport.addTo(rvListings).setOnItemClickListener(
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
@@ -128,22 +127,16 @@ public class ListingsFragment extends Fragment {
                     return;
                 }
 
-                Log.d(TAG, "queryListings(): Loaded " + String.valueOf(allListings.size()) + " Listings");
-
                 // CLEAR OUT old items before appending in the new ones for refresh
                 listings.clear();
                 listings.addAll(allListings);
                 adapter.notifyDataSetChanged();
-
-                rvListings.setVisibility(View.VISIBLE);
-                pb.setVisibility(View.GONE);
-
-                Log.d(TAG, "Size: " + String.valueOf(listings.size()));
-
                 skip = listings.size() - 1;
 
+                scrollListener.resetState();
                 swipeContainer.setRefreshing(false);
-                pb.setVisibility(View.INVISIBLE);
+                rvListings.setVisibility(View.VISIBLE);
+                pb.setVisibility(View.GONE);
             }
         });
     }
@@ -166,14 +159,8 @@ public class ListingsFragment extends Fragment {
                     return;
                 }
 
-                Log.d(TAG, "queryMoreListings(): Loaded " + String.valueOf(allListings.size()) + " Listings");
-
                 listings.addAll(allListings);
                 adapter.notifyDataSetChanged();
-                scrollListener.resetState();
-
-                Log.d(TAG, "Size: " + String.valueOf(listings.size()));
-
                 skip = listings.size() - 1;
             }
         });

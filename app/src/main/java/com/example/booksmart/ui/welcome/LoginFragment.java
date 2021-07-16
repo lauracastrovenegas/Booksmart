@@ -1,6 +1,5 @@
 package com.example.booksmart.ui.welcome;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.booksmart.MainActivity;
 import com.example.booksmart.R;
 import com.example.booksmart.WelcomeActivity;
 import com.parse.LogInCallback;
@@ -31,7 +29,6 @@ public class LoginFragment extends Fragment {
     public static final String NO_PASSWORD_MSG = "Password field is empty.";
     public static final String INVALID_LOGIN_MSG = "Invalid username/password";
     public static final String LOGIN_ISSUE_MSG = "Issue with login. Please try again.";
-    public static final String EMPTY_STRING = "";
 
     ImageView ivBack;
     EditText etUsername;
@@ -76,41 +73,42 @@ public class LoginFragment extends Fragment {
         if (username.isEmpty() || username == null){
             pb.setVisibility(View.INVISIBLE);
             Toast.makeText(getContext(), NO_USERNAME_MSG, Toast.LENGTH_SHORT).show();
-        } else if (password.isEmpty() || password == null){
+            return;
+        }
+        if (password.isEmpty() || password == null){
             pb.setVisibility(View.INVISIBLE);
             Toast.makeText(getContext(), NO_PASSWORD_MSG, Toast.LENGTH_SHORT).show();
-        } else {
-            ParseUser.logInInBackground(username, password, new LogInCallback() {
-                @Override
-                public void done(ParseUser user, ParseException e) {
-                    pb.setVisibility(View.INVISIBLE);
+            return;
+        }
 
-                    if (e != null) {
-                        switch (e.getCode()) {
-                            case ParseException.USERNAME_MISSING:
-                                Toast.makeText(getContext(), NO_USERNAME_MSG, Toast.LENGTH_SHORT).show();
-                                break;
-                            case ParseException.PASSWORD_MISSING:
-                                Toast.makeText(getContext(), NO_PASSWORD_MSG, Toast.LENGTH_SHORT).show();
-                                break;
-                            case ParseException.OBJECT_NOT_FOUND:
-                                Toast.makeText(getContext(), INVALID_LOGIN_MSG, Toast.LENGTH_SHORT).show();
-                                break;
-                            default:
-                                Toast.makeText(getContext(), LOGIN_ISSUE_MSG, Toast.LENGTH_SHORT).show();
-                                break;
-                        }
-
-                        Log.d(TAG, LOGIN_ISSUE_MSG + e.getMessage(), e);
-                        return;
+        ParseUser.logInInBackground(username, password, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                pb.setVisibility(View.INVISIBLE);
+                if (e != null) {
+                    switch (e.getCode()) {
+                        case ParseException.USERNAME_MISSING:
+                            Toast.makeText(getContext(), NO_USERNAME_MSG, Toast.LENGTH_SHORT).show();
+                            break;
+                        case ParseException.PASSWORD_MISSING:
+                            Toast.makeText(getContext(), NO_PASSWORD_MSG, Toast.LENGTH_SHORT).show();
+                            break;
+                        case ParseException.OBJECT_NOT_FOUND:
+                            Toast.makeText(getContext(), INVALID_LOGIN_MSG, Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            Toast.makeText(getContext(), LOGIN_ISSUE_MSG, Toast.LENGTH_SHORT).show();
+                            break;
                     }
 
-                    ((WelcomeActivity) getActivity()).goMainActivity();
-
-                    Toast.makeText(getContext(), SUCCESS_MSG, Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, LOGIN_ISSUE_MSG + e.getMessage(), e);
+                    return;
                 }
-            });
-        }
+
+                ((WelcomeActivity) getActivity()).goMainActivity();
+                Toast.makeText(getContext(), SUCCESS_MSG, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void goWelcomeFragment(){

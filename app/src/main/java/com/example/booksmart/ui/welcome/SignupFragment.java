@@ -3,8 +3,6 @@ package com.example.booksmart.ui.welcome;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -14,7 +12,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.MediaStore;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +25,7 @@ import com.example.booksmart.Camera;
 import com.example.booksmart.R;
 import com.example.booksmart.WelcomeActivity;
 import com.example.booksmart.models.User;
-import com.example.booksmart.ui.listings.ListingsFragment;
 import com.parse.LogInCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -40,8 +35,6 @@ import com.parse.SignUpCallback;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Calendar;
 
 public class SignupFragment extends Fragment {
 
@@ -143,9 +136,10 @@ public class SignupFragment extends Fragment {
         if (isAnyStringNullOrEmpty(username, password, name, email, school)) {
             pb.setVisibility(View.INVISIBLE);
             Toast.makeText(getContext(), EMPTY_FIELDS, Toast.LENGTH_SHORT).show();
-        } else {
-            saveImageToParse();
+            return;
         }
+
+        saveImageToParse();
     }
 
     private void saveImageToParse(){
@@ -157,9 +151,10 @@ public class SignupFragment extends Fragment {
                     if (e != null) {
                         Toast.makeText(getContext(), ERROR_SAVING_IMAGE, Toast.LENGTH_SHORT).show();
                         Log.e(TAG, ERROR_SAVING_IMAGE, e);
-                    } else {
-                        signUpUser(photo);
+                        return;
                     }
+
+                    signUpUser(photo);
                 }
             });
         } else {
@@ -198,11 +193,14 @@ public class SignupFragment extends Fragment {
                             Toast.makeText(getContext(), EMAIL_TAKEN_MSG, Toast.LENGTH_SHORT).show();
                             break;
                         default:
+                            Toast.makeText(getContext(), SIGN_UP_FAILURE,Toast.LENGTH_SHORT).show();
+                            Log.e(TAG, e.getMessage(), e);
                             break;
                     }
-                } else {
-                    loginUser(username, password);
+                    return;
                 }
+
+                loginUser(username, password);
             }
         });
     }
@@ -211,12 +209,13 @@ public class SignupFragment extends Fragment {
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
+                pb.setVisibility(View.INVISIBLE);
                 if (e != null){
                     Toast.makeText(getContext(), LOGIN_FAILURE + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 ((WelcomeActivity) getActivity()).goMainActivity();
-                pb.setVisibility(View.INVISIBLE);
             }
         });
     }

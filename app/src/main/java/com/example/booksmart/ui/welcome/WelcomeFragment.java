@@ -10,10 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.booksmart.MainActivity;
 import com.example.booksmart.R;
-import com.example.booksmart.WelcomeActivity;
-import com.example.booksmart.ui.listings.ListingsFragment;
 
 public class WelcomeFragment extends Fragment {
 

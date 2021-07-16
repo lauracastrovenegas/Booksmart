@@ -2,7 +2,6 @@ package com.example.booksmart.ui.listings;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -13,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.MultiTransformation;
@@ -26,16 +26,11 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.example.booksmart.models.Listing;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-
 public class ListingDetailFragment extends Fragment {
 
     public static final String KEY = "detail_listing";
     public static final String FAIL_MSG = "Failed to retrieve listing";
     public static final String TAG = "ListingDetailFragment";
-    private static final String DATE_FORMAT = "MMMM dd, yyyy";
 
     ParseObject listing;
     String listingId;
@@ -68,7 +63,7 @@ public class ListingDetailFragment extends Fragment {
 
         Bundle bundle = this.getArguments();
         if (bundle != null) {
-            listingId = bundle.getString(KEY); // Key
+            listingId = bundle.getString(KEY);
         }
 
         readObject(listingId);
@@ -76,15 +71,9 @@ public class ListingDetailFragment extends Fragment {
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = new ListingsFragment();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out);
-                transaction.replace(R.id.nav_host_fragment_activity_main, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                goTimeline();
             }
         });
-
 
         return itemView;
     }
@@ -96,11 +85,8 @@ public class ListingDetailFragment extends Fragment {
         query.include("createdAt");
 
         // The query will search for a ParseObject, given its objectId.
-        // When the query finishes running, it will invoke the GetCallback
-        // with either the object, or the exception thrown
         query.getInBackground(objectId, (object, e) -> {
             if (e == null) {
-
                 listing = (Listing) object;
 
                 ParseUser user = listing.getParseUser("user");
@@ -111,14 +97,6 @@ public class ListingDetailFragment extends Fragment {
                     parseException.printStackTrace();
                 }
 
-                /*Iterator<String> keys = user.keySet().iterator();
-
-                while(keys.hasNext()) {
-                    String key = keys.next();
-                    Log.i(TAG, key);
-                }*/
-
-                Log.i(TAG, user.toString());
                 tvTitle.setText(listing.getString(Listing.KEY_TITLE));
                 tvPrice.setText("$" + String.valueOf(listing.getInt(Listing.KEY_PRICE)));
                 tvUserUsername.setText(listing.getParseUser(Listing.KEY_USER).getUsername());
@@ -142,9 +120,19 @@ public class ListingDetailFragment extends Fragment {
                             .into(ivUserProfileImage);
                 }
             } else {
-                // something went wrong
                 Log.e(TAG, FAIL_MSG, e);
+                Toast.makeText(getContext(), FAIL_MSG, Toast.LENGTH_SHORT).show();
+                goTimeline();
             }
         });
+    }
+
+    private void goTimeline(){
+        Fragment fragment = new ListingsFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out);
+        transaction.replace(R.id.nav_host_fragment_activity_main, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
