@@ -200,7 +200,7 @@
                 app:cornerRadius="@dimen/button_corner_radius"/>
 
             <ProgressBar
-                android:id="@+id/pbLoading"
+                android:id="@+id/pbLoadingPost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/ivListingImagePreview"

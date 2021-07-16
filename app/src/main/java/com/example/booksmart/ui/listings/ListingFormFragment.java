@@ -106,7 +106,7 @@ public class ListingFormFragment extends Fragment {
         btnPost = view.findViewById(R.id.btnListingPost);
         ivCloseForm = view.findViewById(R.id.ivPostClose);
         ivImage = view.findViewById(R.id.ivListingImagePreview);
-        pb = view.findViewById(R.id.pbLoading);
+        pb = view.findViewById(R.id.pbLoadingPost);
 
         currentUser = ParseUser.getCurrentUser();
         camera = new Camera(getContext(), getActivity());
