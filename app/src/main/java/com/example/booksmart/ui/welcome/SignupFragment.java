@@ -55,7 +55,7 @@ public class SignupFragment extends Fragment {
     public static final String NAME_KEY = "name";
     public static final String SCHOOL_KEY = "school";
     private static final String SIGN_UP_FAILURE = "Unable to create account for user!";
-    private static final String ERROR_SAVING_IMAGE = "Could not save image to parse";
+    private static final String ERROR_SAVING_IMAGE = "Could not save image uploaded. Please try again!";
     public static final String LOGIN_FAILURE = "Unable to login. ";
     public static final String EMPTY_FIELDS = "Oops, you forgot to fill in some fields!";
     private static final String USERNAME_TAKEN_MSG = "Sorry, that username is already taken.";
@@ -124,21 +124,38 @@ public class SignupFragment extends Fragment {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveImageToParse();
+                onSignUp();
             }
         });
 
         return view;
     }
 
-    private void saveImageToParse(){
+    private void onSignUp(){
         pb.setVisibility(View.VISIBLE);
+
+        String username = etUsername.getText().toString();
+        String password = etPassword.getText().toString();
+        String email = etEmail.getText().toString();
+        String name = etName.getText().toString();
+        String school = etSchool.getText().toString();
+
+        if (isAnyStringNullOrEmpty(username, password, name, email, school)) {
+            pb.setVisibility(View.INVISIBLE);
+            Toast.makeText(getContext(), EMPTY_FIELDS, Toast.LENGTH_SHORT).show();
+        } else {
+            saveImageToParse();
+        }
+    }
+
+    private void saveImageToParse(){
         if (photoFile != null) {
             ParseFile photo = new ParseFile(photoFile);
             photo.saveInBackground(new SaveCallback() {
                 @Override
                 public void done(ParseException e) {
                     if (e != null) {
+                        Toast.makeText(getContext(), ERROR_SAVING_IMAGE, Toast.LENGTH_SHORT).show();
                         Log.e(TAG, ERROR_SAVING_IMAGE, e);
                     } else {
                         signUpUser(photo);
@@ -157,41 +174,37 @@ public class SignupFragment extends Fragment {
         String name = etName.getText().toString();
         String school = etSchool.getText().toString();
 
-        if (isAnyStringNullOrEmpty(username, password, name, email, school)) {
-            pb.setVisibility(View.INVISIBLE);
-            Toast.makeText(getContext(), EMPTY_FIELDS, Toast.LENGTH_SHORT).show();
-        } else {
-            User user = new User();
-            user.setUsername(username);
-            user.setPassword(password);
-            user.setEmail(email);
-            user.put(NAME_KEY, name);
-            user.put(SCHOOL_KEY, school);
-            if (savedImage != null) {
-                user.setImage(savedImage);
-            }
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setEmail(email);
+        user.put(NAME_KEY, name);
+        user.put(SCHOOL_KEY, school);
 
-            user.signUpInBackground(new SignUpCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        pb.setVisibility(View.INVISIBLE);
-                        switch (e.getCode()){
-                            case ParseException.USERNAME_TAKEN:
-                                Toast.makeText(getContext(), USERNAME_TAKEN_MSG, Toast.LENGTH_SHORT).show();
-                                break;
-                            case ParseException.EMAIL_TAKEN:
-                                Toast.makeText(getContext(), EMAIL_TAKEN_MSG, Toast.LENGTH_SHORT).show();
-                                break;
-                            default:
-                                break;
-                        }
-                    } else {
-                        loginUser(username, password);
-                    }
-                }
-            });
+        if (savedImage != null) {
+            user.setImage(savedImage);
         }
+
+        user.signUpInBackground(new SignUpCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    pb.setVisibility(View.INVISIBLE);
+                    switch (e.getCode()){
+                        case ParseException.USERNAME_TAKEN:
+                            Toast.makeText(getContext(), USERNAME_TAKEN_MSG, Toast.LENGTH_SHORT).show();
+                            break;
+                        case ParseException.EMAIL_TAKEN:
+                            Toast.makeText(getContext(), EMAIL_TAKEN_MSG, Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            break;
+                    }
+                } else {
+                    loginUser(username, password);
+                }
+            }
+        });
     }
 
     private void loginUser(String username, String password){
