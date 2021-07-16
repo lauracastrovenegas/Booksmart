@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.booksmart.helpers.DeviceDimensionsHelper;
 import com.example.booksmart.R;
 import com.example.booksmart.models.Listing;
@@ -85,6 +86,7 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHold
             tvUserUsername.setText(listing.getUser().getUsername());
 
             int screenWidth = DeviceDimensionsHelper.getDisplayWidth(context);
+            int placeholderUrl = R.drawable.image_placeholder;
 
             ParseFile image = listing.getImage();
             if (image != null){
@@ -100,6 +102,7 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHold
                 Glide.with(context)
                         .load(profileImage.getUrl())
                         .circleCrop()
+                        .placeholder(placeholderUrl)
                         .into(ivUserProfileImage);
             }
         }
