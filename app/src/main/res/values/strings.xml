@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BookSmart</string>
+    <string name="app_name">Booksmart</string>
     <string name="back4app_server_url">https://parseapi.back4app.com/</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_listings">Listings</string>

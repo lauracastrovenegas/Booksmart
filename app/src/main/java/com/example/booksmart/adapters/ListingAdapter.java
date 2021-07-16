@@ -86,7 +86,6 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHold
             tvUserUsername.setText(listing.getUser().getUsername());
 
             int screenWidth = DeviceDimensionsHelper.getDisplayWidth(context);
-            int placeholderUrl = R.drawable.image_placeholder;
 
             ParseFile image = listing.getImage();
             if (image != null){
@@ -102,7 +101,6 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHold
                 Glide.with(context)
                         .load(profileImage.getUrl())
                         .circleCrop()
-                        .placeholder(placeholderUrl)
                         .into(ivUserProfileImage);
             }
         }
