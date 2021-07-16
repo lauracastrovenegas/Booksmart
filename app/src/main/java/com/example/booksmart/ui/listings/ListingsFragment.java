@@ -98,6 +98,7 @@ public class ListingsFragment extends Fragment {
 
                         getFragmentManager()
                                 .beginTransaction()
+                                .setCustomAnimations(R.anim.slide_in, R.anim.slide_out_left)
                                 .replace(R.id.nav_host_fragment_activity_main, fragment)
                                 .addToBackStack(null).commit();
                     }
@@ -204,6 +205,7 @@ public class ListingsFragment extends Fragment {
 
     private void replaceFragment(Fragment fragment) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in, R.anim.slide_out_left);
         transaction.replace(R.id.nav_host_fragment_activity_main, fragment);
         transaction.addToBackStack(null);
         transaction.commit();

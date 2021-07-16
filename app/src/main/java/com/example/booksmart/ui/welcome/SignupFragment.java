@@ -72,7 +72,6 @@ public class SignupFragment extends Fragment {
     String photoFileName;
     File photoFile;
     User user;
-    ParseFile parseImage;
 
     public SignupFragment() {}
 
@@ -201,7 +200,15 @@ public class SignupFragment extends Fragment {
         image.getLayoutParams().width = width;
     }
 
-    private void goWelcomeFragment(){
-        ((WelcomeActivity) getActivity()).replaceFragment(new WelcomeFragment());
+    public void goWelcomeFragment(){
+        replaceFragment(new WelcomeFragment());
+    }
+
+    public void replaceFragment(Fragment fragment) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out);
+        transaction.replace(R.id.placeholder_activity_welcome, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -65,6 +66,14 @@ public class LoginFragment extends Fragment {
     }
 
     public void goWelcomeFragment(){
-        ((WelcomeActivity)getActivity()).replaceFragment(new WelcomeFragment());
+        replaceFragment(new WelcomeFragment());
+    }
+
+    public void replaceFragment(Fragment fragment) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out);
+        transaction.replace(R.id.placeholder_activity_welcome, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

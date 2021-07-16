@@ -48,12 +48,18 @@ public class WelcomeFragment extends Fragment {
     }
 
     private void goLoginFragment(){
-        ((WelcomeActivity) getActivity()).replaceFragment(new LoginFragment());
+        replaceFragment(new LoginFragment());
     }
 
     private void goSignupFragment(){
-        ((WelcomeActivity) getActivity()).replaceFragment(new SignupFragment());
+        replaceFragment(new SignupFragment());
     }
 
-
+    public void replaceFragment(Fragment fragment) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in, R.anim.slide_out_left);
+        transaction.replace(R.id.placeholder_activity_welcome, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 }
