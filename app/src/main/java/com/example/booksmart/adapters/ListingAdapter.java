@@ -158,12 +158,15 @@ public class ListingAdapter extends RecyclerView.Adapter {
             int screenWidth = DeviceDimensionsHelper.getDisplayWidth(context);
 
             String imageUrl = book.getImage();
-            if (imageUrl != null){
-                Glide.with(context)
-                        .load(imageUrl)
-                        .override(screenWidth/2,(screenWidth/2) - 200)
-                        .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(45, 45, 0, 0)))
-                        .into(ivImage);
+            if (!imageUrl.isEmpty()){
+                imageUrl = imageUrl.substring(0, 4) + "s" + imageUrl.substring(4);
+                if (imageUrl != null){
+                    Glide.with(context)
+                            .load(imageUrl)
+                            .override(screenWidth/2,(screenWidth/2) - 200)
+                            .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(45, 45, 0, 0)))
+                            .into(ivImage);
+                }
             }
 
             tvUserUsername.setVisibility(View.INVISIBLE);
