@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @ParseClassName("Listing")
-public class Listing extends ParseObject {
+public class Listing extends ParseObject implements Item {
 
     public static final String KEY_USER = "user";
     public static final String KEY_TITLE = "title";
@@ -98,6 +98,10 @@ public class Listing extends ParseObject {
 
     public String getCreatedAtDate(Listing listing){
         return calculateTimeAgo(listing.getCreatedAt());
+    }
+
+    public int getType(){
+        return Item.TYPE_LISTING;
     }
 
     public static String calculateTimeAgo(Date createdAt) {
