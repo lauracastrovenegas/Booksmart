@@ -111,7 +111,7 @@ public class ListingAdapter extends RecyclerView.Adapter {
             if (image != null){
                 Glide.with(context)
                         .load(image.getUrl())
-                        .override(screenWidth/2,(screenWidth/2) - 200)
+                        .override(screenWidth/2,(screenWidth/2))
                         .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(45, 45, 0, 0)))
                         .into(ivImage);
             }
@@ -160,17 +160,17 @@ public class ListingAdapter extends RecyclerView.Adapter {
             String imageUrl = book.getImage();
             if (!imageUrl.isEmpty()){
                 imageUrl = imageUrl.substring(0, 4) + "s" + imageUrl.substring(4);
-                if (imageUrl != null){
-                    Glide.with(context)
-                            .load(imageUrl)
-                            .override(screenWidth/2,(screenWidth/2) - 200)
-                            .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(45, 45, 0, 0)))
-                            .into(ivImage);
-                }
+                Glide.with(context)
+                        .load(imageUrl)
+                        .override(screenWidth/2,(screenWidth/2))
+                        .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(45, 45, 0, 0)))
+                        .into(ivImage);
+            } else {
+                ivImage.setImageResource(R.drawable.book_cover_placeholder);
             }
 
-            tvUserUsername.setVisibility(View.INVISIBLE);
-            ivUserProfileImage.setVisibility(View.INVISIBLE);
+            tvUserUsername.setText("Google Books");
+            ivUserProfileImage.setImageResource(R.drawable.google_books_logo);
         }
     }
 }
