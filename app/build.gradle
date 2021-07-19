@@ -3,11 +3,15 @@ plugins {
 }
 
 android {
+
+    def localProperties = new Properties()
+    localProperties.load(new FileInputStream(rootProject.file("apikey.properties")))
+
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.example.universitymarketplace"
+        applicationId "com.example.booksmart"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -17,6 +21,12 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "GOOGLE_API_KEY", "\"" + localProperties['GOOGLE_API_KEY'] + "\"")
+            buildConfigField("String", "APP_ID", "\"" + localProperties['APP_ID'] + "\"")
+            buildConfigField("String", "CLIENT_KEY", "\"" + localProperties['CLIENT_KEY'] + "\"")
+            buildConfigField("String", "SERVER", "\"" + localProperties['SERVER'] + "\"")
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

@@ -9,9 +9,9 @@ import com.parse.ParseObject;
 
 public class BookSmart extends Application {
 
-    public static final String APP_ID = "6vGUdLaWSp7zQlmDSGEmeUnCsoYt06MBxvhX6osT";
-    public static final String CLIENT_KEY = "KAx4fGemEK0wGFjKYkLWW9uAeqb2vAdAbF1LYxSQ";
-    private static final String SERVER = "https://parseapi.back4app.com";
+    public static final String APP_ID = BuildConfig.APP_ID;
+    public static final String CLIENT_KEY = BuildConfig.CLIENT_KEY;
+    private static final String SERVER = BuildConfig.SERVER;
 
     @Override
     public void onCreate() {
