@@ -32,7 +32,7 @@ public class ListingsFragment extends Fragment {
 
     public static final String TAG = "ListingsFragment";
     public static final int GRID_SPAN = 2;
-    public static final int LISTING_LIMIT = 20;
+    public static final int LISTING_LIMIT = 30;
     public static final String DESCENDING_ORDER_KEY = "createdAt";
     public static final String KEY_SCHOOL = "school";
     public static final String QUERY_ERROR = "Error getting listings";
@@ -127,6 +127,8 @@ public class ListingsFragment extends Fragment {
                     return;
                 }
 
+                Log.d(TAG, "queryListings()");
+
                 // CLEAR OUT old items before appending in the new ones for refresh
                 listings.clear();
                 listings.addAll(allListings);
@@ -158,6 +160,8 @@ public class ListingsFragment extends Fragment {
                     Log.e(TAG, QUERY_ERROR, e);
                     return;
                 }
+
+                Log.d(TAG, "queryMoreListings()");
 
                 listings.addAll(allListings);
                 adapter.notifyDataSetChanged();
