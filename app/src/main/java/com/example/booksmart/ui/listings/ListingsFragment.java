@@ -51,8 +51,8 @@ public class ListingsFragment extends Fragment {
     public static final String KEY_SCHOOL = "school";
     public static final String QUERY_ERROR = "Error getting listings";
     public static final String KEY = "detail_listing";
-    public static final String GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1/volumes?printType=books&maxResults=" + String.valueOf(LISTING_LIMIT) + "&q=";
-    public static final String DEFAULT_QUERY = "textbooks";
+    public static final String GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1/volumes?fields=items(id,selfLink,volumeInfo)&printType=books&maxResults=" + String.valueOf(LISTING_LIMIT) + "&q=";
+    public static final String DEFAULT_QUERY = "college+textbook";
 
     SwipeRefreshLayout swipeContainer;
     EndlessRecyclerViewScrollListener scrollListener;
