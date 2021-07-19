@@ -27,6 +27,8 @@ import com.example.booksmart.helpers.EndlessRecyclerViewScrollListener;
 import com.example.booksmart.helpers.ItemClickSupport;
 import com.example.booksmart.R;
 import com.example.booksmart.adapters.ListingAdapter;
+import com.example.booksmart.models.Book;
+import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
@@ -37,6 +39,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -51,12 +54,15 @@ public class ListingsFragment extends Fragment {
     public static final String KEY_SCHOOL = "school";
     public static final String QUERY_ERROR = "Error getting listings";
     public static final String KEY = "detail_listing";
-    public static final String GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1/volumes?fields=items(id,selfLink,volumeInfo)&printType=books&maxResults=" + String.valueOf(LISTING_LIMIT) + "&q=";
+    public static final String GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1/volumes?fields=items(id,selfLink,volumeInfo,saleInfo)&printType=books&maxResults=" + String.valueOf(LISTING_LIMIT) + "&q=";
     public static final String DEFAULT_QUERY = "college+textbook";
+    public static final String ITEMS_KEY = "items";
 
     SwipeRefreshLayout swipeContainer;
     EndlessRecyclerViewScrollListener scrollListener;
     List<Listing> listings;
+    List<Book> books;
+    List<Item> items;
     RecyclerView rvListings;
     ListingAdapter adapter;
     GridLayoutManager gridLayoutManager;
@@ -75,7 +81,9 @@ public class ListingsFragment extends Fragment {
 
         btnCompose = view.findViewById(R.id.btnAddListing);
         listings = new ArrayList<>();
-        adapter = new ListingAdapter(getContext(), listings);
+        books = new ArrayList<>();
+        items = new ArrayList<>();
+        adapter = new ListingAdapter(getContext(), items);
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_SPAN);
         rvListings = view.findViewById(R.id.rvListing);
         pb = view.findViewById(R.id.pbLoadingListings);
@@ -163,9 +171,11 @@ public class ListingsFragment extends Fragment {
 
                 // CLEAR OUT old items before appending in the new ones for refresh
                 listings.clear();
+                items.clear();
                 listings.addAll(allListings);
+                items.addAll(allListings);
                 adapter.notifyDataSetChanged();
-                skip = listings.size();
+                skip = items.size();
 
                 scrollListener.resetState();
                 swipeContainer.setRefreshing(false);
@@ -194,8 +204,9 @@ public class ListingsFragment extends Fragment {
                 Log.d(TAG, "queryMoreListings()");
 
                 listings.addAll(allListings);
+                items.addAll(allListings);
                 adapter.notifyDataSetChanged();
-                skip = listings.size();
+                skip = items.size();
             }
         });
     }
@@ -205,7 +216,18 @@ public class ListingsFragment extends Fragment {
                 new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.i(TAG, response.toString());
+                try {
+                    books.addAll(Book.fromJsonArray(response.getJSONArray(ITEMS_KEY)));
+                    items.addAll(Book.fromJsonArray(response.getJSONArray(ITEMS_KEY)));
+                    adapter.notifyDataSetChanged();
+
+                    for (int i = 0; i < books.size(); i++){
+                        Log.d(TAG, books.get(i).getTitle());
+                    }
+
+                } catch (JSONException e) {
+                    Log.e(TAG, e.getMessage(), e);
+                }
             }
         }, new Response.ErrorListener() {
             @Override
