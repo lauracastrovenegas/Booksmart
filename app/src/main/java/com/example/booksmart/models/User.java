@@ -6,7 +6,10 @@ import com.parse.ParseUser;
 
 @ParseClassName("User")
 public class User extends ParseUser {
+
+    public static final String IMAGE_KEY = "image";
+
     public void setImage(ParseFile parseFile){
-        put("image", parseFile);
+        put(IMAGE_KEY, parseFile);
     }
 }
