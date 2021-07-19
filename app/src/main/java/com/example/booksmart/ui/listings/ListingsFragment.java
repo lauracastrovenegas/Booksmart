@@ -1,6 +1,7 @@
 package com.example.booksmart.ui.listings;
 
 import android.os.Bundle;
+import android.renderscript.ScriptC;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +23,12 @@ import com.example.booksmart.adapters.ListingAdapter;
 import com.example.booksmart.models.Listing;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +53,7 @@ public class ListingsFragment extends Fragment {
     ProgressBar pb;
 
     private int skip;
+    private String currentUserSchool;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -79,7 +85,7 @@ public class ListingsFragment extends Fragment {
             }
         });
 
-        queryListings();
+        onInitialLoad();
 
         return view;
     }
@@ -111,11 +117,22 @@ public class ListingsFragment extends Fragment {
         );
     }
 
+    public void onInitialLoad(){
+        ParseUser user = ParseUser.getCurrentUser();
+
+        user.fetchInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                currentUserSchool = user.getString(KEY_SCHOOL);
+                queryListings();
+            }
+        });
+    }
+
     private void queryListings() {
         ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
         query.include(Listing.KEY_USER);
-        // TODO: Add following when user login set up:
-        //  query.whereEqualTo(KEY_SCHOOL, ParseUser.getCurrentUser().get("school"));
+        query.whereEqualTo(KEY_SCHOOL, currentUserSchool);
         query.setLimit(LISTING_LIMIT);
         query.addDescendingOrder(DESCENDING_ORDER_KEY);
         query.findInBackground(new FindCallback<Listing>() {
@@ -133,7 +150,7 @@ public class ListingsFragment extends Fragment {
                 listings.clear();
                 listings.addAll(allListings);
                 adapter.notifyDataSetChanged();
-                skip = listings.size() - 1;
+                skip = listings.size();
 
                 scrollListener.resetState();
                 swipeContainer.setRefreshing(false);
@@ -143,12 +160,10 @@ public class ListingsFragment extends Fragment {
         });
     }
 
-    // TODO fix double query at beginning
     private void queryMoreListings(){
         ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
         query.include(Listing.KEY_USER);
-        // TODO: Add following when user login set up:
-        //  query.whereEqualTo(KEY_SCHOOL, ParseUser.getCurrentUser().get("school"));
+        query.whereEqualTo(KEY_SCHOOL, currentUserSchool);
         query.setSkip(skip);
         query.setLimit(LISTING_LIMIT);
         query.addDescendingOrder(DESCENDING_ORDER_KEY);
@@ -165,7 +180,7 @@ public class ListingsFragment extends Fragment {
 
                 listings.addAll(allListings);
                 adapter.notifyDataSetChanged();
-                skip = listings.size() - 1;
+                skip = listings.size();
             }
         });
     }

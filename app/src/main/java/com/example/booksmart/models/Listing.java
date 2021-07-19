@@ -22,6 +22,7 @@ public class Listing extends ParseObject {
     public static final String KEY_IMAGE = "image";
     public static final String KEY_ALL_IMAGES = "images";
     public static final String KEY_COURSE = "course";
+    public static final String KEY_SCHOOL = "school";
 
     private static final String DATE_FORMAT = "MMMM dd, yyyy";
 
@@ -85,6 +86,14 @@ public class Listing extends ParseObject {
 
     public void setCourse(String course){
         put(KEY_COURSE, course);
+    }
+
+    public String getSchool(){
+        return getString(KEY_SCHOOL);
+    }
+
+    public void setSchool(String school){
+        put(KEY_SCHOOL, school);
     }
 
     public String getCreatedAtDate(Listing listing){
