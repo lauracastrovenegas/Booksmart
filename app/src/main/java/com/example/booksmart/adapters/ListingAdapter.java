@@ -18,6 +18,8 @@ import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.booksmart.helpers.DeviceDimensionsHelper;
 import com.example.booksmart.R;
+import com.example.booksmart.models.Book;
+import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
 import com.parse.ParseFile;
 
@@ -25,43 +27,60 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHolder> {
+public class ListingAdapter extends RecyclerView.Adapter {
 
     public static final String TAG = "ListingAdapter";
 
-    List<Listing> listings;
+    List<Item> items;
     Context context;
 
-    public ListingAdapter(Context context, List<Listing> listings){
+    public ListingAdapter(Context context, List<Item> items){
         this.context = context;
-        this.listings = listings;
+        this.items = items;
     }
 
     @NonNull
     @NotNull
     @Override
-    public ListingAdapter.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_listing, parent, false);
-        return new ViewHolder(view);
+        if (viewType == Item.TYPE_BOOK){
+            return new BookViewHolder(view);
+        } else {
+            return new ListingViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull ListingAdapter.ViewHolder holder, int position) {
-        Listing listing = listings.get(position);
-        holder.bind(listing);
+    public void onBindViewHolder(@NonNull @NotNull RecyclerView.ViewHolder holder, int position) {
+        if (getItemViewType(position) == Item.TYPE_BOOK){
+            ((BookViewHolder) holder).bind(position);
+        } else {
+            ((ListingViewHolder) holder).bind(position);
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return items.get(position).getType();
     }
 
     @Override
     public int getItemCount() {
-        return listings.size();
+        return items.size();
     }
 
     public void clear() {
-        listings.clear();
+        items.clear();
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public void addAll(List<? extends Item> newItems) {
+        items.addAll(newItems);
+        notifyDataSetChanged();
+    }
+
+    public class ListingViewHolder extends RecyclerView.ViewHolder {
 
         ImageView ivImage;
         ImageView ivUserProfileImage;
@@ -69,7 +88,7 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHold
         TextView tvPrice;
         TextView tvUserUsername;
 
-        public ViewHolder(@NonNull @NotNull View itemView) {
+        public ListingViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
 
             ivImage = itemView.findViewById(R.id.ivListingImage);
@@ -79,7 +98,8 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHold
             tvUserUsername = itemView.findViewById(R.id.tvListingUser);
         }
 
-        public void bind(Listing listing) {
+        public void bind(int position) {
+            Listing listing = (Listing) items.get(position);
 
             tvTitle.setText(listing.getTitle());
             tvPrice.setText("$" + String.valueOf(listing.getPrice()));
@@ -103,6 +123,51 @@ public class ListingAdapter extends RecyclerView.Adapter<ListingAdapter.ViewHold
                         .circleCrop()
                         .into(ivUserProfileImage);
             }
+        }
+    }
+
+    public class BookViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView ivImage;
+        ImageView ivUserProfileImage;
+        TextView tvTitle;
+        TextView tvPrice;
+        TextView tvUserUsername;
+
+        public BookViewHolder(@NonNull @NotNull View itemView) {
+            super(itemView);
+
+            ivImage = itemView.findViewById(R.id.ivListingImage);
+            ivUserProfileImage = itemView.findViewById(R.id.ivListingUser);
+            tvTitle = itemView.findViewById(R.id.tvListingTitle);
+            tvPrice = itemView.findViewById(R.id.tvListingPrice);
+            tvUserUsername = itemView.findViewById(R.id.tvListingUser);
+        }
+
+        public void bind(int position) {
+
+            Book book = (Book) items.get(position);
+
+            tvTitle.setText(book.getTitle());
+            if (book.getPrice() != null){
+                tvPrice.setText(book.getPrice());
+            } else {
+                tvPrice.setVisibility(View.INVISIBLE);
+            }
+
+            int screenWidth = DeviceDimensionsHelper.getDisplayWidth(context);
+
+            String imageUrl = book.getImage();
+            if (imageUrl != null){
+                Glide.with(context)
+                        .load(imageUrl)
+                        .override(screenWidth/2,(screenWidth/2) - 200)
+                        .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(45, 45, 0, 0)))
+                        .into(ivImage);
+            }
+
+            tvUserUsername.setVisibility(View.INVISIBLE);
+            ivUserProfileImage.setVisibility(View.INVISIBLE);
         }
     }
 }
