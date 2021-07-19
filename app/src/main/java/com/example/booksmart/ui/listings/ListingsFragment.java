@@ -16,6 +16,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.booksmart.BuildConfig;
 import com.example.booksmart.helpers.EndlessRecyclerViewScrollListener;
 import com.example.booksmart.helpers.ItemClickSupport;
 import com.example.booksmart.R;
@@ -30,6 +37,8 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +51,8 @@ public class ListingsFragment extends Fragment {
     public static final String KEY_SCHOOL = "school";
     public static final String QUERY_ERROR = "Error getting listings";
     public static final String KEY = "detail_listing";
+    public static final String GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1/volumes?printType=books&maxResults=" + String.valueOf(LISTING_LIMIT) + "&q=";
+    public static final String DEFAULT_QUERY = "textbooks";
 
     SwipeRefreshLayout swipeContainer;
     EndlessRecyclerViewScrollListener scrollListener;
@@ -51,6 +62,7 @@ public class ListingsFragment extends Fragment {
     GridLayoutManager gridLayoutManager;
     FloatingActionButton btnCompose;
     ProgressBar pb;
+    RequestQueue queue;
 
     private int skip;
     private String currentUserSchool;
@@ -73,6 +85,8 @@ public class ListingsFragment extends Fragment {
 
         rvListings.setLayoutManager(gridLayoutManager);
         rvListings.setAdapter(adapter);
+
+        queue = Volley.newRequestQueue(getContext());
 
         setEndlessScrollListener();
 
@@ -125,6 +139,7 @@ public class ListingsFragment extends Fragment {
             public void done(ParseObject object, ParseException e) {
                 currentUserSchool = user.getString(KEY_SCHOOL);
                 queryListings();
+                fetchBooks(DEFAULT_QUERY);
             }
         });
     }
@@ -183,6 +198,23 @@ public class ListingsFragment extends Fragment {
                 skip = listings.size();
             }
         });
+    }
+
+    private void fetchBooks(String queryString){
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, GOOGLE_BOOKS_URL + queryString, null,
+                new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Log.i(TAG, response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, error.toString(), error);
+            }
+        });
+
+        queue.add(jsonObjectRequest);
     }
 
     private void setEndlessScrollListener() {
