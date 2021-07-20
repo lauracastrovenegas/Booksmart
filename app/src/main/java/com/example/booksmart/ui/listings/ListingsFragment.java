@@ -83,7 +83,7 @@ public class ListingsFragment extends Fragment {
         startIndex = 0;
 
         btnCompose = view.findViewById(R.id.btnAddListing);
-        books = new ArrayList<>();
+        books = new ArrayList<>(); // temporary
         items = new ArrayList<>();
         adapter = new ListingAdapter(getContext(), items);
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_SPAN);
@@ -136,30 +136,6 @@ public class ListingsFragment extends Fragment {
                     }
                 }
         );
-
-        // Handles clicks for items in RecyclerView
-        /*ItemClickSupport.addTo(rvListings).setOnItemClickListener(
-                new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Item item = items.get(position);
-                        if (item.getType() == Item.TYPE_LISTING) {
-                            String listing_id = ((Listing) item).getObjectId();
-
-                            Fragment fragment = new ListingDetailFragment();
-                            Bundle bundle = new Bundle();
-                            bundle.putString(KEY, listing_id);
-                            fragment.setArguments(bundle);
-
-                            getFragmentManager()
-                                    .beginTransaction()
-                                    .setCustomAnimations(R.anim.slide_in, R.anim.slide_out_left)
-                                    .replace(R.id.nav_host_fragment_activity_main, fragment)
-                                    .addToBackStack(null).commit();
-                        }
-                    }
-                }
-        );*/
     }
 
     public void onInitialLoad(){
@@ -218,7 +194,7 @@ public class ListingsFragment extends Fragment {
                 try {
 
                     Log.d(TAG, "fetchBooks()");
-
+                    
                     books.addAll(Book.fromJsonArray(response.getJSONArray(ITEMS_KEY))); // temporary
                     items.addAll(Book.fromJsonArray(response.getJSONArray(ITEMS_KEY)));
                     startIndex = books.size();
