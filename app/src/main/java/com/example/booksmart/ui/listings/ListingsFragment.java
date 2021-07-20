@@ -49,7 +49,7 @@ public class ListingsFragment extends Fragment {
 
     public static final String TAG = "ListingsFragment";
     public static final int GRID_SPAN = 2;
-    public static final int LISTING_LIMIT = 30;
+    public static final int LISTING_LIMIT = 15;
     public static final String DESCENDING_ORDER_KEY = "createdAt";
     public static final String KEY_SCHOOL = "school";
     public static final String QUERY_ERROR = "Error getting listings";
@@ -149,12 +149,13 @@ public class ListingsFragment extends Fragment {
             public void done(ParseObject object, ParseException e) {
                 currentUserSchool = user.getString(KEY_SCHOOL);
                 queryListings(skip);
-                fetchBooks(DEFAULT_QUERY, startIndex);
             }
         });
     }
 
     private void queryListings(int skipValue) {
+        scrollListener.setLoading(true);
+
         ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
         query.include(Listing.KEY_USER);
         query.whereEqualTo(KEY_SCHOOL, currentUserSchool);
@@ -174,23 +175,14 @@ public class ListingsFragment extends Fragment {
                 Log.d(TAG, "queryListings()");
 
                 if (skipValue == 0){
-                    // CLEAR OUT old items before appending in the new ones for refresh
                     books.clear(); // temporary
                     items.clear();
-
-                    items.addAll(allListings);
-                    adapter.notifyDataSetChanged();
-
-                    scrollListener.resetState();
-                    swipeContainer.setRefreshing(false);
-                    rvListings.setVisibility(View.VISIBLE);
-                    pb.setVisibility(View.GONE);
-                } else {
-                    items.addAll(allListings);
-                    adapter.notifyDataSetChanged();
+                    startIndex = 0;
                 }
 
+                items.addAll(allListings);
                 skip = skipValue + allListings.size();
+                fetchBooks(DEFAULT_QUERY, startIndex);
 
                 Log.d(TAG, "Total number of listings: " + String.valueOf(skip));
             }
@@ -207,10 +199,18 @@ public class ListingsFragment extends Fragment {
                     Log.d(TAG, "fetchBooks()");
 
                     books.addAll(Book.fromJsonArray(response.getJSONArray(ITEMS_KEY))); // temporary
-
                     items.addAll(Book.fromJsonArray(response.getJSONArray(ITEMS_KEY)));
                     startIndex = books.size();
                     adapter.notifyDataSetChanged();
+
+                    if (start == 0){
+                        scrollListener.resetState();
+                        swipeContainer.setRefreshing(false);
+                        rvListings.setVisibility(View.VISIBLE);
+                        pb.setVisibility(View.GONE);
+                    }
+
+                    scrollListener.setLoading(false);
 
                     Log.d(TAG, "Total number of books: " + String.valueOf(startIndex));
 
@@ -234,7 +234,6 @@ public class ListingsFragment extends Fragment {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 Log.i(TAG, String.valueOf(page));
                 queryListings(skip);
-                fetchBooks(DEFAULT_QUERY, startIndex);
             }
         };
 
@@ -248,7 +247,6 @@ public class ListingsFragment extends Fragment {
             @Override
             public void onRefresh() {
                 queryListings(0);
-                fetchBooks(DEFAULT_QUERY, 0);
             }
         });
 
