@@ -70,14 +70,16 @@ public class ListingsFragment extends Fragment {
     ProgressBar pb;
     RequestQueue queue;
 
-    private int skip;
-    private String currentUserSchool;
+    long startIndex;
+    int skip;
+    String currentUserSchool;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_listings, container, false);
 
         skip = 0;
+        startIndex = 0;
 
         btnCompose = view.findViewById(R.id.btnAddListing);
         listings = new ArrayList<>();
@@ -147,7 +149,7 @@ public class ListingsFragment extends Fragment {
             public void done(ParseObject object, ParseException e) {
                 currentUserSchool = user.getString(KEY_SCHOOL);
                 queryListings();
-                fetchBooks(DEFAULT_QUERY);
+                fetchBooks(DEFAULT_QUERY, startIndex);
             }
         });
     }
@@ -170,10 +172,11 @@ public class ListingsFragment extends Fragment {
                 Log.d(TAG, "queryListings()");
 
                 // CLEAR OUT old items before appending in the new ones for refresh
-                listings.clear();
-                books.clear();
+                listings.clear(); // temporary
+                books.clear(); // temporary
+                listings.addAll(allListings); // temporary
+
                 items.clear();
-                listings.addAll(allListings);
                 items.addAll(allListings);
                 adapter.notifyDataSetChanged();
                 skip = items.size();
@@ -204,7 +207,7 @@ public class ListingsFragment extends Fragment {
 
                 Log.d(TAG, "queryMoreListings()");
 
-                listings.addAll(allListings);
+                listings.addAll(allListings); // temporary
                 items.addAll(allListings);
                 adapter.notifyDataSetChanged();
                 skip = items.size();
@@ -212,8 +215,8 @@ public class ListingsFragment extends Fragment {
         });
     }
 
-    private void fetchBooks(String queryString){
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, GOOGLE_BOOKS_URL + queryString, null,
+    private void fetchBooks(String queryString, long start){
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, GOOGLE_BOOKS_URL + queryString + "&startIndex=" + String.valueOf(start), null,
                 new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -221,13 +224,10 @@ public class ListingsFragment extends Fragment {
 
                     Log.d(TAG, "fetchBooks()");
 
-                    books.addAll(Book.fromJsonArray(response.getJSONArray(ITEMS_KEY)));
+                    books.addAll(Book.fromJsonArray(response.getJSONArray(ITEMS_KEY))); // temporary
                     items.addAll(Book.fromJsonArray(response.getJSONArray(ITEMS_KEY)));
+                    startIndex = books.size();
                     adapter.notifyDataSetChanged();
-
-                    for (int i = 0; i < books.size(); i++){
-                        Log.d(TAG, books.get(i).getTitle());
-                    }
 
                 } catch (JSONException e) {
                     Log.e(TAG, e.getMessage(), e);
@@ -249,7 +249,7 @@ public class ListingsFragment extends Fragment {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 Log.i(TAG, String.valueOf(page));
                 queryMoreListings();
-                fetchBooks(DEFAULT_QUERY);
+                fetchBooks(DEFAULT_QUERY, startIndex);
             }
         };
 
@@ -263,7 +263,7 @@ public class ListingsFragment extends Fragment {
             @Override
             public void onRefresh() {
                 queryListings();
-                fetchBooks(DEFAULT_QUERY);
+                fetchBooks(DEFAULT_QUERY, 0);
             }
         });
 
