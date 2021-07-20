@@ -2,8 +2,11 @@ package com.example.booksmart.ui.listings;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,12 +24,15 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.booksmart.R;
 import com.example.booksmart.helpers.DeviceDimensionsHelper;
+import com.example.booksmart.models.Item;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.example.booksmart.models.Listing;
+
+import org.jetbrains.annotations.NotNull;
 
 public class ListingDetailFragment extends Fragment {
 
@@ -65,16 +71,7 @@ public class ListingDetailFragment extends Fragment {
         ivClose = itemView.findViewById(R.id.ivClose);
         progressBar = itemView.findViewById(R.id.pbListingDetail);
 
-        btnCourse.setVisibility(View.GONE);
-        btnMessageSeller.setVisibility(View.GONE);
         progressBar.setVisibility(View.VISIBLE);
-
-        Bundle bundle = this.getArguments();
-        if (bundle != null) {
-            listingId = bundle.getString(KEY);
-        }
-
-        readObject(listingId);
 
         ivClose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,18 +83,13 @@ public class ListingDetailFragment extends Fragment {
         return itemView;
     }
 
-    public void readObject(String objectId) {
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Listing");
-        query.include("description");
-        query.include("image");
-        query.include("createdAt");
-
-        // The query will search for a ParseObject, given its objectId.
-        query.getInBackground(objectId, (object, e) -> {
-            if (e == null) {
-                listing = (Listing) object;
-
-                ParseUser user = listing.getParseUser("user");
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ListingsViewModel listingsViewModel = new ViewModelProvider(requireActivity()).get(ListingsViewModel.class);
+        listingsViewModel.getSelected().observe(getViewLifecycleOwner(), item -> {
+            if (item.getType() == Item.TYPE_LISTING){
+                ParseUser user = ((Listing) item).getParseUser("user");
 
                 try {
                     user = user.fetchIfNeeded();
@@ -105,7 +97,7 @@ public class ListingDetailFragment extends Fragment {
                     parseException.printStackTrace();
                 }
 
-                ParseFile image = listing.getParseFile(Listing.KEY_IMAGE);
+                ParseFile image = ((Listing) item).getParseFile(Listing.KEY_IMAGE);
                 if (image != null){
                     int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getContext());
 
@@ -116,7 +108,7 @@ public class ListingDetailFragment extends Fragment {
                             .into(ivImage);
                 }
 
-                ParseFile profileImage = listing.getParseUser(Listing.KEY_USER).getParseFile(Listing.KEY_IMAGE);
+                ParseFile profileImage = ((Listing) item).getParseUser(Listing.KEY_USER).getParseFile(Listing.KEY_IMAGE);
                 if (profileImage != null){
                     Glide.with(getContext())
                             .load(profileImage.getUrl())
@@ -124,20 +116,15 @@ public class ListingDetailFragment extends Fragment {
                             .into(ivUserProfileImage);
                 }
 
-                tvTitle.setText(listing.getString(Listing.KEY_TITLE));
-                tvPrice.setText("$" + String.valueOf(listing.getInt(Listing.KEY_PRICE)));
-                tvUserUsername.setText(listing.getParseUser(Listing.KEY_USER).getUsername());
-                btnCourse.setText(listing.getString(Listing.KEY_COURSE));
-                tvDescription.setText(listing.getString(Listing.KEY_DESCRIPTION));
+                tvTitle.setText(((Listing) item).getString(Listing.KEY_TITLE));
+                tvPrice.setText("$" + String.valueOf(((Listing) item).getInt(Listing.KEY_PRICE)));
+                tvUserUsername.setText(((Listing) item).getParseUser(Listing.KEY_USER).getUsername());
+                btnCourse.setText(((Listing) item).getString(Listing.KEY_COURSE));
+                tvDescription.setText(((Listing) item).getString(Listing.KEY_DESCRIPTION));
 
-                btnCourse.setVisibility(View.VISIBLE);
-                btnMessageSeller.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.INVISIBLE);
-
             } else {
-                Log.e(TAG, FAIL_MSG, e);
-                Toast.makeText(getContext(), FAIL_MSG, Toast.LENGTH_SHORT).show();
-                goTimeline();
+                // TODO update the UI for google book item
             }
         });
     }

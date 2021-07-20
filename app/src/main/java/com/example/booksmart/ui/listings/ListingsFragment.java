@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -58,6 +59,7 @@ public class ListingsFragment extends Fragment {
     public static final String DEFAULT_QUERY = "college+textbook";
     public static final String ITEMS_KEY = "items";
 
+    ListingsViewModel listingsViewModel;
     SwipeRefreshLayout swipeContainer;
     EndlessRecyclerViewScrollListener scrollListener;
     List<Book> books;
@@ -116,8 +118,27 @@ public class ListingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Handles clicks for items in RecyclerView
+        listingsViewModel = new ViewModelProvider(requireActivity()).get(ListingsViewModel.class);
+
         ItemClickSupport.addTo(rvListings).setOnItemClickListener(
+                new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        Item item = items.get(position);
+                        listingsViewModel.select(item);
+
+                        Fragment fragment = new ListingDetailFragment();
+                        getFragmentManager()
+                                .beginTransaction()
+                                .setCustomAnimations(R.anim.slide_in, R.anim.slide_out_left)
+                                .replace(R.id.nav_host_fragment_activity_main, fragment)
+                                .addToBackStack(null).commit();
+                    }
+                }
+        );
+
+        // Handles clicks for items in RecyclerView
+        /*ItemClickSupport.addTo(rvListings).setOnItemClickListener(
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
@@ -138,7 +159,7 @@ public class ListingsFragment extends Fragment {
                         }
                     }
                 }
-        );
+        );*/
     }
 
     public void onInitialLoad(){
