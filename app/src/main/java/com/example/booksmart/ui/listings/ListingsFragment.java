@@ -171,6 +171,7 @@ public class ListingsFragment extends Fragment {
 
                 // CLEAR OUT old items before appending in the new ones for refresh
                 listings.clear();
+                books.clear();
                 items.clear();
                 listings.addAll(allListings);
                 items.addAll(allListings);
@@ -217,6 +218,9 @@ public class ListingsFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
                 try {
+
+                    Log.d(TAG, "fetchBooks()");
+
                     books.addAll(Book.fromJsonArray(response.getJSONArray(ITEMS_KEY)));
                     items.addAll(Book.fromJsonArray(response.getJSONArray(ITEMS_KEY)));
                     adapter.notifyDataSetChanged();
@@ -245,6 +249,7 @@ public class ListingsFragment extends Fragment {
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 Log.i(TAG, String.valueOf(page));
                 queryMoreListings();
+                fetchBooks(DEFAULT_QUERY);
             }
         };
 
@@ -258,6 +263,7 @@ public class ListingsFragment extends Fragment {
             @Override
             public void onRefresh() {
                 queryListings();
+                fetchBooks(DEFAULT_QUERY);
             }
         });
 
