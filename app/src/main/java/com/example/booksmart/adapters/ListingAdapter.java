@@ -160,7 +160,6 @@ public class ListingAdapter extends RecyclerView.Adapter {
 
             String imageUrl = book.getImage();
             if (!imageUrl.isEmpty()){
-                imageUrl = imageUrl.substring(0, 4) + "s" + imageUrl.substring(4);
                 Glide.with(context)
                         .load(imageUrl)
                         .override(screenWidth/2,(screenWidth/2))
@@ -170,7 +169,7 @@ public class ListingAdapter extends RecyclerView.Adapter {
                 ivImage.setImageResource(R.drawable.book_cover_placeholder);
             }
 
-            tvUserUsername.setText("Google Books");
+            tvUserUsername.setText(book.getUserName());
             ivUserProfileImage.setImageResource(R.drawable.google_books_logo);
         }
     }

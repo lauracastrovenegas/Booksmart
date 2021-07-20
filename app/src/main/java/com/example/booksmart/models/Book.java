@@ -22,6 +22,7 @@ public class Book implements Item {
     public static final String NOT_FOR_SALE = "NOT_FOR_SALE";
     public static final String PRICE_KEY = "listPrice";
     public static final String PRICE_AMNT_KEY = "amount";
+    public static final String USER_NAME = "Google Books";
 
     String id;
     String title;
@@ -50,6 +51,9 @@ public class Book implements Item {
         }
         try {
             book.imageLink = volumeInfo.getJSONObject(IMAGE_LINK_KEY).getString(IMAGE_KEY);
+            if (!book.imageLink.isEmpty()) {
+                book.imageLink = book.imageLink.substring(0, 4) + "s" + book.imageLink.substring(4);
+            }
         } catch (JSONException e){
             book.imageLink = "";
         }
@@ -112,6 +116,10 @@ public class Book implements Item {
 
     public String getPrice(){
         return price;
+    }
+
+    public String getUserName(){
+        return USER_NAME;
     }
 
     public int getType(){
