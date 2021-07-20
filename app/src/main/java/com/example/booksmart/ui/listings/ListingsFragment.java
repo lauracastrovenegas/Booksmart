@@ -55,7 +55,7 @@ public class ListingsFragment extends Fragment {
     public static final String KEY_SCHOOL = "school";
     public static final String QUERY_ERROR = "Error getting listings";
     public static final String KEY = "detail_listing";
-    public static final String GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1/volumes?fields=items(id,selfLink,volumeInfo,saleInfo)&printType=books&maxResults=" + String.valueOf(LISTING_LIMIT) + "&q=";
+    public static final String GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1/volumes?fields=items(id,volumeInfo,saleInfo)&printType=books&maxResults=" + String.valueOf(LISTING_LIMIT) + "&q=";
     public static final String DEFAULT_QUERY = "college+textbook";
     public static final String ITEMS_KEY = "items";
 
