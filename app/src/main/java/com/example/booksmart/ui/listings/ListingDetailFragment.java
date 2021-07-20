@@ -1,5 +1,7 @@
 package com.example.booksmart.ui.listings;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -24,6 +26,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.booksmart.R;
 import com.example.booksmart.helpers.DeviceDimensionsHelper;
+import com.example.booksmart.models.Book;
 import com.example.booksmart.models.Item;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -39,7 +42,7 @@ public class ListingDetailFragment extends Fragment {
     public static final String KEY = "detail_listing";
     public static final String FAIL_MSG = "Failed to retrieve listing";
     public static final String TAG = "ListingDetailFragment";
-    
+
     ImageView ivImage;
     ImageView ivUserProfileImage;
     TextView tvTitle;
@@ -49,6 +52,7 @@ public class ListingDetailFragment extends Fragment {
     Button btnCourse;
     TextView tvDescription;
     Button btnMessageSeller;
+    Button btnLinkToGoogle;
     ProgressBar progressBar;
 
     public ListingDetailFragment() {}
@@ -66,6 +70,7 @@ public class ListingDetailFragment extends Fragment {
         btnCourse = itemView.findViewById(R.id.btnListingCourse);
         tvDescription = itemView.findViewById(R.id.tvListingDescription);
         btnMessageSeller = itemView.findViewById(R.id.btnMessageSeller);
+        btnLinkToGoogle = itemView.findViewById(R.id.btnGoogleBooksLink);
         ivClose = itemView.findViewById(R.id.ivClose);
         progressBar = itemView.findViewById(R.id.pbListingDetail);
 
@@ -88,7 +93,6 @@ public class ListingDetailFragment extends Fragment {
         listingsViewModel.getSelected().observe(getViewLifecycleOwner(), item -> {
             if (item.getType() == Item.TYPE_LISTING){
                 ParseUser user = ((Listing) item).getParseUser("user");
-
                 try {
                     user = user.fetchIfNeeded();
                 } catch (ParseException parseException) {
@@ -119,11 +123,45 @@ public class ListingDetailFragment extends Fragment {
                 tvUserUsername.setText(((Listing) item).getParseUser(Listing.KEY_USER).getUsername());
                 btnCourse.setText(((Listing) item).getString(Listing.KEY_COURSE));
                 tvDescription.setText(((Listing) item).getString(Listing.KEY_DESCRIPTION));
-
-                progressBar.setVisibility(View.INVISIBLE);
+                btnLinkToGoogle.setVisibility(View.GONE);
             } else {
-                // TODO update the UI for google book item
+                String image = ((Book) item).getImage();
+                if (image != null){
+                    int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getContext());
+
+                    Glide.with(getContext())
+                            .load(image)
+                            .override(screenWidth/2,800)
+                            .centerCrop()
+                            .into(ivImage);
+                }
+
+                tvTitle.setText(((Book) item).getTitle());
+                tvUserUsername.setText(((Book) item).getUserName());
+                btnCourse.setVisibility(View.GONE);
+                if (((Book) item).getDescription().isEmpty()){
+                    tvDescription.setVisibility(View.GONE);
+                } else {
+                    tvDescription.setText(((Book) item).getDescription());
+                }
+                ivUserProfileImage.setImageResource(R.drawable.google_books_logo);
+
+                if (((Book) item).getPrice() != null){
+                    tvPrice.setText("$" + String.valueOf(((Book) item).getPrice()));
+                } else {
+                    tvPrice.setVisibility(View.GONE);
+                }
+
+                btnMessageSeller.setVisibility(View.GONE);
+                btnLinkToGoogle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((Book) item).getGoogleLink())));
+                    }
+                });
             }
+
+            progressBar.setVisibility(View.INVISIBLE);
         });
     }
 
