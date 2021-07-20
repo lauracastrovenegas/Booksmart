@@ -1,5 +1,7 @@
 package com.example.booksmart.models;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,13 +11,14 @@ import java.util.List;
 
 public class Book implements Item {
 
+    public static final String TAG = "Book.class";
     private static final String BOOK_ID = "id";
     public static final String TITLE_KEY = "title";
     public static final String AUTHORS_KEY = "authors";
     public static final String DESCRIPTION_KEY = "description";
     public static final String IMAGE_LINK_KEY = "imageLinks";
     public static final String IMAGE_KEY = "thumbnail";
-    public static final String GOOGLE_LINK_KEY = "selfLink";
+    public static final String GOOGLE_LINK_KEY = "previewLink";
     public static final String VOLUME_INFO_KEY = "volumeInfo";
     public static final String SALE_INFO_KEY = "saleInfo";
     public static final String SALEABILITY_KEY = "saleability";
@@ -36,7 +39,6 @@ public class Book implements Item {
     public static Book fromJson(JSONObject jsonObject) throws JSONException {
         Book book = new Book();
         book.id = jsonObject.getString(BOOK_ID);
-        book.googleLink = jsonObject.getString(GOOGLE_LINK_KEY);
         JSONObject volumeInfo = jsonObject.getJSONObject(VOLUME_INFO_KEY);
         book.title = volumeInfo.getString(TITLE_KEY);
         try {
@@ -68,6 +70,7 @@ public class Book implements Item {
         } else {
             book.price = null;
         }
+        book.googleLink = "https://www.google.com/books/edition/" + book.title.replace(" ","_") + "/" + book.id + "?hl=en&kptab=getbook";
 
         return book;
     }
