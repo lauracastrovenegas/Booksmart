@@ -45,6 +45,7 @@ public class ListingDetailFragment extends Fragment {
     public static final String KEY = "detail_listing";
     public static final String FAIL_MSG = "Failed to retrieve listing";
     public static final String TAG = "ListingDetailFragment";
+    public static final int IMAGE_HEIGHT = 700;
 
     ImageView ivImage;
     ImageView ivUserProfileImage;
@@ -110,7 +111,7 @@ public class ListingDetailFragment extends Fragment {
 
                     Glide.with(getContext())
                             .load(image.getUrl())
-                            .override(screenWidth,800)
+                            .override(screenWidth,IMAGE_HEIGHT)
                             .centerCrop()
                             .into(ivImage);
                 }
@@ -137,7 +138,7 @@ public class ListingDetailFragment extends Fragment {
 
                     Glide.with(getContext())
                             .load(image)
-                            .override(screenWidth/2,700)
+                            .override(screenWidth/2,IMAGE_HEIGHT)
                             .centerCrop()
                             .into(ivImage);
                 }
