@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.booksmart.helpers.DeviceDimensionsHelper;
@@ -152,7 +153,7 @@ public class ListingAdapter extends RecyclerView.Adapter {
             if (book.getPrice() != null){
                 tvPrice.setText(book.getPrice());
             } else {
-                tvPrice.setVisibility(View.INVISIBLE);
+                tvPrice.setVisibility(View.GONE);
             }
 
             int screenWidth = DeviceDimensionsHelper.getDisplayWidth(context);
