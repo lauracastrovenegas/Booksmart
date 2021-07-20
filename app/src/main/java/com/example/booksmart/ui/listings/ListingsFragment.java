@@ -148,18 +148,20 @@ public class ListingsFragment extends Fragment {
             @Override
             public void done(ParseObject object, ParseException e) {
                 currentUserSchool = user.getString(KEY_SCHOOL);
-                queryListings();
+                queryListings(skip);
                 fetchBooks(DEFAULT_QUERY, startIndex);
             }
         });
     }
 
-    private void queryListings() {
+    private void queryListings(int skipValue) {
         ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
         query.include(Listing.KEY_USER);
         query.whereEqualTo(KEY_SCHOOL, currentUserSchool);
+        query.setSkip(skipValue);
         query.setLimit(LISTING_LIMIT);
         query.addDescendingOrder(DESCENDING_ORDER_KEY);
+
         query.findInBackground(new FindCallback<Listing>() {
 
             @Override
@@ -171,43 +173,26 @@ public class ListingsFragment extends Fragment {
 
                 Log.d(TAG, "queryListings()");
 
-                // CLEAR OUT old items before appending in the new ones for refresh
-                books.clear(); // temporary
+                if (skipValue == 0){
+                    // CLEAR OUT old items before appending in the new ones for refresh
+                    books.clear(); // temporary
+                    items.clear();
 
-                items.clear();
-                items.addAll(allListings);
-                adapter.notifyDataSetChanged();
-                skip = items.size();
+                    items.addAll(allListings);
+                    adapter.notifyDataSetChanged();
 
-                scrollListener.resetState();
-                swipeContainer.setRefreshing(false);
-                rvListings.setVisibility(View.VISIBLE);
-                pb.setVisibility(View.GONE);
-            }
-        });
-    }
-
-    private void queryMoreListings(){
-        ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
-        query.include(Listing.KEY_USER);
-        query.whereEqualTo(KEY_SCHOOL, currentUserSchool);
-        query.setSkip(skip);
-        query.setLimit(LISTING_LIMIT);
-        query.addDescendingOrder(DESCENDING_ORDER_KEY);
-        query.findInBackground(new FindCallback<Listing>() {
-
-            @Override
-            public void done(List<Listing> allListings, ParseException e) {
-                if (e != null){
-                    Log.e(TAG, QUERY_ERROR, e);
-                    return;
+                    scrollListener.resetState();
+                    swipeContainer.setRefreshing(false);
+                    rvListings.setVisibility(View.VISIBLE);
+                    pb.setVisibility(View.GONE);
+                } else {
+                    items.addAll(allListings);
+                    adapter.notifyDataSetChanged();
                 }
 
-                Log.d(TAG, "queryMoreListings()");
-                
-                items.addAll(allListings);
-                adapter.notifyDataSetChanged();
-                skip = items.size();
+                skip = skipValue + allListings.size();
+
+                Log.d(TAG, "Total number of listings: " + String.valueOf(skip));
             }
         });
     }
@@ -222,9 +207,12 @@ public class ListingsFragment extends Fragment {
                     Log.d(TAG, "fetchBooks()");
 
                     books.addAll(Book.fromJsonArray(response.getJSONArray(ITEMS_KEY))); // temporary
+
                     items.addAll(Book.fromJsonArray(response.getJSONArray(ITEMS_KEY)));
                     startIndex = books.size();
                     adapter.notifyDataSetChanged();
+
+                    Log.d(TAG, "Total number of books: " + String.valueOf(startIndex));
 
                 } catch (JSONException e) {
                     Log.e(TAG, e.getMessage(), e);
@@ -245,7 +233,7 @@ public class ListingsFragment extends Fragment {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 Log.i(TAG, String.valueOf(page));
-                queryMoreListings();
+                queryListings(skip);
                 fetchBooks(DEFAULT_QUERY, startIndex);
             }
         };
@@ -259,7 +247,7 @@ public class ListingsFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                queryListings();
+                queryListings(0);
                 fetchBooks(DEFAULT_QUERY, 0);
             }
         });
