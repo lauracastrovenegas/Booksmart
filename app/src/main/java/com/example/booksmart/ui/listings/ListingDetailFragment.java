@@ -39,9 +39,7 @@ public class ListingDetailFragment extends Fragment {
     public static final String KEY = "detail_listing";
     public static final String FAIL_MSG = "Failed to retrieve listing";
     public static final String TAG = "ListingDetailFragment";
-
-    ParseObject listing;
-    String listingId;
+    
     ImageView ivImage;
     ImageView ivUserProfileImage;
     TextView tvTitle;
