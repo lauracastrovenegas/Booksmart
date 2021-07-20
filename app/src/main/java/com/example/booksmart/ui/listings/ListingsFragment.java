@@ -123,19 +123,21 @@ public class ListingsFragment extends Fragment {
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Listing listing = listings.get(position);
-                        String listing_id = listing.getObjectId();
+                        Item item = items.get(position);
+                        if (item.getType() == Item.TYPE_LISTING) {
+                            String listing_id = ((Listing) item).getObjectId();
 
-                        Fragment fragment = new ListingDetailFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString(KEY, listing_id);
-                        fragment.setArguments(bundle);
+                            Fragment fragment = new ListingDetailFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putString(KEY, listing_id);
+                            fragment.setArguments(bundle);
 
-                        getFragmentManager()
-                                .beginTransaction()
-                                .setCustomAnimations(R.anim.slide_in, R.anim.slide_out_left)
-                                .replace(R.id.nav_host_fragment_activity_main, fragment)
-                                .addToBackStack(null).commit();
+                            getFragmentManager()
+                                    .beginTransaction()
+                                    .setCustomAnimations(R.anim.slide_in, R.anim.slide_out_left)
+                                    .replace(R.id.nav_host_fragment_activity_main, fragment)
+                                    .addToBackStack(null).commit();
+                        }
                     }
                 }
         );
