@@ -26,6 +26,10 @@ public class Listing extends ParseObject implements Item {
 
     private static final String DATE_FORMAT = "MMMM dd, yyyy";
 
+    public String getId(){
+        return getObjectId();
+    }
+
     public ParseUser getUser(){
         return getParseUser(KEY_USER);
     }
