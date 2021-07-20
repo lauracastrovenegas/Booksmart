@@ -60,7 +60,6 @@ public class ListingsFragment extends Fragment {
 
     SwipeRefreshLayout swipeContainer;
     EndlessRecyclerViewScrollListener scrollListener;
-    List<Listing> listings;
     List<Book> books;
     List<Item> items;
     RecyclerView rvListings;
@@ -82,7 +81,6 @@ public class ListingsFragment extends Fragment {
         startIndex = 0;
 
         btnCompose = view.findViewById(R.id.btnAddListing);
-        listings = new ArrayList<>();
         books = new ArrayList<>();
         items = new ArrayList<>();
         adapter = new ListingAdapter(getContext(), items);
@@ -174,9 +172,7 @@ public class ListingsFragment extends Fragment {
                 Log.d(TAG, "queryListings()");
 
                 // CLEAR OUT old items before appending in the new ones for refresh
-                listings.clear(); // temporary
                 books.clear(); // temporary
-                listings.addAll(allListings); // temporary
 
                 items.clear();
                 items.addAll(allListings);
@@ -208,8 +204,7 @@ public class ListingsFragment extends Fragment {
                 }
 
                 Log.d(TAG, "queryMoreListings()");
-
-                listings.addAll(allListings); // temporary
+                
                 items.addAll(allListings);
                 adapter.notifyDataSetChanged();
                 skip = items.size();
