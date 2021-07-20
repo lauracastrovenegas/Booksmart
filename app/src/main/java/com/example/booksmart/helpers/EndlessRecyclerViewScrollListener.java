@@ -5,12 +5,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.example.booksmart.models.Book;
+
 /* Endless RecyclerView scrolling for different layout managers.
 Source: https://gist.github.com/nesquena/d09dc68ff07e845cc622 */
 public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnScrollListener {
     // The minimum amount of items to have below your current scroll position
     // before loading more.
-    private int visibleThreshold = 3;
+    private int visibleThreshold = 5;
     // The current offset index of data you have loaded
     private int currentPage = 0;
     // The total number of items in the dataset after the last load
@@ -80,7 +82,6 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
         // changed, if so we conclude it has finished loading and update the current page
         // number and total item count.
         if (loading && (totalItemCount > previousTotalItemCount)) {
-            loading = false;
             previousTotalItemCount = totalItemCount;
         }
 
@@ -88,10 +89,9 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
         // the visibleThreshold and need to reload more data.
         // If we do need to reload some more data, we execute onLoadMore to fetch the data.
         // threshold should reflect how many total columns there are too
-        if (!loading && (lastVisibleItemPosition + visibleThreshold) > totalItemCount) {
+        if (!loading && (lastVisibleItemPosition + visibleThreshold) >= totalItemCount) {
             currentPage++;
             onLoadMore(currentPage, totalItemCount, view);
-            loading = true;
         }
     }
 
@@ -100,6 +100,10 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
         this.currentPage = this.startingPageIndex;
         this.previousTotalItemCount = 0;
         this.loading = true;
+    }
+
+    public void setLoading(Boolean isLoading){
+        loading = isLoading;
     }
 
     // Defines the process for actually loading more data based on page
