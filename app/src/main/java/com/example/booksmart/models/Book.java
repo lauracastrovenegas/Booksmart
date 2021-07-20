@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,13 +97,15 @@ public class Book implements Item {
         return description;
     }
 
-    public List<JSONObject> getAuthors(){
-        List<JSONObject> authorsList = new ArrayList<>();
-        for (int i = 0; i < authors.length(); i++){
-            try {
-                authorsList.add(authors.getJSONObject(i));
-            } catch (JSONException e) {
-                e.printStackTrace();
+    public List<String> getAuthors(){
+        List<String> authorsList = new ArrayList<>();
+        if (authors != null) {
+            for (int i = 0; i < authors.length(); i++) {
+                try {
+                    authorsList.add(authors.getString(i));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

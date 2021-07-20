@@ -36,6 +36,9 @@ import com.parse.ParseUser;
 import com.example.booksmart.models.Listing;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+
+import java.util.List;
 
 public class ListingDetailFragment extends Fragment {
 
@@ -48,6 +51,7 @@ public class ListingDetailFragment extends Fragment {
     TextView tvTitle;
     TextView tvPrice;
     TextView tvUserUsername;
+    TextView tvAuthors;
     ImageView ivClose;
     Button btnCourse;
     TextView tvDescription;
@@ -65,6 +69,7 @@ public class ListingDetailFragment extends Fragment {
         ivImage = itemView.findViewById(R.id.ivListingImageDetail);
         ivUserProfileImage = itemView.findViewById(R.id.ivListingUserDetail);
         tvTitle = itemView.findViewById(R.id.tvListingTitleDetail);
+        tvAuthors = itemView.findViewById(R.id.tvListingAuthorDetail);
         tvPrice = itemView.findViewById(R.id.tvListingPriceDetail);
         tvUserUsername = itemView.findViewById(R.id.tvListingUserDetail);
         btnCourse = itemView.findViewById(R.id.btnListingCourse);
@@ -124,6 +129,7 @@ public class ListingDetailFragment extends Fragment {
                 btnCourse.setText(((Listing) item).getString(Listing.KEY_COURSE));
                 tvDescription.setText(((Listing) item).getString(Listing.KEY_DESCRIPTION));
                 btnLinkToGoogle.setVisibility(View.GONE);
+                tvAuthors.setVisibility(View.GONE);
             } else {
                 String image = ((Book) item).getImage();
                 if (image != null){
@@ -131,12 +137,17 @@ public class ListingDetailFragment extends Fragment {
 
                     Glide.with(getContext())
                             .load(image)
-                            .override(screenWidth/2,800)
+                            .override(screenWidth/2,700)
                             .centerCrop()
                             .into(ivImage);
                 }
 
                 tvTitle.setText(((Book) item).getTitle());
+                if (((Book) item).getAuthors() != null){
+                    tvAuthors.setText(setAuthorString(((Book) item).getAuthors()));
+                } else {
+                    tvAuthors.setVisibility(View.GONE);
+                }
                 tvUserUsername.setText(((Book) item).getUserName());
                 btnCourse.setVisibility(View.GONE);
                 if (((Book) item).getDescription().isEmpty()){
@@ -163,6 +174,15 @@ public class ListingDetailFragment extends Fragment {
 
             progressBar.setVisibility(View.INVISIBLE);
         });
+    }
+
+    private String setAuthorString(List<String> authors){
+        String authorString = "By " + authors.get(0);
+        for (int i = 1; i < authors.size(); i++){
+            authorString = authorString + ", " + authors.get(i);
+        }
+
+        return authorString;
     }
 
     private void goTimeline(){
