@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,25 +17,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.MultiTransformation;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.booksmart.R;
 import com.example.booksmart.helpers.DeviceDimensionsHelper;
 import com.example.booksmart.models.Book;
 import com.example.booksmart.models.Item;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.example.booksmart.models.Listing;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -95,8 +87,8 @@ public class ListingDetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ListingsViewModel listingsViewModel = new ViewModelProvider(requireActivity()).get(ListingsViewModel.class);
-        listingsViewModel.getSelected().observe(getViewLifecycleOwner(), item -> {
+        ListingDetailViewModel listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
+        listingDetailViewModel.getSelected().observe(getViewLifecycleOwner(), item -> {
             if (item.getType() == Item.TYPE_LISTING){
                 ParseUser user = ((Listing) item).getParseUser("user");
                 try {
