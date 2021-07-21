@@ -1,8 +1,6 @@
 package com.example.booksmart.ui.listings;
 
 import android.os.Bundle;
-import android.renderscript.ScriptC;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,32 +15,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.booksmart.BuildConfig;
+import com.example.booksmart.Client;
 import com.example.booksmart.helpers.EndlessRecyclerViewScrollListener;
 import com.example.booksmart.helpers.ItemClickSupport;
 import com.example.booksmart.R;
 import com.example.booksmart.adapters.ListingAdapter;
-import com.example.booksmart.models.Book;
 import com.example.booksmart.models.Item;
-import com.example.booksmart.models.Listing;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,57 +29,41 @@ public class ListingsFragment extends Fragment {
 
     public static final String TAG = "ListingsFragment";
     public static final int GRID_SPAN = 2;
-    public static final int LISTING_LIMIT = 15;
-    public static final String DESCENDING_ORDER_KEY = "createdAt";
-    public static final String KEY_SCHOOL = "school";
-    public static final String QUERY_ERROR = "Error getting listings";
-    public static final String KEY = "detail_listing";
-    public static final String GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1/volumes?fields=items(id,volumeInfo,saleInfo)&printType=books&maxResults=" + String.valueOf(LISTING_LIMIT) + "&q=";
-    public static final String DEFAULT_QUERY = "college+textbook";
-    public static final String ITEMS_KEY = "items";
 
-    ListingsViewModel listingsViewModel;
+    ListingDetailViewModel listingDetailViewModel;
     SwipeRefreshLayout swipeContainer;
     EndlessRecyclerViewScrollListener scrollListener;
-    List<Book> books;
     List<Item> items;
     RecyclerView rvListings;
     ListingAdapter adapter;
     GridLayoutManager gridLayoutManager;
     FloatingActionButton btnCompose;
     ProgressBar pb;
-    RequestQueue queue;
+    Client client;
 
     long startIndex;
     int skip;
-    String currentUserSchool;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_listings, container, false);
 
-        skip = 0;
-        startIndex = 0;
-
         btnCompose = view.findViewById(R.id.btnAddListing);
-        books = new ArrayList<>(); // temporary
-        items = new ArrayList<>();
-        adapter = new ListingAdapter(getContext(), items);
-        gridLayoutManager = new GridLayoutManager(getContext(), GRID_SPAN);
         rvListings = view.findViewById(R.id.rvListing);
         pb = view.findViewById(R.id.pbLoadingListings);
 
-        rvListings.setVisibility(View.GONE);
-        pb.setVisibility(View.VISIBLE);
-
+        skip = 0;
+        startIndex = 0;
+        listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
+        items = new ArrayList<>();
+        adapter = new ListingAdapter(getContext(), items);
+        gridLayoutManager = new GridLayoutManager(getContext(), GRID_SPAN);
         rvListings.setLayoutManager(gridLayoutManager);
         rvListings.setAdapter(adapter);
 
-        queue = Volley.newRequestQueue(getContext());
-
         setEndlessScrollListener();
-
         setSwipeContainer(view);
+        setClient();
 
         btnCompose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +72,11 @@ public class ListingsFragment extends Fragment {
             }
         });
 
-        onInitialLoad();
+        rvListings.setVisibility(View.GONE);
+        pb.setVisibility(View.VISIBLE);
+        scrollListener.setLoading(true);
+
+        client.onInitialLoad();
 
         return view;
     }
@@ -118,119 +85,45 @@ public class ListingsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        listingsViewModel = new ViewModelProvider(requireActivity()).get(ListingsViewModel.class);
-
         ItemClickSupport.addTo(rvListings).setOnItemClickListener(
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                         Item item = items.get(position);
-                        listingsViewModel.select(item);
-
-                        Fragment fragment = new ListingDetailFragment();
-                        getFragmentManager()
-                                .beginTransaction()
-                                .setCustomAnimations(R.anim.slide_in, R.anim.slide_out_left)
-                                .replace(R.id.nav_host_fragment_activity_main, fragment)
-                                .addToBackStack(null).commit();
+                        listingDetailViewModel.select(item);
+                        goDetailView();
                     }
                 }
         );
     }
 
-    public void onInitialLoad(){
-        ParseUser user = ParseUser.getCurrentUser();
-
-        user.fetchInBackground(new GetCallback<ParseObject>() {
+    private void setClient(){
+        client = new Client(getContext(), getActivity()) {
             @Override
-            public void done(ParseObject object, ParseException e) {
-                currentUserSchool = user.getString(KEY_SCHOOL);
-                queryListings(skip);
-            }
-        });
-    }
+            public void onDone(List<Item> itemList) {
+                items.addAll(itemList);
+                adapter.notifyDataSetChanged();
 
-    private void queryListings(int skipValue) {
-        scrollListener.setLoading(true);
-
-        ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
-        query.include(Listing.KEY_USER);
-        query.whereEqualTo(KEY_SCHOOL, currentUserSchool);
-        query.setSkip(skipValue);
-        query.setLimit(LISTING_LIMIT);
-        query.addDescendingOrder(DESCENDING_ORDER_KEY);
-
-        query.findInBackground(new FindCallback<Listing>() {
-
-            @Override
-            public void done(List<Listing> allListings, ParseException e) {
-                if (e != null){
-                    Log.e(TAG, QUERY_ERROR, e);
-                    return;
+                if (skip == 0){
+                    scrollListener.resetState();
+                    rvListings.setVisibility(View.VISIBLE);
+                    pb.setVisibility(View.GONE);
                 }
 
-                Log.d(TAG, "queryListings()");
-
-                if (skipValue == 0){
-                    books.clear(); // temporary
-                    items.clear();
-                    startIndex = 0;
-                }
-
-                items.addAll(allListings);
-                skip = skipValue + allListings.size();
-                fetchBooks(DEFAULT_QUERY, startIndex);
-
-                Log.d(TAG, "Total number of listings: " + String.valueOf(skip));
+                skip = client.getCurrentSkip();
+                startIndex = client.getCurrentStart();
+                scrollListener.setLoading(false);
+                swipeContainer.setRefreshing(false);
             }
-        });
-    }
-
-    private void fetchBooks(String queryString, long start){
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, GOOGLE_BOOKS_URL + queryString + "&startIndex=" + String.valueOf(start), null,
-                new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-
-                    Log.d(TAG, "fetchBooks()");
-                    
-                    books.addAll(Book.fromJsonArray(response.getJSONArray(ITEMS_KEY))); // temporary
-                    items.addAll(Book.fromJsonArray(response.getJSONArray(ITEMS_KEY)));
-                    startIndex = books.size();
-                    adapter.notifyDataSetChanged();
-
-                    if (start == 0){
-                        scrollListener.resetState();
-                        swipeContainer.setRefreshing(false);
-                        rvListings.setVisibility(View.VISIBLE);
-                        pb.setVisibility(View.GONE);
-                    }
-
-                    scrollListener.setLoading(false);
-
-                    Log.d(TAG, "Total number of books: " + String.valueOf(startIndex));
-
-                } catch (JSONException e) {
-                    Log.e(TAG, e.getMessage(), e);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, error.toString(), error);
-            }
-        });
-
-        queue.add(jsonObjectRequest);
+        };
     }
 
     private void setEndlessScrollListener() {
         scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                Log.i(TAG, String.valueOf(page));
-                queryListings(skip);
+                scrollListener.setLoading(true);
+                client.fetchItems(skip, startIndex);
             }
         };
 
@@ -243,7 +136,9 @@ public class ListingsFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                queryListings(0);
+                scrollListener.setLoading(true);
+                items.clear();
+                client.fetchItems(0,0);
             }
         });
 
@@ -256,6 +151,11 @@ public class ListingsFragment extends Fragment {
 
     private void goListingForm(){
         Fragment fragment = new ListingFormFragment();
+        replaceFragment(fragment);
+    }
+
+    private void goDetailView(){
+        Fragment fragment = new ListingDetailFragment();
         replaceFragment(fragment);
     }
 
