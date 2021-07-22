@@ -2,33 +2,12 @@ package com.example.booksmart.ui.listings;
 
 import android.app.Application;
 import android.os.Parcelable;
-import android.util.Log;
-import android.view.View;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.booksmart.Client;
-import com.example.booksmart.MainActivity;
-import com.example.booksmart.adapters.ListingAdapter;
-import com.example.booksmart.models.Book;
 import com.example.booksmart.models.Item;
-import com.example.booksmart.models.Listing;
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 

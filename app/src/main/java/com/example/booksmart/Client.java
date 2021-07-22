@@ -1,10 +1,7 @@
 package com.example.booksmart;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
