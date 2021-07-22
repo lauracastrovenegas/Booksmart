@@ -52,7 +52,6 @@ public class ListingsViewModel extends AndroidViewModel {
 
             @Override
             public void onListingSaved(Listing listing) {
-                Log.i(TAG, "onListingSaved()");
                 itemArrayList.add(listing);
                 items.setValue(itemArrayList);
             }
