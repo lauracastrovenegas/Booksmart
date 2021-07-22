@@ -39,7 +39,6 @@ public abstract class Client {
     public static final String DEFAULT_QUERY = "college+textbook";
     public static final String ITEMS_KEY = "items";
 
-    Context context;
     RequestQueue queue;
     List<Item> items;
     int skip;
