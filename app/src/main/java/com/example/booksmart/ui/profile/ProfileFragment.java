@@ -5,15 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -21,19 +17,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.booksmart.MainActivity;
 import com.example.booksmart.R;
 import com.example.booksmart.WelcomeActivity;
-import com.example.booksmart.adapters.ListingAdapter;
-import com.example.booksmart.databinding.FragmentProfileBinding;
+import com.example.booksmart.adapters.HorizontalItemAdapter;
 import com.example.booksmart.models.Item;
-import com.example.booksmart.ui.listings.ListingsViewModel;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
@@ -49,7 +40,7 @@ public class ProfileFragment extends Fragment {
     TextView tvUserName;
     TextView tvUserSchool;
     RecyclerView rvListings;
-    ListingAdapter listingAdapter;
+    HorizontalItemAdapter listingAdapter;
     LinearLayoutManager listingsLayoutManager;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -64,10 +55,11 @@ public class ProfileFragment extends Fragment {
         rvListings = view.findViewById(R.id.rvProfileListings);
 
         user = ParseUser.getCurrentUser();
-        listingAdapter = new ListingAdapter(getContext(), new ArrayList<Item>());
+
         listingsLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        rvListings.setAdapter(listingAdapter);
         rvListings.setLayoutManager(listingsLayoutManager);
+
+        setViewModels();
 
         tvUsername.setText(user.getUsername());
         tvUserName.setText(user.getString(KEY_NAME));
@@ -96,6 +88,19 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    private void setViewModels(){
+        profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+
+        // set observer for listings view model
+        profileViewModel.getListings().observe(getViewLifecycleOwner(), new Observer<List<Item>>(){
+            @Override
+            public void onChanged(List<Item> items) {
+                listingAdapter = new HorizontalItemAdapter(getContext(), items);
+                rvListings.setAdapter(listingAdapter);
+            }
+        });
     }
 
     public void goWelcomeActivity(){
