@@ -120,6 +120,7 @@ public abstract class Client {
             public void done(List<Listing> allListings, ParseException e) {
                 if (e != null){
                     Log.e(TAG, QUERY_ERROR, e);
+                    fetchBooks(DEFAULT_QUERY, startIndexValue);
                     return;
                 }
 
@@ -154,7 +155,7 @@ public abstract class Client {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, error.toString(), error);
-                error.printStackTrace();
+                onDone(items);
             }
         });
 
