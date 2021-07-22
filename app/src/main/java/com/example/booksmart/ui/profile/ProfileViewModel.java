@@ -1,19 +1,67 @@
 package com.example.booksmart.ui.profile;
 
+import android.app.Application;
+import android.util.Log;
+
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ProfileViewModel extends ViewModel {
+import com.example.booksmart.Client;
+import com.example.booksmart.models.Item;
+import com.example.booksmart.models.Listing;
+import com.parse.ParseUser;
 
-    private MutableLiveData<String> mText;
+import java.util.ArrayList;
+import java.util.List;
 
-    public ProfileViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is notifications fragment");
+public class ProfileViewModel extends AndroidViewModel {
+
+    public static final String TAG = "ProfileViewModel";
+
+    MutableLiveData<List<Item>> listings;
+    List<Item> listingsArrayList;
+    Client client;
+    int listingsSkip;
+
+    public ProfileViewModel(Application application) {
+        super(application);
+
+        listings = new MutableLiveData<>();
+        listingsArrayList = new ArrayList<>();
+        listingsSkip = 0;
+
+        setClient(application);
+
+        client.queryUserListings(listingsSkip, ParseUser.getCurrentUser());
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    private void setClient(Application application) {
+        client = new Client(application.getBaseContext()) {
+            @Override
+            public void onDone(List<Item> items) {
+                listingsArrayList.addAll(items);
+                listings.setValue(listingsArrayList);
+                Log.i(TAG, listingsArrayList.toString());
+            }
+
+            @Override
+            public void onListingSaved(Listing listing) {
+
+            }
+        };
+    }
+
+    public LiveData<List<Item>> getListings() {
+        return listings;
+    }
+
+    public Item getListing(int position){
+        return listingsArrayList.get(position);
+    }
+
+    public List<Item> getListingsArrayList(){
+        return listingsArrayList;
     }
 }
