@@ -28,12 +28,16 @@ public class ProfileFragment extends Fragment {
 
     ProfileViewModel profileViewModel;
     Button btnLogout;
+    TextView tvUsername;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         btnLogout = view.findViewById(R.id.btnLogout);
+        tvUsername = view.findViewById(R.id.tvToolbarTitleUsername);
+
+        tvUsername.setText(ParseUser.getCurrentUser().getUsername());
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
