@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.listings.ListingsFragment">
 
-    <include layout="@layout/toolbar_main"
+    <include layout="@layout/toolbar_listings"
         android:id="@+id/listings_toolbar"></include>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

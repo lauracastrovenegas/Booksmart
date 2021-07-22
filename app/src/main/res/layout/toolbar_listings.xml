@@ -43,9 +43,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="0dp"
         android:fontFamily="@font/work_sans"
+        android:text="@string/listings_toolbar_title"
         android:textColor="@color/black"
-        android:textSize="@dimen/font_size_large"
-        tools:text="Marketplace" />
+        android:textSize="@dimen/font_size_large" />
 
     <ImageButton
         android:id="@+id/ibToolbarSearch"
