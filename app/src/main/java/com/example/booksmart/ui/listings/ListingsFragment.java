@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,12 +24,16 @@ import com.example.booksmart.R;
 import com.example.booksmart.adapters.ListingAdapter;
 import com.example.booksmart.models.Item;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.parse.ParseUser;
+
 import java.util.List;
 
 public class ListingsFragment extends Fragment {
 
     public static final String TAG = "ListingsFragment";
     public static final int GRID_SPAN = 2;
+    public static final String KEY_SCHOOL = "school";
+    private static final String KEY_PAGE_TITLE = "Marketplace";
 
     ListingsViewModel listingsViewModel;
     ListingDetailViewModel listingDetailViewModel;
@@ -39,6 +44,8 @@ public class ListingsFragment extends Fragment {
     GridLayoutManager gridLayoutManager;
     FloatingActionButton btnCompose;
     ProgressBar pb;
+    TextView toolbarTitleSchool;
+    TextView toolbarTitlePage;
     Boolean fragmentRecreated; // Indicates if fragment has just been created
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +55,11 @@ public class ListingsFragment extends Fragment {
         btnCompose = view.findViewById(R.id.btnAddListing);
         rvListings = view.findViewById(R.id.rvListing);
         pb = view.findViewById(R.id.pbLoadingListings);
+        toolbarTitleSchool = view.findViewById(R.id.tvToolbarTitleSchool);
+        toolbarTitlePage = view.findViewById(R.id.tvToolbarTitlePage);
+
+        toolbarTitleSchool.setText(ParseUser.getCurrentUser().getString(KEY_SCHOOL));
+        toolbarTitlePage.setText(KEY_PAGE_TITLE);
 
         fragmentRecreated = true;
 

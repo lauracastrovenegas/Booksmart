@@ -6,11 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.listings.ListingsFragment">
 
+    <include layout="@layout/toolbar_main"
+        android:id="@+id/listings_toolbar"></include>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="0dp">
+        android:layout_below="@+id/listings_toolbar">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -27,18 +30,17 @@
                 android:visibility="invisible"
                 tools:visibility="visible" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvListing"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:background="@color/white"
-            android:paddingStart="10dp"
-            android:paddingTop="10dp"
-            android:paddingEnd="10dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvListing"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:background="@color/white"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/btnAddListing"
