@@ -83,7 +83,6 @@ public class ListingsViewModel extends AndroidViewModel {
     }
 
     public void postListing(String title, String description, String price, String course, File photoFile){
-        Log.i(TAG, "postListing()");
         client.onPostListing(title, description, price, course, photoFile);
     }
 
