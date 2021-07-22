@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ public class ProfileFragment extends Fragment {
     TextView tvUserName;
     TextView tvUserSchool;
     TextView tvNoListingText;
+    ImageButton ibOptions;
     RecyclerView rvListings;
     HorizontalItemAdapter listingAdapter;
     LinearLayoutManager listingsLayoutManager;
@@ -54,6 +56,7 @@ public class ProfileFragment extends Fragment {
         tvUserName = view.findViewById(R.id.tvProfileUserName);
         tvUserSchool = view.findViewById(R.id.tvProfileSchoolName);
         tvNoListingText = view.findViewById(R.id.tvNoListingsText);
+        ibOptions = view.findViewById(R.id.ibToolbarOptionsProfile);
         rvListings = view.findViewById(R.id.rvProfileListings);
 
         user = ParseUser.getCurrentUser();
@@ -81,6 +84,20 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 ParseUser.logOut();
                 goWelcomeActivity();
+            }
+        });
+
+        ibOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (btnLogout.getVisibility()){
+                    case View.INVISIBLE:
+                        btnLogout.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        btnLogout.setVisibility(View.INVISIBLE);
+                        break;
+                }
             }
         });
 
