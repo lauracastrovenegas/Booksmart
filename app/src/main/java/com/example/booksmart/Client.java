@@ -40,16 +40,13 @@ public abstract class Client {
     public static final String ITEMS_KEY = "items";
 
     Context context;
-    Activity activity;
     RequestQueue queue;
     List<Item> items;
     int skip;
     long startIndex;
     String currentUserSchool;
 
-    public Client(Context context, Activity activity){
-        this.context = context;
-        this.activity = activity;
+    public Client(Context context){
         queue = Volley.newRequestQueue(context);
         items = new ArrayList<>();
         skip = 0;
@@ -109,7 +106,7 @@ public abstract class Client {
                         try {
                             List<Book> newBooks = Book.fromJsonArray(response.getJSONArray(ITEMS_KEY));
                             items.addAll(newBooks);
-                            startIndex = start + newBooks.size() + 1;
+                            startIndex = start + newBooks.size() + 2;
 
                             onDone(items);
                         } catch (JSONException e) {
