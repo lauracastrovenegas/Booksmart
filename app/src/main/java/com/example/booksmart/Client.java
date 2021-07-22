@@ -47,6 +47,7 @@ public abstract class Client {
     RequestQueue queue;
     List<Item> items;
     ParseUser user;
+    int listingSkip;
     int skip;
     long startIndex;
     String currentUserSchool;
@@ -73,6 +74,36 @@ public abstract class Client {
     public void fetchItems(int skipValue, long startIndexValue){
         items.clear();
         queryListings(skipValue, startIndexValue);
+    }
+
+    public void queryUserListings(int skipValue, ParseUser user) {
+        user.fetchInBackground(new GetCallback<ParseObject>() {
+            @Override
+            public void done(ParseObject object, ParseException e) {
+                ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
+                query.include(Listing.KEY_USER);
+                query.whereEqualTo(Listing.KEY_USER, user);
+                query.setSkip(skipValue);
+                query.setLimit(LISTING_LIMIT);
+                query.addDescendingOrder(DESCENDING_ORDER_KEY);
+
+                query.findInBackground(new FindCallback<Listing>() {
+
+                    @Override
+                    public void done(List<Listing> allListings, ParseException e) {
+                        if (e != null){
+                            Log.e(TAG, QUERY_ERROR, e);
+                            return;
+                        }
+
+                        listingSkip = skipValue + allListings.size();
+                        List<Item> newList = new ArrayList<>();
+                        newList.addAll(allListings);
+                        onDone(newList);
+                    }
+                });
+            }
+        });
     }
 
     public void queryListings(int skipValue, long startIndexValue) {
