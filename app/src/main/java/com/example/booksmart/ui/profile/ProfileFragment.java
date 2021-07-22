@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,24 +17,24 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.booksmart.MainActivity;
+import com.example.booksmart.R;
 import com.example.booksmart.WelcomeActivity;
 import com.example.booksmart.databinding.FragmentProfileBinding;
 import com.parse.ParseUser;
 
+import org.w3c.dom.Text;
+
 public class ProfileFragment extends Fragment {
 
-    private ProfileViewModel profileViewModel;
-    private FragmentProfileBinding binding;
+    ProfileViewModel profileViewModel;
+    Button btnLogout;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        profileViewModel =
-                new ViewModelProvider(this).get(ProfileViewModel.class);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        binding = FragmentProfileBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        btnLogout = view.findViewById(R.id.btnLogout);
 
-        final Button btnLogout = binding.btnLogout;
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -40,13 +42,13 @@ public class ProfileFragment extends Fragment {
                 goWelcomeActivity();
             }
         });
-        return root;
+
+        return view;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 
     public void goWelcomeActivity(){
