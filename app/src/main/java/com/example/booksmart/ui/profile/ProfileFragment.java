@@ -25,6 +25,7 @@ import com.example.booksmart.models.Item;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProfileFragment extends Fragment {
@@ -61,6 +62,8 @@ public class ProfileFragment extends Fragment {
 
         user = ParseUser.getCurrentUser();
 
+        listingAdapter = new HorizontalItemAdapter(getContext(), new ArrayList<>());
+        rvListings.setAdapter(listingAdapter);
         listingsLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvListings.setLayoutManager(listingsLayoutManager);
 
