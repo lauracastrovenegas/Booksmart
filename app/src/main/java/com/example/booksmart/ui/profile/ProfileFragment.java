@@ -11,7 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,9 +23,14 @@ import com.bumptech.glide.Glide;
 import com.example.booksmart.R;
 import com.example.booksmart.WelcomeActivity;
 import com.example.booksmart.adapters.HorizontalItemAdapter;
+import com.example.booksmart.helpers.ItemClickSupport;
 import com.example.booksmart.models.Item;
+import com.example.booksmart.ui.listings.ListingDetailFragment;
+import com.example.booksmart.ui.listings.ListingDetailViewModel;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +42,7 @@ public class ProfileFragment extends Fragment {
     public static final String KEY_IMAGE = "image";
 
     ProfileViewModel profileViewModel;
+    ListingDetailViewModel listingDetailViewModel;
     ParseUser user;
     Button btnLogout;
     TextView tvUsername;
@@ -108,11 +116,30 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Click listener for items in the recycler view
+        ItemClickSupport.addTo(rvListings).setOnItemClickListener(
+                new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        Item item = profileViewModel.getListing(position);
+                        listingDetailViewModel.setPreviousFragment(new ProfileFragment());
+                        listingDetailViewModel.select(item);
+                        goDetailView();
+                    }
+                }
+        );
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
     }
 
     private void setViewModels(){
+        listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
 
         // set observer for profile view model
@@ -133,5 +160,18 @@ public class ProfileFragment extends Fragment {
         Intent intent = new Intent(getContext(), WelcomeActivity.class);
         getActivity().finish();
         startActivity(intent);
+    }
+
+    private void goDetailView(){
+        Fragment fragment = new ListingDetailFragment();
+        replaceFragment(fragment);
+    }
+
+    private void replaceFragment(Fragment fragment) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in, R.anim.slide_out_left);
+        transaction.replace(R.id.nav_host_fragment_activity_main, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

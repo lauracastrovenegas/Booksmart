@@ -23,6 +23,7 @@ import com.example.booksmart.R;
 import com.example.booksmart.helpers.DeviceDimensionsHelper;
 import com.example.booksmart.models.Book;
 import com.example.booksmart.models.Item;
+import com.example.booksmart.ui.profile.ProfileFragment;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -74,13 +75,6 @@ public class ListingDetailFragment extends Fragment {
 
         progressBar.setVisibility(View.VISIBLE);
 
-        ivClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goTimeline();
-            }
-        });
-
         return itemView;
     }
 
@@ -88,6 +82,16 @@ public class ListingDetailFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ListingDetailViewModel listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
+
+        listingDetailViewModel.getPreviousFragment().observe(getViewLifecycleOwner(), fragment -> {
+            ivClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToFragment(fragment);
+                }
+            });
+        });
+
         listingDetailViewModel.getSelected().observe(getViewLifecycleOwner(), item -> {
             if (item.getType() == Item.TYPE_LISTING){
                 ParseUser user = ((Listing) item).getParseUser("user");
@@ -178,8 +182,7 @@ public class ListingDetailFragment extends Fragment {
         return authorString;
     }
 
-    private void goTimeline(){
-        Fragment fragment = new ListingsFragment();
+    private void goToFragment(Fragment fragment){
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out);
         transaction.replace(R.id.nav_host_fragment_activity_main, fragment);

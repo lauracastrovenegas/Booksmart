@@ -23,6 +23,7 @@ import com.example.booksmart.helpers.ItemClickSupport;
 import com.example.booksmart.R;
 import com.example.booksmart.adapters.ItemAdapter;
 import com.example.booksmart.models.Item;
+import com.example.booksmart.ui.profile.ProfileFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.ParseUser;
 
@@ -91,6 +92,7 @@ public class ListingsFragment extends Fragment {
                         saveRecyclerViewState();
                         Item item = listingsViewModel.getItem(position);
                         listingDetailViewModel.select(item);
+                        listingDetailViewModel.setPreviousFragment(new ListingsFragment());
                         goDetailView();
                     }
                 }
