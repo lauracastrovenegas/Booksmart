@@ -31,6 +31,12 @@
 
     <string name="welcome_back">Welcome back!</string>
 
+    <!-- Profile Fragment -->
+    <string name="profile_listings_title">My Listings</string>
+    <string name="profile_resource_title">My Resources</string>
+    <string name="profile_saved_listings_title">My Saved Listings</string>
+    <string name="profile_saved_resources_title">My Saved Resources</string>
+
     <!-- Button Text -->
     <string name="select_photo">Select Photo</string>
     <string name="capture_photo">Capture Photo</string>
@@ -40,6 +46,7 @@
     <string name="login">Log in</string>
     <string name="signup">Sign Up</string>
     <string name="signin">Sign in</string>
+    <string name="logout">Log out</string>
     <string name="create_account">Create Account</string>
 
     <!-- Placeholder Strings -->
@@ -48,6 +55,6 @@
     <string name="title_placeholder">Biology Textbook</string>
     <string name="username_placeholder">laura.castro.test</string>
     <string name="price_placeholder">$10</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="user_name_placeholder">John Doe</string>
+    <string name="school_name_placeholder">Facebook University</string>
 </resources>
