@@ -10,10 +10,109 @@
         android:id="@+id/profile_toolbar"
         layout="@layout/toolbar_profile" />
 
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Log out" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/profile_toolbar">
+
+        <RelativeLayout
+            android:id="@+id/profile_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/logout"
+                android:layout_centerHorizontal="true"/>
+
+            <ImageView
+                android:id="@+id/ivProfileUserPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="60dp"
+                tools:src="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/tvProfileUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ivProfileUserPhoto"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/work_sans_light"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_heading"
+                tools:text="@string/user_name_placeholder"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/tvProfileSchoolName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvProfileUserName"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="0dp"
+                android:fontFamily="@font/graduate"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_medium"
+                tools:text="@string/school_name_placeholder" />
+
+            <RelativeLayout
+                android:id="@+id/rlListingsProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/activity_horizontal_margin"
+                android:paddingVertical="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/tvProfileSchoolName">
+
+                <TextView
+                    android:id="@+id/tvMyListingsTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/profile_listings_title"
+                    android:fontFamily="@font/work_sans"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_size_large"
+                    android:layout_marginBottom="5dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvProfileListings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvMyListingsTitle" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlResourcesProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rlListingsProfile"
+                android:paddingHorizontal="@dimen/activity_horizontal_margin"
+                android:paddingVertical="10dp"
+                android:background="@color/purple_500">
+
+                <TextView
+                    android:id="@+id/tvMyResourcesTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/profile_resource_title"
+                    android:fontFamily="@font/work_sans"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_size_large"
+                    android:layout_marginBottom="5dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvProfileResources"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvMyResourcesTitle"
+                    android:layout_marginTop="0dp" />
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>
