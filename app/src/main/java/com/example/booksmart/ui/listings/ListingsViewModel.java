@@ -52,7 +52,7 @@ public class ListingsViewModel extends AndroidViewModel {
 
             @Override
             public void onListingSaved(Listing listing) {
-                itemArrayList.add(listing);
+                itemArrayList.add(0, listing);
                 items.setValue(itemArrayList);
             }
         };
