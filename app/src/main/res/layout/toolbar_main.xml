@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/toolbar_main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:minHeight="?attr/actionBarSize"
+        android:outlineProvider="none"
+        android:theme="?attr/actionBarTheme" />
+
+    <ImageView
+        android:id="@+id/ivToolbarLogo"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_centerHorizontal="false"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="20dp"
+        app:srcCompat="@drawable/ic_shopping_store_purple" />
+
+    <TextView
+        android:id="@+id/tvToolbarTitleSchool"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/graduate"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_size_large"
+        tools:text="Facebook University" />
+
+    <TextView
+        android:id="@+id/tvToolbarTitlePage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvToolbarTitleSchool"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
+        android:fontFamily="@font/work_sans"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_size_large"
+        tools:text="Marketplace" />
+
+    <ImageButton
+        android:id="@+id/ibToolbarSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="-10dp"
+        android:layout_toStartOf="@+id/ibToolbarOptions"
+        android:backgroundTint="@color/white"
+        app:srcCompat="@drawable/ic_search_solid" />
+
+    <ImageButton
+        android:id="@+id/ibToolbarOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="10dp"
+        android:backgroundTint="@color/white"
+        app:srcCompat="@drawable/ic_ellipsis_v_solid" />
+
+</RelativeLayout>
