@@ -44,7 +44,6 @@ public class ListingsFragment extends Fragment {
     FloatingActionButton btnCompose;
     ProgressBar pb;
     TextView toolbarTitleSchool;
-    TextView toolbarTitlePage;
     Boolean fragmentRecreated; // Indicates if fragment has just been created
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,7 +54,6 @@ public class ListingsFragment extends Fragment {
         rvListings = view.findViewById(R.id.rvListing);
         pb = view.findViewById(R.id.pbLoadingListings);
         toolbarTitleSchool = view.findViewById(R.id.tvToolbarTitleSchool);
-        toolbarTitlePage = view.findViewById(R.id.tvToolbarTitlePage);
 
         toolbarTitleSchool.setText(ParseUser.getCurrentUser().getString(KEY_SCHOOL));
 
