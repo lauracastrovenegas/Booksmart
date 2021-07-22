@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.booksmart.Camera;
 import com.example.booksmart.R;
 import com.example.booksmart.models.Listing;
+import com.example.booksmart.ui.profile.ProfileViewModel;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
@@ -70,6 +71,7 @@ public class ListingFormFragment extends Fragment {
     ParseUser currentUser;
     ProgressBar pb;
     ListingsViewModel listingsViewModel;
+    ProfileViewModel profileViewModel;
 
     public ListingFormFragment() {}
 
@@ -81,6 +83,7 @@ public class ListingFormFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_listing_form, container, false);
 
         listingsViewModel = new ViewModelProvider(requireActivity()).get(ListingsViewModel.class);
+        profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
 
         etTitle = view.findViewById(R.id.etListingTitle);
         etDescription = view.findViewById(R.id.etListingDescription);
@@ -150,6 +153,7 @@ public class ListingFormFragment extends Fragment {
         }
 
         listingsViewModel.postListing(title, description, price, course, photoFile);
+        profileViewModel.addToListings(title, description, price, course, photoFile);
         pb.setVisibility(ProgressBar.VISIBLE);
 
         etTitle.setText(BLANK);

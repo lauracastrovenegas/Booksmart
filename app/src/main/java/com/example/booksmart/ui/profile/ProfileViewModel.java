@@ -11,8 +11,12 @@ import androidx.lifecycle.ViewModel;
 import com.example.booksmart.Client;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,5 +67,22 @@ public class ProfileViewModel extends AndroidViewModel {
 
     public List<Item> getListingsArrayList(){
         return listingsArrayList;
+    }
+
+    public void addToListings(String title, String description, String price, String course, File photoFile) {
+        Listing listing = new Listing();
+        listing.setTitle(title);
+        listing.setDescription(description);
+        listing.setPrice(Integer.parseInt(price));
+        listing.setCourse(course);
+        listing.setUser(ParseUser.getCurrentUser());
+        ParseFile image = new ParseFile(photoFile);
+        image.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                listing.setImage(image);
+                listingsArrayList.add(0, listing);
+            }
+        });
     }
 }
