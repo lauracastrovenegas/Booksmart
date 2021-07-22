@@ -6,6 +6,11 @@
     <string name="title_resources">Resources</string>
     <string name="title_profile">Profile</string>
 
+    <!-- Toolbar Text -->
+    <string name="listings_toolbar_title">Marketplace</string>
+    <string name="profile_toolbar_title">Your Profile</string>
+    <string name="resources_toolbar_title">Resources</string>
+
     <!-- Listing Post Form -->
     <string name="post_listing_title">Post a Listing</string>
     <string name="post_listing_instructions">Sell Textbooks, Clickers, Lab Manuals, or any other course materials you don’t need anymore. </string>
