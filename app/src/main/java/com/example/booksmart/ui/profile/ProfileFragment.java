@@ -49,10 +49,8 @@ public class ProfileFragment extends Fragment {
     TextView tvUserName;
     TextView tvUserSchool;
     RecyclerView rvListings;
-    RecyclerView rvResources;
     ListingAdapter listingAdapter;
     LinearLayoutManager listingsLayoutManager;
-    LinearLayoutManager resourcesLayoutManager;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -64,16 +62,12 @@ public class ProfileFragment extends Fragment {
         tvUserName = view.findViewById(R.id.tvProfileUserName);
         tvUserSchool = view.findViewById(R.id.tvProfileSchoolName);
         rvListings = view.findViewById(R.id.rvProfileListings);
-        rvResources = view.findViewById(R.id.rvProfileResources);
 
         user = ParseUser.getCurrentUser();
         listingAdapter = new ListingAdapter(getContext(), new ArrayList<Item>());
         listingsLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvListings.setAdapter(listingAdapter);
         rvListings.setLayoutManager(listingsLayoutManager);
-
-        resourcesLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        rvResources.setLayoutManager(resourcesLayoutManager);
 
         tvUsername.setText(user.getUsername());
         tvUserName.setText(user.getString(KEY_NAME));
