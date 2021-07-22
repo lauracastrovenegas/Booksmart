@@ -2,6 +2,8 @@ package com.example.booksmart;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -15,13 +17,16 @@ import com.example.booksmart.models.Listing;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,14 +40,19 @@ public abstract class Client {
     public static final String GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1/volumes?fields=items(id,volumeInfo,saleInfo)&printType=books&maxResults=" + String.valueOf(LISTING_LIMIT) + "&q=";
     public static final String DEFAULT_QUERY = "college+textbook";
     public static final String ITEMS_KEY = "items";
+    public static final String SAVING_ERROR = "Error while saving";
+    private static final String ERROR_SAVING_IMAGE = "Could not save image uploaded. Please try again!";
 
+    Context context;
     RequestQueue queue;
     List<Item> items;
+    ParseUser user;
     int skip;
     long startIndex;
     String currentUserSchool;
 
     public Client(Context context){
+        this.context = context;
         queue = Volley.newRequestQueue(context);
         items = new ArrayList<>();
         skip = 0;
@@ -50,7 +60,7 @@ public abstract class Client {
     }
 
     public void onInitialLoad(){
-        ParseUser user = ParseUser.getCurrentUser();
+        user = ParseUser.getCurrentUser();
         user.fetchInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
@@ -129,4 +139,49 @@ public abstract class Client {
     }
 
     public abstract void onDone(List<Item> items);
+
+    public void onPostListing(String title, String description, String price, String course, File photoFile){
+        saveImageToParse(title, description, price, course, photoFile);
+    }
+
+    private void saveImageToParse(String title, String description, String price, String course, File photoFile){
+        ParseFile photo = new ParseFile(photoFile);
+        photo.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null){
+                    Toast.makeText(context, ERROR_SAVING_IMAGE, Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, e.getMessage(), e);
+                    return;
+                }
+
+                saveListing(title, description, price, course, photo, user);
+            }
+        });
+    }
+
+    private void saveListing(String title, String description, String price, String course, ParseFile photoFile, ParseUser currentUser) {
+        Listing listing = new Listing();
+        listing.setTitle(title);
+        listing.setDescription(description);
+        listing.setPrice(Integer.parseInt(price));
+        listing.setCourse(course);
+        listing.setImage(photoFile);
+        listing.setUser(currentUser);
+        listing.setSchool(currentUser.getString(KEY_SCHOOL));
+
+        listing.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null){
+                    Log.e(TAG, SAVING_ERROR, e);
+                    Toast.makeText(context, SAVING_ERROR, Toast.LENGTH_SHORT).show();
+                }
+
+                onListingSaved(listing);
+            }
+        });
+    }
+
+    public abstract void onListingSaved(Listing listing);
 }

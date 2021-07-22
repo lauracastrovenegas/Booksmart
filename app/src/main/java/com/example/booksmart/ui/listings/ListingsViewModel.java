@@ -2,18 +2,22 @@ package com.example.booksmart.ui.listings;
 
 import android.app.Application;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.example.booksmart.Client;
 import com.example.booksmart.models.Item;
+import com.example.booksmart.models.Listing;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListingsViewModel extends AndroidViewModel {
 
-    public static final String TAG = "ListingsFragmentViewModel";
+    public static final String TAG = "ListingsViewModel";
 
     MutableLiveData<List<Item>> items;
     List<Item> itemArrayList;
@@ -45,6 +49,13 @@ public class ListingsViewModel extends AndroidViewModel {
                 skip = client.getCurrentSkip();
                 startIndex = client.getCurrentStart();
             }
+
+            @Override
+            public void onListingSaved(Listing listing) {
+                Log.i(TAG, "onListingSaved()");
+                itemArrayList.add(listing);
+                items.setValue(itemArrayList);
+            }
         };
     }
 
@@ -69,6 +80,11 @@ public class ListingsViewModel extends AndroidViewModel {
         skip = 0;
         startIndex = 0;
         fetchMoreItems();
+    }
+
+    public void postListing(String title, String description, String price, String course, File photoFile){
+        Log.i(TAG, "postListing()");
+        client.onPostListing(title, description, price, course, photoFile);
     }
 
     public void setRecyclerViewState(Parcelable recyclerViewState) {

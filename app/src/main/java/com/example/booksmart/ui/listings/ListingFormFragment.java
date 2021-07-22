@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.provider.MediaStore;
 import android.util.Log;
@@ -68,6 +69,7 @@ public class ListingFormFragment extends Fragment {
     String course;
     ParseUser currentUser;
     ProgressBar pb;
+    ListingsViewModel listingsViewModel;
 
     public ListingFormFragment() {}
 
@@ -77,6 +79,8 @@ public class ListingFormFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_listing_form, container, false);
+
+        listingsViewModel = new ViewModelProvider(requireActivity()).get(ListingsViewModel.class);
 
         etTitle = view.findViewById(R.id.etListingTitle);
         etDescription = view.findViewById(R.id.etListingDescription);
@@ -145,57 +149,20 @@ public class ListingFormFragment extends Fragment {
             return;
         }
 
-        saveImageToParse();
-    }
-
-    private void saveImageToParse(){
+        listingsViewModel.postListing(title, description, price, course, photoFile);
         pb.setVisibility(ProgressBar.VISIBLE);
 
-        ParseFile photo = new ParseFile(photoFile);
-        photo.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null){
-                    pb.setVisibility(ProgressBar.INVISIBLE);
-                    Toast.makeText(getContext(), ERROR_SAVING_IMAGE, Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, e.getMessage(), e);
-                    return;
-                }
+        etTitle.setText(BLANK);
+        etDescription.setText(BLANK);
+        etCourse.setText(BLANK);
+        etPrice.setText(BLANK);
+        ivImage.setImageResource(0);
+        pb.setVisibility(View.INVISIBLE);
 
-                saveListing(title, description, price, course, photo, currentUser);
-            }
-        });
+        goListingTimeline();
     }
 
-    private void saveListing(String title, String description, String price, String course, ParseFile photoFile, ParseUser currentUser) {
-        Listing listing = new Listing();
-        listing.setTitle(title);
-        listing.setDescription(description);
-        listing.setPrice(Integer.parseInt(price));
-        listing.setCourse(course);
-        listing.setImage(photoFile);
-        listing.setUser(currentUser);
-
-        listing.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null){
-                    Log.e(TAG, SAVING_ERROR, e);
-                    Toast.makeText(getContext(), SAVING_ERROR, Toast.LENGTH_SHORT).show();
-                }
-
-                etTitle.setText(BLANK);
-                etDescription.setText(BLANK);
-                etCourse.setText(BLANK);
-                etPrice.setText(BLANK);
-                ivImage.setImageResource(0);
-                pb.setVisibility(ProgressBar.INVISIBLE);
-                goListingTimeline();
-            }
-        });
-
-    }
-
+    // on result of image capture or image selection
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onActivityResult (int requestCode, int resultCode, Intent data) {
