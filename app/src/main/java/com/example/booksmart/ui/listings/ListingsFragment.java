@@ -1,15 +1,18 @@
 package com.example.booksmart.ui.listings;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +25,9 @@ import com.example.booksmart.R;
 import com.example.booksmart.adapters.ListingAdapter;
 import com.example.booksmart.models.Item;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,20 +35,18 @@ public class ListingsFragment extends Fragment {
 
     public static final String TAG = "ListingsFragment";
     public static final int GRID_SPAN = 2;
+    public static final int NEW_LISTING_FRAGMENT_REQUEST_CODE = 1;
 
+    ListingsViewModel listingsViewModel;
     ListingDetailViewModel listingDetailViewModel;
     SwipeRefreshLayout swipeContainer;
     EndlessRecyclerViewScrollListener scrollListener;
-    List<Item> items;
     RecyclerView rvListings;
     ListingAdapter adapter;
     GridLayoutManager gridLayoutManager;
     FloatingActionButton btnCompose;
     ProgressBar pb;
-    Client client;
-
-    long startIndex;
-    int skip;
+    Boolean fragmentRecreated;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -52,18 +56,17 @@ public class ListingsFragment extends Fragment {
         rvListings = view.findViewById(R.id.rvListing);
         pb = view.findViewById(R.id.pbLoadingListings);
 
-        skip = 0;
-        startIndex = 0;
-        listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
-        items = new ArrayList<>();
-        adapter = new ListingAdapter(getContext(), items);
+        fragmentRecreated = true;
+
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_SPAN);
         rvListings.setLayoutManager(gridLayoutManager);
-        rvListings.setAdapter(adapter);
+
+        listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
+        listingsViewModel = new ViewModelProvider(requireActivity()).get(ListingsViewModel.class);
+        listingsViewModel.getItems().observe(getViewLifecycleOwner(), itemsUpdateObserver);
 
         setEndlessScrollListener();
         setSwipeContainer(view);
-        setClient();
 
         btnCompose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,12 +77,27 @@ public class ListingsFragment extends Fragment {
 
         rvListings.setVisibility(View.GONE);
         pb.setVisibility(View.VISIBLE);
-        scrollListener.setLoading(true);
-
-        client.onInitialLoad();
 
         return view;
     }
+
+    private Observer<List<Item>> itemsUpdateObserver = new Observer<List<Item>>(){
+        @Override
+        public void onChanged(List<Item> items) {
+            if (fragmentRecreated){
+                adapter = new ListingAdapter(getContext(), items);
+                rvListings.setAdapter(adapter);
+                scrollListener.resetState();
+
+                fragmentRecreated = false;
+                rvListings.setVisibility(View.VISIBLE);
+                pb.setVisibility(View.GONE);
+            }
+
+            adapter.notifyDataSetChanged();
+            scrollListener.setLoading(false);
+        }
+    };
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -89,7 +107,7 @@ public class ListingsFragment extends Fragment {
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Item item = items.get(position);
+                        Item item = listingsViewModel.getItemArrayList().get(position);
                         listingDetailViewModel.select(item);
                         goDetailView();
                     }
@@ -97,37 +115,18 @@ public class ListingsFragment extends Fragment {
         );
     }
 
-    private void setClient(){
-        client = new Client(getContext(), getActivity()) {
-            @Override
-            public void onDone(List<Item> itemList) {
-                items.addAll(itemList);
-                adapter.notifyDataSetChanged();
-
-                if (skip == 0){
-                    scrollListener.resetState();
-                    rvListings.setVisibility(View.VISIBLE);
-                    pb.setVisibility(View.GONE);
-                }
-
-                skip = client.getCurrentSkip();
-                startIndex = client.getCurrentStart();
-                scrollListener.setLoading(false);
-                swipeContainer.setRefreshing(false);
-            }
-        };
-    }
-
     private void setEndlessScrollListener() {
         scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                Log.i(TAG, "onLoadMore()");
                 scrollListener.setLoading(true);
-                client.fetchItems(skip, startIndex);
+                listingsViewModel.fetchMoreItems();
             }
         };
 
         rvListings.addOnScrollListener(scrollListener);
+        scrollListener.setLoading(false);
     }
 
     private void setSwipeContainer(View view){
@@ -136,9 +135,10 @@ public class ListingsFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                scrollListener.setLoading(true);
-                items.clear();
-                client.fetchItems(0,0);
+                listingsViewModel.resetList();
+                swipeContainer.setRefreshing(false);
+                scrollListener.resetState();
+                scrollListener.setLoading(false);
             }
         });
 
