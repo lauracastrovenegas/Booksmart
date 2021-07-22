@@ -51,9 +51,7 @@ public class ProfileViewModel extends AndroidViewModel {
             }
 
             @Override
-            public void onListingSaved(Listing listing) {
-
-            }
+            public void onListingSaved(Listing listing) {}
         };
     }
 

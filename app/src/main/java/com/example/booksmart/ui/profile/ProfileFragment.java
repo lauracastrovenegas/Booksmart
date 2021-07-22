@@ -115,7 +115,7 @@ public class ProfileFragment extends Fragment {
     private void setViewModels(){
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
 
-        // set observer for listings view model
+        // set observer for profile view model
         profileViewModel.getListings().observe(getViewLifecycleOwner(), new Observer<List<Item>>(){
             @Override
             public void onChanged(List<Item> items) {

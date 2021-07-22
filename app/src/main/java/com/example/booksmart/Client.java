@@ -84,7 +84,6 @@ public abstract class Client {
                 query.include(Listing.KEY_USER);
                 query.whereEqualTo(Listing.KEY_USER, user);
                 query.setSkip(skipValue);
-                query.setLimit(LISTING_LIMIT);
                 query.addDescendingOrder(DESCENDING_ORDER_KEY);
 
                 query.findInBackground(new FindCallback<Listing>() {
