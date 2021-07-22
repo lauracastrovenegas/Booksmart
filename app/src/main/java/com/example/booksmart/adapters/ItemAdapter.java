@@ -5,7 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,14 +30,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ListingAdapter extends RecyclerView.Adapter {
+public class ItemAdapter extends RecyclerView.Adapter {
 
     public static final String TAG = "ListingAdapter";
 
     List<Item> items;
     Context context;
 
-    public ListingAdapter(Context context, List<Item> items){
+    public ItemAdapter(Context context, List<Item> items){
         this.context = context;
         this.items = items;
     }
@@ -88,6 +90,7 @@ public class ListingAdapter extends RecyclerView.Adapter {
         TextView tvTitle;
         TextView tvPrice;
         TextView tvUserUsername;
+        RelativeLayout rlContainer;
 
         public ListingViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -97,6 +100,7 @@ public class ListingAdapter extends RecyclerView.Adapter {
             tvTitle = itemView.findViewById(R.id.tvListingTitle);
             tvPrice = itemView.findViewById(R.id.tvListingPrice);
             tvUserUsername = itemView.findViewById(R.id.tvListingUser);
+            rlContainer = itemView.findViewById(R.id.rlItemListing);
         }
 
         public void bind(int position) {

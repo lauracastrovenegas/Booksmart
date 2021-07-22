@@ -21,7 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.booksmart.helpers.EndlessRecyclerViewScrollListener;
 import com.example.booksmart.helpers.ItemClickSupport;
 import com.example.booksmart.R;
-import com.example.booksmart.adapters.ListingAdapter;
+import com.example.booksmart.adapters.ItemAdapter;
 import com.example.booksmart.models.Item;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.ParseUser;
@@ -39,7 +39,7 @@ public class ListingsFragment extends Fragment {
     SwipeRefreshLayout swipeContainer;
     EndlessRecyclerViewScrollListener scrollListener;
     RecyclerView rvListings;
-    ListingAdapter adapter;
+    ItemAdapter adapter;
     GridLayoutManager gridLayoutManager;
     FloatingActionButton btnCompose;
     ProgressBar pb;
@@ -126,7 +126,7 @@ public class ListingsFragment extends Fragment {
                 // only instantiate adapter and set adapter for rv right after the fragment has been created
                 // every time after that initial set up, just notify the adapter
                 if (fragmentRecreated){
-                    adapter = new ListingAdapter(getContext(), items);
+                    adapter = new ItemAdapter(getContext(), items);
                     rvListings.setAdapter(adapter);
                     scrollListener.resetState();
 
