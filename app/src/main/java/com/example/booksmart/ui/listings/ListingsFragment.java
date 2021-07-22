@@ -47,7 +47,7 @@ public class ListingsFragment extends Fragment {
     GridLayoutManager gridLayoutManager;
     FloatingActionButton btnCompose;
     ProgressBar pb;
-    Boolean fragmentRecreated;
+    Boolean fragmentRecreated; // Indicates if fragment has just been created
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -62,14 +62,7 @@ public class ListingsFragment extends Fragment {
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_SPAN);
         rvListings.setLayoutManager(gridLayoutManager);
 
-        listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
-        listingsViewModel = new ViewModelProvider(requireActivity()).get(ListingsViewModel.class);
-        listingsViewModel.getItems().observe(getViewLifecycleOwner(), itemsUpdateObserver);
-
-        if (listingsViewModel.getRecyclerViewState() != null){
-            rvListings.getLayoutManager().onRestoreInstanceState(listingsViewModel.getRecyclerViewState());
-        }
-
+        setViewModels();
         setEndlessScrollListener();
         setSwipeContainer(view);
 
@@ -86,28 +79,11 @@ public class ListingsFragment extends Fragment {
         return view;
     }
 
-    private Observer<List<Item>> itemsUpdateObserver = new Observer<List<Item>>(){
-        @Override
-        public void onChanged(List<Item> items) {
-            if (fragmentRecreated){
-                adapter = new ListingAdapter(getContext(), items);
-                rvListings.setAdapter(adapter);
-                scrollListener.resetState();
-
-                fragmentRecreated = false;
-                rvListings.setVisibility(View.VISIBLE);
-                pb.setVisibility(View.GONE);
-            }
-
-            adapter.notifyDataSetChanged();
-            scrollListener.setLoading(false);
-        }
-    };
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Click listener for items in the recycler view
         ItemClickSupport.addTo(rvListings).setOnItemClickListener(
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
@@ -139,11 +115,41 @@ public class ListingsFragment extends Fragment {
         saveRecyclerViewState();
     }
 
+    private void setViewModels(){
+        listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
+        listingsViewModel = new ViewModelProvider(requireActivity()).get(ListingsViewModel.class);
+
+        // set observer for listings view model
+        listingsViewModel.getItems().observe(getViewLifecycleOwner(), new Observer<List<Item>>(){
+            @Override
+            public void onChanged(List<Item> items) {
+                // only instantiate adapter and set adapter for rv right after the fragment has been created
+                // every time after that initial set up, just notify the adapter
+                if (fragmentRecreated){
+                    adapter = new ListingAdapter(getContext(), items);
+                    rvListings.setAdapter(adapter);
+                    scrollListener.resetState();
+
+                    fragmentRecreated = false;
+                    rvListings.setVisibility(View.VISIBLE);
+                    pb.setVisibility(View.GONE);
+                }
+
+                adapter.notifyDataSetChanged();
+                scrollListener.setLoading(false);
+            }
+        });
+
+        // restore state of recycler view if any saved in ListingsViewModel
+        if (listingsViewModel.getRecyclerViewState() != null){
+            rvListings.getLayoutManager().onRestoreInstanceState(listingsViewModel.getRecyclerViewState());
+        }
+    }
+
     private void setEndlessScrollListener() {
         scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                Log.i(TAG, "onLoadMore()");
                 scrollListener.setLoading(true);
                 listingsViewModel.fetchMoreItems();
             }
