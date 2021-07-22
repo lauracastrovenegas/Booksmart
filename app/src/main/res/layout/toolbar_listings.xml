@@ -33,7 +33,7 @@
         android:fontFamily="@font/graduate"
         android:textColor="@color/black"
         android:textSize="@dimen/font_size_large"
-        tools:text="Facebook University" />
+        tools:text="@string/school_name_placeholder" />
 
     <TextView
         android:id="@+id/tvToolbarTitlePage"
