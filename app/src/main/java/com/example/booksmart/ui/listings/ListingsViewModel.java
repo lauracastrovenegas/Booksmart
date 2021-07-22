@@ -1,6 +1,7 @@
 package com.example.booksmart.ui.listings;
 
 import android.app.Application;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 
@@ -40,6 +41,7 @@ public class ListingsViewModel extends AndroidViewModel {
     Client client;
     int skip;
     long startIndex;
+    Parcelable recyclerViewState;
 
     public ListingsViewModel(Application application) {
         super(application);
@@ -88,5 +90,13 @@ public class ListingsViewModel extends AndroidViewModel {
         skip = 0;
         startIndex = 0;
         fetchMoreItems();
+    }
+
+    public void setRecyclerViewState(Parcelable recyclerViewState) {
+        this.recyclerViewState = recyclerViewState;
+    }
+
+    public Parcelable getRecyclerViewState() {
+        return recyclerViewState;
     }
 }

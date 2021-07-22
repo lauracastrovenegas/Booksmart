@@ -1,6 +1,7 @@
 package com.example.booksmart.ui.listings;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,10 @@ public class ListingsFragment extends Fragment {
         listingsViewModel = new ViewModelProvider(requireActivity()).get(ListingsViewModel.class);
         listingsViewModel.getItems().observe(getViewLifecycleOwner(), itemsUpdateObserver);
 
+        if (listingsViewModel.getRecyclerViewState() != null){
+            rvListings.getLayoutManager().onRestoreInstanceState(listingsViewModel.getRecyclerViewState());
+        }
+
         setEndlessScrollListener();
         setSwipeContainer(view);
 
@@ -107,12 +112,31 @@ public class ListingsFragment extends Fragment {
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        saveRecyclerViewState();
                         Item item = listingsViewModel.getItem(position);
                         listingDetailViewModel.select(item);
                         goDetailView();
                     }
                 }
         );
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        saveRecyclerViewState();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        saveRecyclerViewState();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        saveRecyclerViewState();
     }
 
     private void setEndlessScrollListener() {
@@ -139,6 +163,7 @@ public class ListingsFragment extends Fragment {
                 swipeContainer.setRefreshing(false);
                 scrollListener.resetState();
                 scrollListener.setLoading(false);
+                listingsViewModel.setRecyclerViewState(null);
             }
         });
 
@@ -147,6 +172,11 @@ public class ListingsFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+    }
+
+    private void saveRecyclerViewState(){
+        Parcelable recylerViewState = rvListings.getLayoutManager().onSaveInstanceState();
+        listingsViewModel.setRecyclerViewState(recylerViewState);
     }
 
     private void goListingForm(){
