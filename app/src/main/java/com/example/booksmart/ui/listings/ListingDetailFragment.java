@@ -174,12 +174,16 @@ public class ListingDetailFragment extends Fragment {
     }
 
     private String setAuthorString(List<String> authors){
-        String authorString = "By " + authors.get(0);
-        for (int i = 1; i < authors.size(); i++){
-            authorString = authorString + ", " + authors.get(i);
+        if (authors.size() > 0){
+            String authorString = "By " + authors.get(0);
+            for (int i = 1; i < authors.size(); i++){
+                authorString = authorString + ", " + authors.get(i);
+            }
+
+            return authorString;
         }
 
-        return authorString;
+        return "";
     }
 
     private void goToFragment(Fragment fragment){
