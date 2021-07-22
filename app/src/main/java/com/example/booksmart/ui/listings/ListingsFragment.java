@@ -46,7 +46,6 @@ public class ListingsFragment extends Fragment {
     FloatingActionButton btnCompose;
     ProgressBar pb;
     TextView toolbarTitleSchool;
-    ImageView ivLogo;
     Boolean fragmentRecreated; // Indicates if fragment has just been created
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +56,6 @@ public class ListingsFragment extends Fragment {
         rvListings = view.findViewById(R.id.rvListing);
         pb = view.findViewById(R.id.pbLoadingListings);
         toolbarTitleSchool = view.findViewById(R.id.tvToolbarTitleSchool);
-        ivLogo = view.findViewById(R.id.ivToolbarLogo);
 
         toolbarTitleSchool.setText(ParseUser.getCurrentUser().getString(KEY_SCHOOL));
         fragmentRecreated = true;
@@ -73,15 +71,6 @@ public class ListingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 goListingForm();
-            }
-        });
-
-        ivLogo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GridLayoutManager layoutManager = (GridLayoutManager) rvListings.getLayoutManager();
-                layoutManager.smoothScrollToPosition(rvListings, null, 0);
-                listingsViewModel.resetList();
             }
         });
 
