@@ -107,7 +107,7 @@ public class ListingsFragment extends Fragment {
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Item item = listingsViewModel.getItemArrayList().get(position);
+                        Item item = listingsViewModel.getItem(position);
                         listingDetailViewModel.select(item);
                         goDetailView();
                     }

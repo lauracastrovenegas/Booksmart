@@ -71,6 +71,10 @@ public class ListingsViewModel extends AndroidViewModel {
         return items;
     }
 
+    public Item getItem(int position){
+        return itemArrayList.get(position);
+    }
+
     public List<Item> getItemArrayList(){
         return itemArrayList;
     }
