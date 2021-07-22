@@ -33,7 +33,6 @@ public class ListingsFragment extends Fragment {
     public static final String TAG = "ListingsFragment";
     public static final int GRID_SPAN = 2;
     public static final String KEY_SCHOOL = "school";
-    private static final String KEY_PAGE_TITLE = "Marketplace";
 
     ListingsViewModel listingsViewModel;
     ListingDetailViewModel listingDetailViewModel;
@@ -59,7 +58,6 @@ public class ListingsFragment extends Fragment {
         toolbarTitlePage = view.findViewById(R.id.tvToolbarTitlePage);
 
         toolbarTitleSchool.setText(ParseUser.getCurrentUser().getString(KEY_SCHOOL));
-        toolbarTitlePage.setText(KEY_PAGE_TITLE);
 
         fragmentRecreated = true;
 
