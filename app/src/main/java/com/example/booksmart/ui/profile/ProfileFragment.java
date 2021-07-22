@@ -39,6 +39,7 @@ public class ProfileFragment extends Fragment {
     ImageView ivUserProfilePhoto;
     TextView tvUserName;
     TextView tvUserSchool;
+    TextView tvNoListingText;
     RecyclerView rvListings;
     HorizontalItemAdapter listingAdapter;
     LinearLayoutManager listingsLayoutManager;
@@ -52,6 +53,7 @@ public class ProfileFragment extends Fragment {
         ivUserProfilePhoto = view.findViewById(R.id.ivProfileUserPhoto);
         tvUserName = view.findViewById(R.id.tvProfileUserName);
         tvUserSchool = view.findViewById(R.id.tvProfileSchoolName);
+        tvNoListingText = view.findViewById(R.id.tvNoListingsText);
         rvListings = view.findViewById(R.id.rvProfileListings);
 
         user = ParseUser.getCurrentUser();
@@ -99,6 +101,10 @@ public class ProfileFragment extends Fragment {
             public void onChanged(List<Item> items) {
                 listingAdapter = new HorizontalItemAdapter(getContext(), items);
                 rvListings.setAdapter(listingAdapter);
+                if (items.size() == 0){
+                    rvListings.setVisibility(View.GONE);
+                    tvNoListingText.setVisibility(View.VISIBLE);
+                }
             }
         });
     }

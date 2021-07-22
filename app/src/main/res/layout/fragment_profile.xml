@@ -84,6 +84,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tvMyListingsTitle" />
+
+                <TextView
+                    android:id="@+id/tvNoListingsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvMyListingsTitle"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="0dp"
+                    android:text="@string/profile_no_listings"
+                    android:visibility="invisible" />
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -105,12 +116,26 @@
                     android:textSize="@dimen/font_size_large"
                     android:layout_marginBottom="5dp"/>
 
+                <TextView
+                    android:id="@+id/tvNoResourcesText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvMyResourcesTitle"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="0dp"
+                    android:text="@string/profile_no_resources"
+                    android:textColor="@color/white"
+                    android:visibility="visible"
+                    tools:visibility="visible" />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvProfileResources"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tvMyResourcesTitle"
-                    android:layout_marginTop="0dp" />
+                    android:layout_marginTop="0dp"
+                    android:visibility="invisible" />
+
             </RelativeLayout>
 
         </RelativeLayout>

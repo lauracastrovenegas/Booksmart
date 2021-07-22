@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Booksmart</string>
     <string name="back4app_server_url">https://parseapi.back4app.com/</string>
     <string name="title_activity_main">MainActivity</string>
@@ -36,6 +36,8 @@
     <string name="profile_resource_title">My Resources</string>
     <string name="profile_saved_listings_title">My Saved Listings</string>
     <string name="profile_saved_resources_title">My Saved Resources</string>
+    <string name="profile_no_listings">You do not have any active listings!</string>
+    <string name="profile_no_resources">You have not uploaded any resources!</string>
 
     <!-- Button Text -->
     <string name="select_photo">Select Photo</string>
