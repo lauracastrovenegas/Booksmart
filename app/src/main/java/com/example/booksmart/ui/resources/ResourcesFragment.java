@@ -12,34 +12,30 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.booksmart.R;
 import com.example.booksmart.databinding.FragmentResourcesBinding;
+import com.parse.ParseUser;
 
 public class ResourcesFragment extends Fragment {
 
+    public static final String KEY_SCHOOL = "school";
+
     private ResourcesViewModel resourcesViewModel;
-    private FragmentResourcesBinding binding;
+    TextView toolbarTitleSchool;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        resourcesViewModel =
-                new ViewModelProvider(this).get(ResourcesViewModel.class);
 
-        binding = FragmentResourcesBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        View view = inflater.inflate(R.layout.fragment_resources, container, false);
 
-        final TextView textView = binding.textDashboard;
-        resourcesViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
+        toolbarTitleSchool = view.findViewById(R.id.tvToolbarTitleSchool);
+        toolbarTitleSchool.setText(ParseUser.getCurrentUser().getString(KEY_SCHOOL));
+
+        return view;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 }
