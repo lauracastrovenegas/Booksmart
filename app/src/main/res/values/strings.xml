@@ -8,7 +8,7 @@
 
     <!-- Toolbar Text -->
     <string name="listings_toolbar_title">Marketplace</string>
-    <string name="profile_toolbar_title">Your Profile</string>
+    <string name="profile_toolbar_title">Profile</string>
     <string name="resources_toolbar_title">Resources</string>
 
     <!-- Listing Post Form -->
@@ -60,4 +60,5 @@
     <string name="user_name_placeholder">John Doe</string>
     <string name="school_name_placeholder">Facebook University</string>
     <string name="title_chat">Messages</string>
+    <string name="no_messages_text">You don\'t have any messages!</string>
 </resources>
