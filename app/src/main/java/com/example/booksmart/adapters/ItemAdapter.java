@@ -170,7 +170,11 @@ public class ItemAdapter extends RecyclerView.Adapter {
                         .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(45, 45, 0, 0)))
                         .into(ivImage);
             } else {
-                ivImage.setImageResource(R.drawable.book_cover_placeholder);
+                Glide.with(context)
+                        .load(R.drawable.book_cover_placeholder)
+                        .override(screenWidth/2,(screenWidth/2))
+                        .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(45, 45, 0, 0)))
+                        .into(ivImage);
             }
 
             tvUserUsername.setText(book.getUserName());
