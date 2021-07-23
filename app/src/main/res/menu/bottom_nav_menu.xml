@@ -10,6 +10,12 @@
         android:id="@+id/navigation_listings"
         android:icon="@drawable/home_icon_selector"
         android:title="@string/title_listings" />
+
+    <item
+        android:id="@+id/navigation_chat"
+        android:icon="@drawable/chat_icon_selector"
+        android:title="@string/title_chat" />
+
     <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/user_icon_selector"
