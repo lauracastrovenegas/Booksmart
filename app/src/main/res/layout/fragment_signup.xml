@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/orange_500"
     tools:context=".ui.welcome.SignupFragment">
 
     <ImageView
@@ -16,7 +15,7 @@
         android:layout_marginStart="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:src="?attr/actionModeCloseDrawable"
-        app:tint="@color/white" />
+        app:tint="@color/orange_500" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -34,7 +33,7 @@
 
             <include
                 android:id="@+id/signup_fragment_logo"
-                layout="@layout/booksmart_logo_white"
+                layout="@layout/booksmart_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp" />
@@ -48,7 +47,7 @@
                 android:fontFamily="@font/work_sans_semibold"
                 android:gravity="center"
                 android:text="@string/signup_title"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/font_size_heading" />
 
             <EditText
@@ -58,28 +57,29 @@
                 android:layout_below="@+id/tvSignupTitle"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/black"
                 android:fontFamily="@font/work_sans"
                 android:hint="@string/signup_name"
                 android:inputType="textPersonName|textCapWords"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:textSize="@dimen/font_size_medium" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/etSignupSchool"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/etSignupName"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:backgroundTint="@color/white"
-                android:fontFamily="@font/work_sans"
+                android:spinnerMode="dropdown"
                 android:hint="@string/signup_school"
-                android:inputType="textPersonName|textCapWords"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                android:textSize="@dimen/font_size_medium" />
+                android:textColorHint="@color/black"
+                android:backgroundTint="@color/black"
+                android:fontFamily="@font/work_sans"
+                android:dropDownHeight="130dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_medium"/>
 
             <EditText
                 android:id="@+id/etSignupEmail"
@@ -88,12 +88,12 @@
                 android:layout_below="@+id/etSignupSchool"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/black"
                 android:fontFamily="@font/work_sans"
                 android:hint="@string/signup_email"
                 android:inputType="textEmailAddress"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:textSize="@dimen/font_size_medium" />
 
             <EditText
@@ -103,12 +103,12 @@
                 android:layout_below="@+id/etSignupEmail"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/black"
                 android:fontFamily="@font/work_sans"
                 android:hint="@string/signup_username"
                 android:inputType="text|textNoSuggestions"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:textSize="@dimen/font_size_medium" />
 
             <EditText
@@ -118,12 +118,12 @@
                 android:layout_below="@+id/etSignupUsername"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/black"
                 android:fontFamily="@font/work_sans"
                 android:hint="@string/signup_password"
                 android:inputType="textPassword"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:textSize="@dimen/font_size_medium" />
 
             <TextView
@@ -135,7 +135,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/work_sans"
                 android:text="@string/upload_profile_image"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="@dimen/font_size_small" />
 
             <Button
@@ -146,11 +146,11 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/orange_500"
                 android:fontFamily="@font/work_sans"
                 android:text="@string/select_photo"
                 android:textAllCaps="false"
-                android:textColor="@color/orange_500"
+                android:textColor="@color/white"
                 android:textSize="@dimen/font_size_small"
                 app:cornerRadius="@dimen/button_corner_radius" />
 
@@ -162,11 +162,11 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="20dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/orange_500"
                 android:fontFamily="@font/work_sans"
                 android:text="@string/capture_photo"
                 android:textAllCaps="false"
-                android:textColor="@color/orange_500"
+                android:textColor="@color/white"
                 android:textSize="@dimen/font_size_small"
                 app:cornerRadius="@dimen/button_corner_radius" />
 
@@ -190,11 +190,11 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="0dp"
                 android:layout_marginBottom="20dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/orange_500"
                 android:fontFamily="@font/work_sans"
                 android:text="@string/create_account"
                 android:textAllCaps="false"
-                android:textColor="@color/orange_500"
+                android:textColor="@color/white"
                 android:textSize="@dimen/font_size_large"
                 app:cornerRadius="@dimen/button_corner_radius" />
 
@@ -208,7 +208,7 @@
                 android:visibility="invisible"
                 android:indeterminate="true"
                 android:indeterminateTintMode="src_atop"
-                android:indeterminateTint="@color/white"/>
+                android:indeterminateTint="@color/black"/>
 
         </RelativeLayout>
 

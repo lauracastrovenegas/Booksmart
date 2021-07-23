@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -15,15 +17,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.booksmart.Camera;
 import com.example.booksmart.R;
 import com.example.booksmart.WelcomeActivity;
+import com.example.booksmart.data.Colleges;
 import com.example.booksmart.models.User;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -32,9 +40,13 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SignupFragment extends Fragment {
 
@@ -56,7 +68,8 @@ public class SignupFragment extends Fragment {
 
     ImageView ivBack;
     EditText etName;
-    EditText etSchool;
+    AutoCompleteTextView tvSchool;
+    ArrayAdapter<String> spinnerArrayAdapter;
     EditText etEmail;
     EditText etUsername;
     EditText etPassword;
@@ -69,6 +82,8 @@ public class SignupFragment extends Fragment {
     String photoFileName;
     File photoFile;
     ProgressBar pb;
+    Colleges colleges;
+    List<String> collegesList;
 
     public SignupFragment() {}
 
@@ -80,7 +95,7 @@ public class SignupFragment extends Fragment {
 
         ivBack = view.findViewById(R.id.ivSignupBack);
         etName = view.findViewById(R.id.etSignupName);
-        etSchool = view.findViewById(R.id.etSignupSchool);
+        tvSchool = view.findViewById(R.id.etSignupSchool);
         etEmail = view.findViewById(R.id.etSignupEmail);
         etUsername = view.findViewById(R.id.etSignupUsername);
         etPassword = view.findViewById(R.id.etSignupPassword);
@@ -90,8 +105,11 @@ public class SignupFragment extends Fragment {
         btnSignUp = view.findViewById(R.id.btnCreateAccount);
         pb = view.findViewById(R.id.pbLoadingSignup);
 
+        colleges = new Colleges(getContext());
+        collegesList = colleges.getColleges();
         camera = new Camera(getContext(), getActivity());
         photoFileName = PHOTO_NAME_SUFFIX;
+        setAutoCompleteTextView();
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +142,11 @@ public class SignupFragment extends Fragment {
         return view;
     }
 
+    private void setAutoCompleteTextView() {
+        spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, collegesList);
+        tvSchool.setAdapter(spinnerArrayAdapter);
+    }
+
     private void onSignUp(){
         pb.setVisibility(View.VISIBLE);
 
@@ -131,7 +154,7 @@ public class SignupFragment extends Fragment {
         String password = etPassword.getText().toString();
         String email = etEmail.getText().toString();
         String name = etName.getText().toString();
-        String school = etSchool.getText().toString();
+        String school = tvSchool.getText().toString();
 
         if (isAnyStringNullOrEmpty(username, password, name, email, school)) {
             pb.setVisibility(View.INVISIBLE);
@@ -167,7 +190,7 @@ public class SignupFragment extends Fragment {
         String password = etPassword.getText().toString();
         String email = etEmail.getText().toString();
         String name = etName.getText().toString();
-        String school = etSchool.getText().toString();
+        String school = tvSchool.getText().toString();
 
         User user = new User();
         user.setUsername(username);
