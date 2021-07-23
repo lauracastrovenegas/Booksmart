@@ -80,7 +80,7 @@
                     android:fontFamily="@font/work_sans"
                     android:text="@string/profile_listings_title"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/font_size_large" />
+                    android:textSize="@dimen/font_size_subheading" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvProfileListings"
@@ -96,6 +96,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="0dp"
                     android:text="@string/profile_no_listings"
+                    android:textColor="@color/white"
                     android:visibility="invisible" />
 
             </RelativeLayout>
