@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
+    <!--<item
         android:id="@+id/navigation_resources"
         android:icon="@drawable/book_icon_selector"
-        android:title="@string/title_resources" />
+        android:title="@string/title_resources" />-->
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/user_icon_selector"
+        android:title="@string/title_profile" />
 
     <item
         android:id="@+id/navigation_listings"
@@ -15,10 +20,5 @@
         android:id="@+id/navigation_chat"
         android:icon="@drawable/chat_icon_selector"
         android:title="@string/title_chat" />
-
-    <item
-        android:id="@+id/navigation_profile"
-        android:icon="@drawable/user_icon_selector"
-        android:title="@string/title_profile" />
 
 </menu>

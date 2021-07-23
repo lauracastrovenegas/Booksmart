@@ -11,11 +11,11 @@
         android:label="@string/title_listings"
         tools:layout="@layout/fragment_listings" />
 
-    <fragment
+    <!--<fragment
         android:id="@+id/navigation_resources"
         android:name="com.example.booksmart.ui.resources.ResourcesFragment"
         android:label="@string/title_resources"
-        tools:layout="@layout/fragment_resources" />
+        tools:layout="@layout/fragment_resources" />-->
 
     <fragment
         android:id="@+id/navigation_profile"
