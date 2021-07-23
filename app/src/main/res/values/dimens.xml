@@ -18,4 +18,5 @@
     <dimen name="button_height">40dp</dimen>
     <dimen name="button_height_small">35dp</dimen>
     <dimen name="button_corner_radius">20dp</dimen>
+    <dimen name="action_button_padding">10dp</dimen>
 </resources>

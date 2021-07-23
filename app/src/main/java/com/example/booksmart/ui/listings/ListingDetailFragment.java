@@ -1,5 +1,6 @@
 package com.example.booksmart.ui.listings;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,14 +12,21 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.example.booksmart.MainActivity;
 import com.example.booksmart.R;
 import com.example.booksmart.helpers.DeviceDimensionsHelper;
 import com.example.booksmart.models.Book;
@@ -38,7 +46,7 @@ public class ListingDetailFragment extends Fragment {
     public static final String KEY = "detail_listing";
     public static final String FAIL_MSG = "Failed to retrieve listing";
     public static final String TAG = "ListingDetailFragment";
-    public static final int IMAGE_HEIGHT = 700;
+    public static final int IMAGE_HEIGHT = 800;
 
     ImageView ivImage;
     ImageView ivUserProfileImage;
@@ -51,6 +59,7 @@ public class ListingDetailFragment extends Fragment {
     TextView tvDescription;
     Button btnMessageSeller;
     Button btnLinkToGoogle;
+    Toolbar toolbar;
     ProgressBar progressBar;
 
     public ListingDetailFragment() {}
@@ -59,6 +68,7 @@ public class ListingDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View itemView = inflater.inflate(R.layout.fragment_listing_detail, container, false);
+        setHasOptionsMenu(true);
 
         ivImage = itemView.findViewById(R.id.ivListingImageDetail);
         ivUserProfileImage = itemView.findViewById(R.id.ivListingUserDetail);
@@ -72,7 +82,7 @@ public class ListingDetailFragment extends Fragment {
         btnLinkToGoogle = itemView.findViewById(R.id.btnGoogleBooksLink);
         ivClose = itemView.findViewById(R.id.ivClose);
         progressBar = itemView.findViewById(R.id.pbListingDetail);
-
+        toolbar = itemView.findViewById(R.id.detail_toolbar);
         progressBar.setVisibility(View.VISIBLE);
 
         return itemView;
@@ -101,13 +111,13 @@ public class ListingDetailFragment extends Fragment {
                     parseException.printStackTrace();
                 }
 
+                ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 ParseFile image = ((Listing) item).getParseFile(Listing.KEY_IMAGE);
                 if (image != null){
                     int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getContext());
 
                     Glide.with(getContext())
                             .load(image.getUrl())
-                            .override(screenWidth,IMAGE_HEIGHT)
                             .centerCrop()
                             .into(ivImage);
                 }
@@ -127,6 +137,25 @@ public class ListingDetailFragment extends Fragment {
                 tvDescription.setText(((Listing) item).getString(Listing.KEY_DESCRIPTION));
                 btnLinkToGoogle.setVisibility(View.GONE);
                 tvAuthors.setVisibility(View.GONE);
+
+                if (user.getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
+                    btnMessageSeller.setVisibility(View.GONE);
+                    toolbar.inflateMenu(R.menu.detail_options_menu);
+                    toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            int id = item.getItemId();
+                            if (id == R.id.edit_listing) {
+                                Toast.makeText(getContext(), "Edit", Toast.LENGTH_SHORT).show();
+                            }
+                            if (id == R.id.remove_listing) {
+                                Toast.makeText(getContext(), "Remove", Toast.LENGTH_SHORT).show();
+                            }
+                            return true;
+                        }
+                    });
+                }
+
             } else {
                 String image = ((Book) item).getImage();
                 if (image != null){
@@ -134,7 +163,7 @@ public class ListingDetailFragment extends Fragment {
 
                     Glide.with(getContext())
                             .load(image)
-                            .override(screenWidth/2,IMAGE_HEIGHT)
+                            .override(screenWidth/2 + 60, IMAGE_HEIGHT)
                             .centerCrop()
                             .into(ivImage);
                 }

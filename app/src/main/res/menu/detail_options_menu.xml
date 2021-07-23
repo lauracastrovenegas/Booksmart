@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item android:id="@+id/detailMenu"
+        android:icon="@drawable/ic_menu_hamburger_purple"
+        android:title=""
+        app:showAsAction="always">
+        <menu>
+            <item
+                android:id="@+id/edit_listing"
+                android:icon="@drawable/ic_edit"
+                android:title="@string/edit_listing"
+                app:showAsAction="always|withText"/>
+
+            <item
+                android:id="@+id/remove_listing"
+                android:icon="@drawable/ic_trash"
+                android:title="@string/remove_listing"
+                app:showAsAction="always|withText"/>
+
+        </menu>
+    </item>
+</menu>
