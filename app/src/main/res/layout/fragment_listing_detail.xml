@@ -6,12 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".ui.listings.ListingDetailFragment">
 
+    <RelativeLayout
+        android:id="@+id/detail_toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize">
         <ProgressBar
             android:id="@+id/pbListingDetail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:indeterminate="true"
             android:indeterminateTint="@color/purple_500"
+            android:layout_centerVertical="true"
             android:indeterminateTintMode="src_atop"
             android:layout_centerHorizontal="true"
             android:visibility="invisible"
@@ -21,17 +27,19 @@
             android:id="@+id/ivClose"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginVertical="@dimen/activity_vertical_margin"
             android:src="?attr/actionModeCloseDrawable"
             app:tint="@color/purple_500"/>
+
+    </RelativeLayout>
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/ivClose"
+            android:layout_below="@id/detail_toolbar_layout"
             android:scrollbars="vertical"
             android:isScrollContainer="true">
 

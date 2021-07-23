@@ -6,21 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".ui.listings.ListingFormFragment">
 
-    <ImageView
-        android:id="@+id/ivPostClose"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:src="?attr/actionModeCloseDrawable"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
-        app:tint="@color/purple_500" />
+    <RelativeLayout
+        android:id="@+id/form_toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize">
+
+        <ImageView
+            android:id="@+id/ivPostClose"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:src="?attr/actionModeCloseDrawable"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            app:tint="@color/purple_500" />
+
+    </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/ivPostClose"
+        android:layout_below="@+id/form_toolbar_layout"
         android:isScrollContainer="true"
         android:scrollbars="vertical">
 
