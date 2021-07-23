@@ -159,15 +159,15 @@ public class ListingDetailFragment extends Fragment {
             } else {
                 String image = ((Book) item).getImage();
                 int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getContext());
-                if (!image.isEmpty()){
+                if (image.isEmpty() || image == null){
                     Glide.with(getContext())
-                            .load(image)
+                            .load(R.drawable.book_cover_placeholder)
                             .override(screenWidth/2 + 60, IMAGE_HEIGHT)
                             .centerCrop()
                             .into(ivImage);
                 } else {
                     Glide.with(getContext())
-                            .load(R.drawable.book_cover_placeholder)
+                            .load(image)
                             .override(screenWidth/2 + 60, IMAGE_HEIGHT)
                             .centerCrop()
                             .into(ivImage);
