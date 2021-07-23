@@ -28,7 +28,7 @@
 
         <include
             android:id="@+id/login_fragment_logo"
-            layout="@layout/booksmart_logo_orange"
+            layout="@layout/booksmart_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp" />
@@ -42,7 +42,7 @@
             android:fontFamily="@font/work_sans"
             android:gravity="center"
             android:text="@string/welcome_back"
-            android:textColor="@color/orange_500"
+            android:textColor="@color/black"
             android:textSize="@dimen/font_size_heading" />
 
         <EditText
@@ -52,13 +52,13 @@
             android:layout_above="@+id/etLoginPassword"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/orange_500"
+            android:backgroundTint="@color/black"
             android:fontFamily="@font/work_sans"
             android:hint="@string/signup_username"
             android:importantForAutofill="no"
             android:inputType="text|textNoSuggestions"
-            android:textColor="@color/orange_500"
-            android:textColorHint="@color/orange_500"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:textSize="@dimen/font_size_medium" />
 
         <EditText
@@ -66,13 +66,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:backgroundTint="@color/orange_500"
+            android:backgroundTint="@color/black"
             android:fontFamily="@font/work_sans"
             android:hint="@string/signup_password"
             android:importantForAutofill="no"
             android:inputType="textPassword"
-            android:textColor="@color/orange_500"
-            android:textColorHint="@color/orange_500"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:textSize="@dimen/font_size_medium" />
 
         <Button
@@ -103,7 +103,7 @@
             android:visibility="invisible"
             android:indeterminate="true"
             android:indeterminateTintMode="src_atop"
-            android:indeterminateTint="@color/orange_500"/>
+            android:indeterminateTint="@color/black"/>
 
     </RelativeLayout>
 

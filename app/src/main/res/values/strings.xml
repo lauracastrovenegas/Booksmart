@@ -23,7 +23,7 @@
     <!-- Sign up Form -->
     <string name="signup_title">Join booksmart</string>
     <string name="signup_name">Name</string>
-    <string name="signup_school">Choose your school</string>
+    <string name="signup_school">College/University</string>
     <string name="signup_email">E-mail</string>
     <string name="signup_username">Username</string>
     <string name="signup_password">Password</string>
@@ -59,4 +59,5 @@
     <string name="price_placeholder">$10</string>
     <string name="user_name_placeholder">John Doe</string>
     <string name="school_name_placeholder">Facebook University</string>
+    <string name="title_chat">Messages</string>
 </resources>

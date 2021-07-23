@@ -22,7 +22,7 @@
         android:layout_centerHorizontal="false"
         android:layout_centerVertical="true"
         android:layout_marginStart="20dp"
-        app:srcCompat="@drawable/ic_shopping_store_purple" />
+        app:srcCompat="@drawable/ic_shopping_store" />
 
     <TextView
         android:id="@+id/tvToolbarTitleUsername"
@@ -33,7 +33,6 @@
         android:fontFamily="@font/work_sans"
         android:textColor="@color/black"
         android:textSize="@dimen/font_size_large"
-        android:textStyle="bold"
         tools:text="@string/username_placeholder" />
 
     <TextView
@@ -42,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/tvToolbarTitleUsername"
-        android:fontFamily="@font/work_sans"
+        android:fontFamily="@font/work_sans_light"
         android:text="@string/profile_toolbar_title"
         android:textColor="@color/black"
         android:textSize="@dimen/font_size_large" />
@@ -55,6 +54,6 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="10dp"
         android:backgroundTint="@color/white"
-        app:srcCompat="@drawable/ic_ellipsis_v_solid" />
+        app:srcCompat="@drawable/ic_menu_hamburger"/>
 
 </RelativeLayout>

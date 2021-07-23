@@ -66,20 +66,21 @@
                 android:id="@+id/rlListingsProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/tvProfileSchoolName"
+                android:layout_marginTop="30dp"
+                android:background="@color/purple_500"
                 android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                android:paddingVertical="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_below="@id/tvProfileSchoolName">
+                android:paddingVertical="10dp">
 
                 <TextView
                     android:id="@+id/tvMyListingsTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/profile_listings_title"
+                    android:layout_marginBottom="5dp"
                     android:fontFamily="@font/work_sans"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/font_size_large"
-                    android:layout_marginBottom="5dp"/>
+                    android:text="@string/profile_listings_title"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_size_large" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvProfileListings"
@@ -98,48 +99,6 @@
                     android:visibility="invisible" />
 
             </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rlResourcesProfile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/rlListingsProfile"
-                android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                android:paddingVertical="10dp"
-                android:background="@color/purple_500">
-
-                <TextView
-                    android:id="@+id/tvMyResourcesTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/profile_resource_title"
-                    android:fontFamily="@font/work_sans"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/font_size_large"
-                    android:layout_marginBottom="5dp"/>
-
-                <TextView
-                    android:id="@+id/tvNoResourcesText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvMyResourcesTitle"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="0dp"
-                    android:text="@string/profile_no_resources"
-                    android:textColor="@color/white"
-                    android:visibility="visible"
-                    tools:visibility="visible" />
-
-                <!--<androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvProfileResources"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvMyResourcesTitle"
-                    android:layout_marginTop="0dp"
-                    android:visibility="gone" />-->
-
-            </RelativeLayout>
-
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

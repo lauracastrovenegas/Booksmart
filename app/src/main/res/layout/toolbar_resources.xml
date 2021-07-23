@@ -22,40 +22,41 @@
         android:layout_centerHorizontal="false"
         android:layout_centerVertical="true"
         android:layout_marginStart="20dp"
-        app:srcCompat="@drawable/ic_shopping_store_purple" />
+        app:srcCompat="@drawable/ic_shopping_store" />
 
     <TextView
         android:id="@+id/tvToolbarTitleSchool"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"
+        android:layout_marginEnd="0dp"
+        android:layout_toStartOf="@+id/ibToolbarOptions"
+        android:layout_toEndOf="@+id/ivToolbarLogo"
         android:fontFamily="@font/graduate"
+        android:gravity="center"
         android:textColor="@color/black"
         android:textSize="@dimen/font_size_large"
-        tools:text="@string/school_name_placeholder" />
+        tools:text="@string/school_name_placeholder"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tvToolbarTitlePage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvToolbarTitleSchool"
-        android:layout_centerHorizontal="true"
+        android:layout_marginStart="5dp"
+        android:layout_centerVertical="true"
         android:layout_marginTop="0dp"
-        android:fontFamily="@font/work_sans"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toStartOf="@+id/ibToolbarOptions"
+        android:layout_toEndOf="@+id/ivToolbarLogo"
+        android:fontFamily="@font/work_sans_light"
+        android:gravity="center"
         android:text="@string/resources_toolbar_title"
         android:textColor="@color/black"
-        android:textSize="@dimen/font_size_large" />
-
-    <ImageButton
-        android:id="@+id/ibToolbarSearch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="-10dp"
-        android:layout_toStartOf="@+id/ibToolbarOptions"
-        android:backgroundTint="@color/white"
-        app:srcCompat="@drawable/ic_search_solid" />
+        android:textSize="@dimen/font_size_subheading" />
 
     <ImageButton
         android:id="@+id/ibToolbarOptions"
@@ -65,6 +66,6 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="10dp"
         android:backgroundTint="@color/white"
-        app:srcCompat="@drawable/ic_ellipsis_v_solid" />
+        app:srcCompat="@drawable/ic_menu_hamburger"/>
 
 </RelativeLayout>
