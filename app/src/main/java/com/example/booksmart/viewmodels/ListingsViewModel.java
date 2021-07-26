@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import com.example.booksmart.helpers.Client;
+import com.example.booksmart.ItemRepository;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
 
@@ -20,7 +20,7 @@ public class ListingsViewModel extends AndroidViewModel {
 
     MutableLiveData<List<Item>> items;
     List<Item> itemArrayList;
-    Client client;
+    ItemRepository itemRepository;
     int skip;
     long startIndex;
     Parcelable recyclerViewState;
@@ -35,22 +35,22 @@ public class ListingsViewModel extends AndroidViewModel {
 
         setClient(application);
 
-        client.onInitialLoad();
+        itemRepository.onInitialLoad();
     }
 
     private void setClient(Application application) {
-        client = new Client(application.getBaseContext()) {
+        itemRepository = new ItemRepository(application.getBaseContext()) {
             @Override
-            public void onDone(List<Item> fetchedItems) {
+            public void onAllItemsFetched(List<Item> fetchedItems) {
                 itemArrayList.addAll(fetchedItems);
                 items.setValue(itemArrayList);
 
-                skip = client.getCurrentSkip();
-                startIndex = client.getCurrentStart();
+                skip = itemRepository.getCurrentSkip();
+                startIndex = itemRepository.getCurrentStart();
             }
 
             @Override
-            public void onListingSaved(Listing listing) {
+            public void listingSaved(Listing listing) {
                 itemArrayList.add(0, listing);
                 items.setValue(itemArrayList);
             }
@@ -70,7 +70,7 @@ public class ListingsViewModel extends AndroidViewModel {
     }
 
     public void fetchMoreItems(){
-        client.fetchItems(skip, startIndex);
+        itemRepository.fetchItems(skip, startIndex);
     }
 
     public void resetList(){
@@ -81,7 +81,7 @@ public class ListingsViewModel extends AndroidViewModel {
     }
 
     public void postListing(String title, String description, String price, String course, File photoFile){
-        client.onPostListing(title, description, price, course, photoFile);
+        itemRepository.onPostListing(title, description, price, course, photoFile);
     }
 
     public void setRecyclerViewState(Parcelable recyclerViewState) {

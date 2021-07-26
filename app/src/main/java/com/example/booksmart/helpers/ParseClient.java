@@ -57,6 +57,7 @@ public abstract class ParseClient {
         this.context = context;
     }
 
+    // Sign up new user -> log in new user
     public void signUpUser(ParseFile savedImage, String username, String password, String email, String name, String school) {
         Log.i(TAG, "signUpUser()");
         User user = new User();
@@ -94,6 +95,7 @@ public abstract class ParseClient {
         });
     }
 
+    // Log in User
     public void loginUser(String username, String password){
         Log.i(TAG, "loginUser()");
         ParseUser.logInInBackground(username, password, new LogInCallback() {
@@ -109,8 +111,7 @@ public abstract class ParseClient {
         });
     }
 
-    public abstract void onUserLoggedIn();
-
+    // get current user and set school
     public void getCurrentUser(){
         Log.i(TAG, "getCurrentUser()");
         user = ParseUser.getCurrentUser();
@@ -123,8 +124,7 @@ public abstract class ParseClient {
         });
     }
 
-    public abstract void onUserFetched(ParseUser user);
-
+    // Query posts for a specific user
     public void queryUserListings(int skipValue, ParseUser user) {
         user.fetchInBackground(new GetCallback<ParseObject>() {
             @Override
@@ -151,10 +151,10 @@ public abstract class ParseClient {
         });
     }
 
-    protected abstract void onQueryUserListingsDone(List<Listing> allListings, ParseException e);
-
+    // Query all listings from skipValue to skipValue + LISTING_LIMIT
     public void queryListings(int skipValue) {
         Log.i(TAG, "queryListings()");
+        Log.i(TAG, String.valueOf(skipValue));
         ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
         query.include(Listing.KEY_USER);
         query.whereEqualTo(KEY_SCHOOL, currentUserSchool);
@@ -171,32 +171,13 @@ public abstract class ParseClient {
                     return;
                 }
 
+                allListings.size();
                 onQueryListingsDone(allListings, e);
             }
         });
     }
 
-    public void saveImageToParse(File photoFile){
-        Log.i(TAG, "saveImageToParse()");
-        if (photoFile != null) {
-            ParseFile photo = new ParseFile(photoFile);
-            photo.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        Toast.makeText(context, ERROR_SAVING_IMAGE, Toast.LENGTH_SHORT).show();
-                        Log.e(TAG, ERROR_SAVING_IMAGE, e);
-                        return;
-                    }
-
-                    onParseImageSaved(photo);
-                }
-            });
-        } else {
-            onParseImageSaved(null);
-        }
-    }
-
+    // Save listing object to parse database
     public void saveListing(String title, String description, String price, String course, ParseFile photoFile, ParseUser currentUser) {
         Listing listing = new Listing();
         listing.setTitle(title);
@@ -220,9 +201,37 @@ public abstract class ParseClient {
         });
     }
 
-    public abstract void onListingSaved(Listing listing);
+    // Save a File as a ParseFile
+    public void saveImageToParse(File photoFile){
+        Log.i(TAG, "saveImageToParse()");
+        if (photoFile != null) {
+            ParseFile photo = new ParseFile(photoFile);
+            photo.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        Toast.makeText(context, ERROR_SAVING_IMAGE, Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, ERROR_SAVING_IMAGE, e);
+                        return;
+                    }
+
+                    onParseImageSaved(photo);
+                }
+            });
+        } else {
+            onParseImageSaved(null);
+        }
+    }
+
+    public abstract void onUserLoggedIn();
+
+    public abstract void onUserFetched(ParseUser user);
 
     public abstract void onQueryListingsDone(List<Listing> items, ParseException e);
+
+    public abstract void onQueryUserListingsDone(List<Listing> allListings, ParseException e);
+
+    public abstract void onListingSaved(Listing listing);
 
     public abstract void onParseImageSaved(ParseFile image);
 }

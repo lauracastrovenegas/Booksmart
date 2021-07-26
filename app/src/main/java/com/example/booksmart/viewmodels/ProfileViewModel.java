@@ -7,7 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.booksmart.helpers.Client;
+import com.example.booksmart.ItemRepository;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
 import com.parse.ParseException;
@@ -25,7 +25,7 @@ public class ProfileViewModel extends AndroidViewModel {
 
     MutableLiveData<List<Item>> listings;
     List<Item> listingsArrayList;
-    Client client;
+    ItemRepository itemRepository;
     int listingsSkip;
 
     public ProfileViewModel(Application application) {
@@ -37,20 +37,20 @@ public class ProfileViewModel extends AndroidViewModel {
 
         setClient(application);
 
-        client.queryUserListings(listingsSkip, ParseUser.getCurrentUser());
+        itemRepository.queryUserListings(listingsSkip, ParseUser.getCurrentUser());
     }
 
     private void setClient(Application application) {
-        client = new Client(application.getBaseContext()) {
+        itemRepository = new ItemRepository(application.getBaseContext()) {
             @Override
-            public void onDone(List<Item> items) {
+            public void onAllItemsFetched(List<Item> items) {
                 listingsArrayList.addAll(items);
                 listings.setValue(listingsArrayList);
                 Log.i(TAG, listingsArrayList.toString());
             }
 
             @Override
-            public void onListingSaved(Listing listing) {}
+            public void listingSaved(Listing listing) {}
         };
     }
 

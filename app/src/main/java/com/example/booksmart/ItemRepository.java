@@ -1,4 +1,4 @@
-package com.example.booksmart.helpers;
+package com.example.booksmart;
 
 import android.content.Context;
 import android.util.Log;
@@ -11,6 +11,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.booksmart.helpers.ParseClient;
 import com.example.booksmart.models.Book;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
@@ -30,36 +31,38 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Client {
+public abstract class ItemRepository {
 
     public static final String TAG = "Listings Client";
     public static final int LISTING_LIMIT = 15;
-    public static final String DESCENDING_ORDER_KEY = "createdAt";
     public static final String KEY_SCHOOL = "school";
-    public static final String QUERY_ERROR = "Error getting listings";
     public static final String GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1/volumes?fields=items(id,volumeInfo,saleInfo)&printType=books&maxResults=" + String.valueOf(LISTING_LIMIT) + "&q=";
     public static final String DEFAULT_QUERY = "college+textbook";
     public static final String ITEMS_KEY = "items";
-    public static final String SAVING_ERROR = "Error while saving";
-    private static final String ERROR_SAVING_IMAGE = "Could not save image uploaded. Please try again!";
 
     Context context;
     RequestQueue queue;
     ParseClient parseClient;
     List<Item> items;
-    ParseUser user;
+    ParseUser currentUser;
     int listingSkip;
     int skip;
     long startIndex;
-    String currentUserSchool;
+    String userSchool;
+    String title;
+    String description;
+    String price;
+    String course;
+    Boolean isInitialFetch;
 
-    public Client(Context context){
+    public ItemRepository(Context context){
         this.context = context;
         setParseClient();
         queue = Volley.newRequestQueue(context);
         items = new ArrayList<>();
         skip = 0;
         startIndex = 0;
+        isInitialFetch = false;
     }
 
     private void setParseClient() {
@@ -70,18 +73,19 @@ public abstract class Client {
             @Override
             public void onUserFetched(ParseUser user) {
                 Log.i(TAG, "onUserFetched()");
-                currentUserSchool = user.getString(KEY_SCHOOL);
-                fetchItems(skip, startIndex);
+                currentUser = user;
+                userSchool = user.getString(KEY_SCHOOL);
+                if (isInitialFetch){
+                    fetchItems(0,0);
+                }
             }
 
             @Override
-            protected void onQueryUserListingsDone(List<Listing> allListings, ParseException e) {
-
-            }
-
-            @Override
-            public void onListingSaved(Listing listing) {
-
+            public void onQueryUserListingsDone(List<Listing> allListings, ParseException e) {
+                listingSkip = listingSkip + allListings.size();
+                List<Item> newList = new ArrayList<>();
+                newList.addAll(allListings);
+                onAllItemsFetched(newList);
             }
 
             @Override
@@ -106,13 +110,19 @@ public abstract class Client {
 
             @Override
             public void onParseImageSaved(ParseFile image) {
+                parseClient.saveListing(title, description, price, course, image, ParseUser.getCurrentUser());
+            }
 
+            @Override
+            public void onListingSaved(Listing listing) {
+                listingSaved(listing);
             }
         };
     }
 
     public void onInitialLoad(){
         Log.i(TAG, "onInitialLoad()");
+        isInitialFetch = true;
         parseClient.getCurrentUser();
     }
 
@@ -124,32 +134,7 @@ public abstract class Client {
     }
 
     public void queryUserListings(int skipValue, ParseUser user) {
-        user.fetchInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject object, ParseException e) {
-                ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
-                query.include(Listing.KEY_USER);
-                query.whereEqualTo(Listing.KEY_USER, user);
-                query.setSkip(skipValue);
-                query.addDescendingOrder(DESCENDING_ORDER_KEY);
-
-                query.findInBackground(new FindCallback<Listing>() {
-
-                    @Override
-                    public void done(List<Listing> allListings, ParseException e) {
-                        if (e != null){
-                            Log.e(TAG, QUERY_ERROR, e);
-                            return;
-                        }
-
-                        listingSkip = skipValue + allListings.size();
-                        List<Item> newList = new ArrayList<>();
-                        newList.addAll(allListings);
-                        onDone(newList);
-                    }
-                });
-            }
-        });
+        parseClient.queryUserListings(skipValue, user);
     }
 
     private void fetchBooks(String queryString, long start){
@@ -163,7 +148,7 @@ public abstract class Client {
                             items.addAll(newBooks);
                             startIndex = start + newBooks.size() + 2;
 
-                            onDone(items);
+                            onAllItemsFetched(items);
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage(), e);
                         }
@@ -172,11 +157,19 @@ public abstract class Client {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, error.toString(), error);
-                onDone(items);
+                onAllItemsFetched(items);
             }
         });
 
         queue.add(jsonObjectRequest);
+    }
+
+    public void onPostListing(String title, String description, String price, String course, File photoFile){
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.course = course;
+        parseClient.saveImageToParse(photoFile);
     }
 
     public int getCurrentSkip(){
@@ -187,50 +180,7 @@ public abstract class Client {
         return startIndex;
     }
 
-    public abstract void onDone(List<Item> items);
+    public abstract void onAllItemsFetched(List<Item> items);
 
-    public void onPostListing(String title, String description, String price, String course, File photoFile){
-        saveImageToParse(title, description, price, course, photoFile);
-    }
-
-    private void saveImageToParse(String title, String description, String price, String course, File photoFile){
-        ParseFile photo = new ParseFile(photoFile);
-        photo.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null){
-                    Toast.makeText(context, ERROR_SAVING_IMAGE, Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, e.getMessage(), e);
-                    return;
-                }
-
-                saveListing(title, description, price, course, photo, user);
-            }
-        });
-    }
-
-    private void saveListing(String title, String description, String price, String course, ParseFile photoFile, ParseUser currentUser) {
-        Listing listing = new Listing();
-        listing.setTitle(title);
-        listing.setDescription(description);
-        listing.setPrice(Integer.parseInt(price));
-        listing.setCourse(course);
-        listing.setImage(photoFile);
-        listing.setUser(currentUser);
-        listing.setSchool(currentUser.getString(KEY_SCHOOL));
-
-        listing.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null){
-                    Log.e(TAG, SAVING_ERROR, e);
-                    Toast.makeText(context, SAVING_ERROR, Toast.LENGTH_SHORT).show();
-                }
-
-                onListingSaved(listing);
-            }
-        });
-    }
-
-    public abstract void onListingSaved(Listing listing);
+    public abstract void listingSaved(Listing listing);
 }

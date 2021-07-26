@@ -158,7 +158,7 @@ public class SignupFragment extends Fragment {
             public void onUserFetched(ParseUser user) {}
 
             @Override
-            protected void onQueryUserListingsDone(List<Listing> allListings, ParseException e) {
+            public void onQueryUserListingsDone(List<Listing> allListings, ParseException e) {
 
             }
 
