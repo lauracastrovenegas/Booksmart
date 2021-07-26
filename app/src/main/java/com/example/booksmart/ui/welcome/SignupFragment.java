@@ -6,8 +6,6 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -17,21 +15,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.booksmart.Camera;
+import com.example.booksmart.helpers.Camera;
 import com.example.booksmart.R;
-import com.example.booksmart.WelcomeActivity;
-import com.example.booksmart.data.Colleges;
+import com.example.booksmart.helpers.ParseClient;
+import com.example.booksmart.models.Item;
+import com.example.booksmart.models.Listing;
+import com.example.booksmart.ui.WelcomeActivity;
+import com.example.booksmart.helpers.Colleges;
 import com.example.booksmart.models.User;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -40,12 +38,9 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SignupFragment extends Fragment {
@@ -84,6 +79,12 @@ public class SignupFragment extends Fragment {
     ProgressBar pb;
     Colleges colleges;
     List<String> collegesList;
+    ParseClient parseClient;
+    String username;
+    String password;
+    String email;
+    String name;
+    String school;
 
     public SignupFragment() {}
 
@@ -104,6 +105,8 @@ public class SignupFragment extends Fragment {
         ivProfilePhoto = view.findViewById(R.id.ivProfileImagePreview);
         btnSignUp = view.findViewById(R.id.btnCreateAccount);
         pb = view.findViewById(R.id.pbLoadingSignup);
+
+        setParseClient();
 
         colleges = new Colleges(getContext());
         collegesList = colleges.getColleges();
@@ -142,6 +145,32 @@ public class SignupFragment extends Fragment {
         return view;
     }
 
+    private void setParseClient() {
+        parseClient = new ParseClient(getContext()) {
+            @Override
+            public void onParseImageSaved(ParseFile image) {
+                Log.i(TAG, "onParseImageSaved()");
+                parseClient.signUpUser(image, username, password, email, name, school);
+            }
+
+            @Override
+            public void onUserLoggedIn() {
+                Log.i(TAG, "onUserLoggedIn()");
+                pb.setVisibility(View.GONE);
+                ((WelcomeActivity) getActivity()).goMainActivity();
+            }
+
+            @Override
+            public void onUserFetched(ParseUser user) {}
+
+            @Override
+            public void onListingSaved(Listing listing) {}
+
+            @Override
+            public void onQueryListingsDone(List<Item> items) {}
+        };
+    }
+
     private void setAutoCompleteTextView() {
         spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_item, collegesList);
         tvSchool.setAdapter(spinnerArrayAdapter);
@@ -150,11 +179,11 @@ public class SignupFragment extends Fragment {
     private void onSignUp(){
         pb.setVisibility(View.VISIBLE);
 
-        String username = etUsername.getText().toString();
-        String password = etPassword.getText().toString();
-        String email = etEmail.getText().toString();
-        String name = etName.getText().toString();
-        String school = tvSchool.getText().toString();
+        username = etUsername.getText().toString();
+        password = etPassword.getText().toString();
+        email = etEmail.getText().toString();
+        name = etName.getText().toString();
+        school = tvSchool.getText().toString();
 
         if (isAnyStringNullOrEmpty(username, password, name, email, school)) {
             pb.setVisibility(View.INVISIBLE);
@@ -162,87 +191,10 @@ public class SignupFragment extends Fragment {
             return;
         }
 
-        saveImageToParse();
+        parseClient.saveImageToParse(photoFile);
     }
 
-    private void saveImageToParse(){
-        if (photoFile != null) {
-            ParseFile photo = new ParseFile(photoFile);
-            photo.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        Toast.makeText(getContext(), ERROR_SAVING_IMAGE, Toast.LENGTH_SHORT).show();
-                        Log.e(TAG, ERROR_SAVING_IMAGE, e);
-                        return;
-                    }
-
-                    signUpUser(photo);
-                }
-            });
-        } else {
-            signUpUser(null);
-        }
-    }
-
-    private void signUpUser(ParseFile savedImage) {
-        String username = etUsername.getText().toString();
-        String password = etPassword.getText().toString();
-        String email = etEmail.getText().toString();
-        String name = etName.getText().toString();
-        String school = tvSchool.getText().toString();
-
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setEmail(email);
-        user.put(NAME_KEY, name);
-        user.put(SCHOOL_KEY, school);
-
-        if (savedImage != null) {
-            user.setImage(savedImage);
-        }
-
-        user.signUpInBackground(new SignUpCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    pb.setVisibility(View.INVISIBLE);
-                    switch (e.getCode()){
-                        case ParseException.USERNAME_TAKEN:
-                            Toast.makeText(getContext(), USERNAME_TAKEN_MSG, Toast.LENGTH_SHORT).show();
-                            break;
-                        case ParseException.EMAIL_TAKEN:
-                            Toast.makeText(getContext(), EMAIL_TAKEN_MSG, Toast.LENGTH_SHORT).show();
-                            break;
-                        default:
-                            Toast.makeText(getContext(), SIGN_UP_FAILURE,Toast.LENGTH_SHORT).show();
-                            Log.e(TAG, e.getMessage(), e);
-                            break;
-                    }
-                    return;
-                }
-
-                loginUser(username, password);
-            }
-        });
-    }
-
-    private void loginUser(String username, String password){
-        ParseUser.logInInBackground(username, password, new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException e) {
-                pb.setVisibility(View.INVISIBLE);
-                if (e != null){
-                    Toast.makeText(getContext(), LOGIN_FAILURE + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                ((WelcomeActivity) getActivity()).goMainActivity();
-            }
-        });
-    }
-
+    // On result from take photo with camera/choose photo from gallery
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void onActivityResult (int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -282,11 +234,11 @@ public class SignupFragment extends Fragment {
         image.getLayoutParams().width = width;
     }
 
-    public void goWelcomeFragment(){
+    private void goWelcomeFragment(){
         replaceFragment(new WelcomeFragment());
     }
 
-    public void replaceFragment(Fragment fragment) {
+    private void replaceFragment(Fragment fragment) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out);
         transaction.replace(R.id.placeholder_activity_welcome, fragment);
@@ -294,7 +246,7 @@ public class SignupFragment extends Fragment {
         transaction.commit();
     }
 
-    public static boolean isAnyStringNullOrEmpty(String... strings) {
+    private static boolean isAnyStringNullOrEmpty(String... strings) {
         for (String s : strings)
             if (s == null || s.isEmpty())
                 return true;
