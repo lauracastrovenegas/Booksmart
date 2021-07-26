@@ -2,6 +2,7 @@ package com.example.booksmart;
 
 import android.app.Application;
 
+import com.example.booksmart.models.Conversation;
 import com.example.booksmart.models.Listing;
 import com.example.booksmart.models.Message;
 import com.example.booksmart.models.User;
@@ -21,6 +22,7 @@ public class BookSmart extends Application {
         ParseObject.registerSubclass(Listing.class);
         ParseObject.registerSubclass(User.class);
         ParseObject.registerSubclass(Message.class);
+        ParseObject.registerSubclass(Conversation.class);
 
         Parse.initialize(new Parse.Configuration.Builder(this)
                 .applicationId(APP_ID)
