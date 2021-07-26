@@ -41,15 +41,11 @@ public abstract class ParseClient {
     public static final String DESCENDING_ORDER_KEY = "createdAt";
     public static final String KEY_SCHOOL = "school";
     public static final String QUERY_ERROR = "Error getting listings";
-    public static final String GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1/volumes?fields=items(id,volumeInfo,saleInfo)&printType=books&maxResults=" + String.valueOf(LISTING_LIMIT) + "&q=";
-    public static final String DEFAULT_QUERY = "college+textbook";
-    public static final String ITEMS_KEY = "items";
     public static final String SAVING_ERROR = "Error while saving";
     private static final String ERROR_SAVING_IMAGE = "Could not save image uploaded. Please try again!";
     public static final String NAME_KEY = "name";
     private static final String SIGN_UP_FAILURE = "Unable to create account for user!";
-    public static final String LOGIN_FAILURE = "Unable to login. ";
-    public static final String EMPTY_FIELDS = "Oops, you forgot to fill in some fields!";
+    public static final String LOGIN_FAILURE = "Unable to login.";
     private static final String USERNAME_TAKEN_MSG = "Sorry, that username is already taken.";
     public static final String EMAIL_TAKEN_MSG = "An account already exists for that email.";
 

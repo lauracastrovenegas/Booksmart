@@ -53,13 +53,7 @@ public class SignupFragment extends Fragment {
     public static final int IMAGE_PREVIEW_DIMENSION = 400;
     public static final String PHOTO_NAME_SUFFIX = "_profile_photo.jpg";
     public static final String NAME_KEY = "name";
-    public static final String SCHOOL_KEY = "school";
-    private static final String SIGN_UP_FAILURE = "Unable to create account for user!";
-    private static final String ERROR_SAVING_IMAGE = "Could not save image uploaded. Please try again!";
-    public static final String LOGIN_FAILURE = "Unable to login. ";
     public static final String EMPTY_FIELDS = "Oops, you forgot to fill in some fields!";
-    private static final String USERNAME_TAKEN_MSG = "Sorry, that username is already taken.";
-    public static final String EMAIL_TAKEN_MSG = "An account already exists for that email.";
 
     ImageView ivBack;
     EditText etName;

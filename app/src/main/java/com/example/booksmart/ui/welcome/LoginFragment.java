@@ -34,8 +34,6 @@ public class LoginFragment extends Fragment {
     public static final String SUCCESS_MSG = "Welcome back!";
     public static final String NO_USERNAME_MSG = "Username field is empty.";
     public static final String NO_PASSWORD_MSG = "Password field is empty.";
-    public static final String INVALID_LOGIN_MSG = "Invalid username/password";
-    public static final String LOGIN_ISSUE_MSG = "Issue with login. Please try again.";
 
     ImageView ivBack;
     EditText etUsername;
