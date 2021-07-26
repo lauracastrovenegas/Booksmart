@@ -22,14 +22,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.booksmart.Camera;
+import com.example.booksmart.helpers.Camera;
 import com.example.booksmart.R;
-import com.example.booksmart.models.Listing;
-import com.example.booksmart.ui.profile.ProfileViewModel;
-import com.parse.ParseException;
-import com.parse.ParseFile;
+import com.example.booksmart.viewmodels.ListingsViewModel;
+import com.example.booksmart.viewmodels.ProfileViewModel;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.io.File;
 import java.io.FileNotFoundException;

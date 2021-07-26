@@ -1,4 +1,4 @@
-package com.example.booksmart.ui.chat;
+package com.example.booksmart.viewmodels;
 
 import androidx.lifecycle.ViewModel;
 

@@ -1,13 +1,12 @@
-package com.example.booksmart.ui.listings;
+package com.example.booksmart.viewmodels;
 
 import android.app.Application;
 import android.os.Parcelable;
-import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import com.example.booksmart.Client;
+import com.example.booksmart.helpers.Client;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
 

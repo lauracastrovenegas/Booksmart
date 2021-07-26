@@ -5,7 +5,6 @@ import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -24,7 +23,8 @@ import com.example.booksmart.helpers.ItemClickSupport;
 import com.example.booksmart.R;
 import com.example.booksmart.adapters.ItemAdapter;
 import com.example.booksmart.models.Item;
-import com.example.booksmart.ui.profile.ProfileFragment;
+import com.example.booksmart.viewmodels.ListingDetailViewModel;
+import com.example.booksmart.viewmodels.ListingsViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.ParseUser;
 

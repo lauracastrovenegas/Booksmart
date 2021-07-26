@@ -1,8 +1,9 @@
-package com.example.booksmart;
+package com.example.booksmart.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.booksmart.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;

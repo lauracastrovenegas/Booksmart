@@ -1,4 +1,4 @@
-package com.example.booksmart.ui.resources;
+package com.example.booksmart.viewmodels;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

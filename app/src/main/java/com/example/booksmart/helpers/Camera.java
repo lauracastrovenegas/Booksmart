@@ -1,4 +1,4 @@
-package com.example.booksmart;
+package com.example.booksmart.helpers;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.FileProvider;
 
+import com.example.booksmart.BuildConfig;
 import com.example.booksmart.helpers.BitmapScaler;
 
 import java.io.ByteArrayOutputStream;

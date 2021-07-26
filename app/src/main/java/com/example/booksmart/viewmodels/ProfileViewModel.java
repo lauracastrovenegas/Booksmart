@@ -1,4 +1,4 @@
-package com.example.booksmart.ui.profile;
+package com.example.booksmart.viewmodels;
 
 import android.app.Application;
 import android.util.Log;
@@ -6,9 +6,8 @@ import android.util.Log;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.example.booksmart.Client;
+import com.example.booksmart.helpers.Client;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
 import com.parse.ParseException;

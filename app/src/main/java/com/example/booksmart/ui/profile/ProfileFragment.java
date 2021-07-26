@@ -21,12 +21,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.booksmart.R;
-import com.example.booksmart.WelcomeActivity;
+import com.example.booksmart.ui.WelcomeActivity;
 import com.example.booksmart.adapters.HorizontalItemAdapter;
 import com.example.booksmart.helpers.ItemClickSupport;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.ui.listings.ListingDetailFragment;
-import com.example.booksmart.ui.listings.ListingDetailViewModel;
+import com.example.booksmart.viewmodels.ListingDetailViewModel;
+import com.example.booksmart.viewmodels.ProfileViewModel;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 

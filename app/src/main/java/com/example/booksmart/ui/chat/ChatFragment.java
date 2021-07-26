@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.booksmart.R;
+import com.example.booksmart.viewmodels.ChatViewModel;
 
 public class ChatFragment extends Fragment {
 

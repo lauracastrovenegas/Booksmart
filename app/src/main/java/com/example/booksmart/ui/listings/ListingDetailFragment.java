@@ -1,6 +1,5 @@
 package com.example.booksmart.ui.listings;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,8 +11,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +23,11 @@ import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
-import com.example.booksmart.MainActivity;
 import com.example.booksmart.R;
 import com.example.booksmart.helpers.DeviceDimensionsHelper;
 import com.example.booksmart.models.Book;
 import com.example.booksmart.models.Item;
-import com.example.booksmart.ui.profile.ProfileFragment;
+import com.example.booksmart.viewmodels.ListingDetailViewModel;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;

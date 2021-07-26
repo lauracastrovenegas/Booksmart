@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.booksmart.R;
-import com.example.booksmart.WelcomeActivity;
+import com.example.booksmart.ui.WelcomeActivity;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;

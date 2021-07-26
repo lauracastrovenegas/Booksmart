@@ -1,4 +1,4 @@
-package com.example.booksmart;
+package com.example.booksmart.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.booksmart.R;
 import com.example.booksmart.ui.welcome.WelcomeFragment;
 import com.parse.ParseUser;
 

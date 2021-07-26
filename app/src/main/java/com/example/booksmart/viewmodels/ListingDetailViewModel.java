@@ -1,4 +1,4 @@
-package com.example.booksmart.ui.listings;
+package com.example.booksmart.viewmodels;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
