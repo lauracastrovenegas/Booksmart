@@ -45,6 +45,7 @@ public abstract class Client {
 
     Context context;
     RequestQueue queue;
+    ParseClient parseClient;
     List<Item> items;
     ParseUser user;
     int listingSkip;
@@ -54,26 +55,72 @@ public abstract class Client {
 
     public Client(Context context){
         this.context = context;
+        setParseClient();
         queue = Volley.newRequestQueue(context);
         items = new ArrayList<>();
         skip = 0;
         startIndex = 0;
     }
 
-    public void onInitialLoad(){
-        user = ParseUser.getCurrentUser();
-        user.fetchInBackground(new GetCallback<ParseObject>() {
+    private void setParseClient() {
+        parseClient = new ParseClient(context) {
             @Override
-            public void done(ParseObject object, ParseException e) {
+            public void onUserLoggedIn() {}
+
+            @Override
+            public void onUserFetched(ParseUser user) {
+                Log.i(TAG, "onUserFetched()");
                 currentUserSchool = user.getString(KEY_SCHOOL);
-                fetchItems(0, 0);
+                fetchItems(skip, startIndex);
             }
-        });
+
+            @Override
+            protected void onQueryUserListingsDone(List<Listing> allListings, ParseException e) {
+
+            }
+
+            @Override
+            public void onListingSaved(Listing listing) {
+
+            }
+
+            @Override
+            public void onQueryListingsDone(List<Listing> allListings, ParseException e) {
+                Log.i(TAG, "onQueryListingsDone()");
+                if (e != null){
+                    Log.e(TAG, QUERY_ERROR, e);
+                    fetchBooks(DEFAULT_QUERY, startIndex);
+                    return;
+                }
+
+                if (skip == 0){
+                    items.clear();
+                    startIndex = 0;
+                }
+
+                items.addAll(allListings);
+                skip = skip + allListings.size();
+
+                fetchBooks(DEFAULT_QUERY, startIndex);
+            }
+
+            @Override
+            public void onParseImageSaved(ParseFile image) {
+
+            }
+        };
+    }
+
+    public void onInitialLoad(){
+        Log.i(TAG, "onInitialLoad()");
+        parseClient.getCurrentUser();
     }
 
     public void fetchItems(int skipValue, long startIndexValue){
+        Log.i(TAG, "fetchItems()");
         items.clear();
-        queryListings(skipValue, startIndexValue);
+        startIndex = startIndexValue;
+        parseClient.queryListings(skipValue);
     }
 
     public void queryUserListings(int skipValue, ParseUser user) {
@@ -105,37 +152,8 @@ public abstract class Client {
         });
     }
 
-    public void queryListings(int skipValue, long startIndexValue) {
-        ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
-        query.include(Listing.KEY_USER);
-        query.whereEqualTo(KEY_SCHOOL, currentUserSchool);
-        query.setSkip(skipValue);
-        query.setLimit(LISTING_LIMIT);
-        query.addDescendingOrder(DESCENDING_ORDER_KEY);
-
-        query.findInBackground(new FindCallback<Listing>() {
-
-            @Override
-            public void done(List<Listing> allListings, ParseException e) {
-                if (e != null){
-                    Log.e(TAG, QUERY_ERROR, e);
-                    fetchBooks(DEFAULT_QUERY, startIndexValue);
-                    return;
-                }
-
-                if (skipValue == 0){
-                    items.clear();
-                    startIndex = 0;
-                }
-
-                items.addAll(allListings);
-                skip = skipValue + allListings.size();
-                fetchBooks(DEFAULT_QUERY, startIndexValue);
-            }
-        });
-    }
-
     private void fetchBooks(String queryString, long start){
+        Log.i(TAG, "fetchBooks()");
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, GOOGLE_BOOKS_URL + queryString + "&startIndex=" + String.valueOf(start), null,
                 new Response.Listener<JSONObject>() {
                     @Override

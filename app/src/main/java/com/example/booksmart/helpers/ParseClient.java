@@ -50,16 +50,11 @@ public abstract class ParseClient {
     public static final String EMAIL_TAKEN_MSG = "An account already exists for that email.";
 
     Context context;
-    List<Item> items;
     ParseUser user;
-    int listingSkip;
-    int skip;
     String currentUserSchool;
 
     public ParseClient(Context context){
         this.context = context;
-        items = new ArrayList<>();
-        skip = 0;
     }
 
     public void signUpUser(ParseFile savedImage, String username, String password, String email, String name, String school) {
@@ -116,7 +111,8 @@ public abstract class ParseClient {
 
     public abstract void onUserLoggedIn();
 
-    public void getUserSchool(int skipValue, long startIndexValue){
+    public void getCurrentUser(){
+        Log.i(TAG, "getCurrentUser()");
         user = ParseUser.getCurrentUser();
         user.fetchInBackground(new GetCallback<ParseObject>() {
             @Override
@@ -148,17 +144,17 @@ public abstract class ParseClient {
                             return;
                         }
 
-                        listingSkip = skipValue + allListings.size();
-                        List<Item> newList = new ArrayList<>();
-                        newList.addAll(allListings);
-                        onQueryListingsDone(newList);
+                        onQueryUserListingsDone(allListings, e);
                     }
                 });
             }
         });
     }
 
+    protected abstract void onQueryUserListingsDone(List<Listing> allListings, ParseException e);
+
     public void queryListings(int skipValue) {
+        Log.i(TAG, "queryListings()");
         ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
         query.include(Listing.KEY_USER);
         query.whereEqualTo(KEY_SCHOOL, currentUserSchool);
@@ -175,18 +171,9 @@ public abstract class ParseClient {
                     return;
                 }
 
-                if (skipValue == 0){
-                    items.clear();
-                }
-
-                items.addAll(allListings);
-                skip = skipValue + allListings.size();
+                onQueryListingsDone(allListings, e);
             }
         });
-    }
-
-    public int getCurrentSkip(){
-        return skip;
     }
 
     public void saveImageToParse(File photoFile){
@@ -235,7 +222,7 @@ public abstract class ParseClient {
 
     public abstract void onListingSaved(Listing listing);
 
-    public abstract void onQueryListingsDone(List<Item> items);
+    public abstract void onQueryListingsDone(List<Listing> items, ParseException e);
 
     public abstract void onParseImageSaved(ParseFile image);
 }

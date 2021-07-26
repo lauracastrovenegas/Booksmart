@@ -105,10 +105,15 @@ public class LoginFragment extends Fragment {
             public void onUserFetched(ParseUser user) {}
 
             @Override
+            protected void onQueryUserListingsDone(List<Listing> allListings, ParseException e) {
+
+            }
+
+            @Override
             public void onListingSaved(Listing listing) {}
 
             @Override
-            public void onQueryListingsDone(List<Item> items) {}
+            public void onQueryListingsDone(List<Listing> items, ParseException e) {}
 
             @Override
             public void onParseImageSaved(ParseFile image) {}
