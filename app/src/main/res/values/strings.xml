@@ -63,4 +63,8 @@
     <string name="school_name_placeholder">Facebook University</string>
     <string name="title_chat">Messages</string>
     <string name="no_messages_text">You don\'t have any messages!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="message_preview_placeholder">You: Hey is this still available?</string>
+    <string name="timestamp_placeholder">Jul 21</string>
 </resources>
