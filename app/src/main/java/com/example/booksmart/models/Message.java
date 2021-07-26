@@ -9,8 +9,8 @@ public class Message extends ParseObject {
     public static final String USER_KEY = "user";
     public static final String BODY_KEY = "body";
 
-    public String getUserId() {
-        return getParseUser(USER_KEY).getObjectId();
+    public ParseUser getUser() {
+        return getParseUser(USER_KEY);
     }
 
     public String getBody() {
