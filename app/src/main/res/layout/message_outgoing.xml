@@ -19,7 +19,7 @@
         android:padding="8dp"
         tools:text="@string/message_placeholder"
         android:textColor="@android:color/white"
-        android:textSize="18dp" />
+        android:textSize="@dimen/font_size_medium" />
 
     <ImageView
         android:id="@+id/ivProfileMe"
