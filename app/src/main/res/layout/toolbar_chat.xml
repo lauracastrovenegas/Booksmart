@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?attr/actionBarSize">
+
+    <ImageView
+        android:id="@+id/ibChatBack"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="20dp"
+        android:backgroundTint="@color/white"
+        app:srcCompat="?attr/actionModeCloseDrawable"
+        app:tint="@color/purple_500" />
+
+    <ImageView
+        android:id="@+id/ivOtherUserProfileImageChat"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="25dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/ibChatBack"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvOtherUserNameChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@+id/ivListingImagePreview"
+        android:layout_toEndOf="@id/ivOtherUserProfileImageChat"
+        android:fontFamily="@font/work_sans_medium"
+        android:textColor="@color/black"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:text="@string/user_name_placeholder" />
+
+    <ImageView
+        android:id="@+id/ivListingImagePreview"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        tools:srcCompat="@tools:sample/avatars"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        android:layout_centerVertical="true"/>
+
+</RelativeLayout>
