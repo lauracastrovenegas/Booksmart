@@ -36,7 +36,7 @@ import java.util.List;
 
 public abstract class ParseClient {
 
-    public static final String TAG = "Listings Client";
+    public static final String TAG = "Parse Client";
     public static final int LISTING_LIMIT = 15;
     public static final String DESCENDING_ORDER_KEY = "createdAt";
     public static final String KEY_SCHOOL = "school";
@@ -67,6 +67,7 @@ public abstract class ParseClient {
     }
 
     public void signUpUser(ParseFile savedImage, String username, String password, String email, String name, String school) {
+        Log.i(TAG, "signUpUser()");
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
@@ -103,6 +104,7 @@ public abstract class ParseClient {
     }
 
     public void loginUser(String username, String password){
+        Log.i(TAG, "loginUser()");
         ParseUser.logInInBackground(username, password, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException e) {
@@ -132,7 +134,6 @@ public abstract class ParseClient {
     public abstract void onUserFetched(ParseUser user);
 
     public void queryUserListings(int skipValue, ParseUser user) {
-        user = ParseUser.getCurrentUser();
         user.fetchInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
@@ -193,6 +194,7 @@ public abstract class ParseClient {
     }
 
     public void saveImageToParse(File photoFile){
+        Log.i(TAG, "saveImageToParse()");
         if (photoFile != null) {
             ParseFile photo = new ParseFile(photoFile);
             photo.saveInBackground(new SaveCallback() {
