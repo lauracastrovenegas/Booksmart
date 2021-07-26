@@ -13,5 +13,16 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/messages_toolbar"
         android:layout_marginTop="0dp" />
-    
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:fontFamily="@font/work_sans"
+        android:text="@string/no_messages_text"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_size_medium"
+        android:visibility="invisible"/>
+
 </RelativeLayout>
