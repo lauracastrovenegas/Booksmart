@@ -6,16 +6,56 @@
     android:background="@color/white"
     tools:context=".ui.chat.ChatFragment">
 
-    <include layout="@layout/toolbar_messages"/>
+    <include android:id="@+id/chat_toolbar"
+        layout="@layout/toolbar_chat"/>
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvMessages"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/chat_toolbar"
+        android:layout_above="@id/etSendMessage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@id/etSendMessage"
+        android:background="?android:attr/listDivider" />
+
+    <RelativeLayout
+        android:id="@+id/etSendMessage"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:fontFamily="@font/work_sans"
-        android:text="@string/no_messages_text"
-        android:textColor="@color/black"
-        android:textSize="@dimen/font_size_medium" />
+        android:layout_alignParentBottom="true"
+        android:paddingStart="20dp"
+        android:paddingEnd="10dp">
+
+        <EditText
+            android:id="@+id/etMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/ibSend"
+            android:backgroundTint="@color/black"
+            android:hint="@string/message_hint"
+            android:imeOptions="actionSend"
+            android:inputType="textShortMessage" />
+
+        <ImageButton
+            android:id="@+id/ibSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_send"
+            android:background="@color/white"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>
