@@ -68,4 +68,5 @@
     <string name="message_preview_placeholder">You: Hey is this still available?</string>
     <string name="timestamp_placeholder">Jul 21</string>
     <string name="message_hint">Type a message...</string>
+    <string name="message_placeholder">This is a message I am sending</string>
 </resources>
