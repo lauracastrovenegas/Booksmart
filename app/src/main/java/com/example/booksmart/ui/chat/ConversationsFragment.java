@@ -7,17 +7,25 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.booksmart.R;
+import com.example.booksmart.adapters.ChatPreviewAdapter;
+import com.example.booksmart.viewmodels.ChatViewModel;
 import com.example.booksmart.viewmodels.ConversationsViewModel;
 
 public class ConversationsFragment extends Fragment {
 
-    private ConversationsViewModel mViewModel;
+    ConversationsViewModel conversationsViewModel;
+    ChatViewModel chatViewModel;
+    RecyclerView rvConversations;
+    ChatPreviewAdapter adapter;
+    LinearLayoutManager linearLayoutManager;
 
     public static ConversationsFragment newInstance() {
         return new ConversationsFragment();
@@ -26,14 +34,23 @@ public class ConversationsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_conversations, container, false);
+        View view = inflater.inflate(R.layout.fragment_conversations, container, false);
+
+        rvConversations = view.findViewById(R.id.rvConversations);
+
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        rvConversations.setLayoutManager(linearLayoutManager);
+
+        setViewModels();
+
+        return view;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(ConversationsViewModel.class);
-        // TODO: Use the ViewModel
+    private void setViewModels() {
+        chatViewModel = new ViewModelProvider((requireActivity())).get(ChatViewModel.class);
+        conversationsViewModel = new ViewModelProvider(requireActivity()).get(ConversationsViewModel.class);
+
+        // TODO: set observer for conversations view model
     }
 
 }
