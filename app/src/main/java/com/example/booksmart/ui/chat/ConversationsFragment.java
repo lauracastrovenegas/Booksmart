@@ -37,10 +37,6 @@ public class ConversationsFragment extends Fragment {
     ChatPreviewAdapter adapter;
     LinearLayoutManager linearLayoutManager;
 
-    public static ConversationsFragment newInstance() {
-        return new ConversationsFragment();
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
