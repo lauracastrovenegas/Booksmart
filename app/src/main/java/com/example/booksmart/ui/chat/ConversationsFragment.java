@@ -1,5 +1,6 @@
 package com.example.booksmart.ui.chat;
 
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -16,8 +17,11 @@ import android.view.ViewGroup;
 
 import com.example.booksmart.R;
 import com.example.booksmart.adapters.ChatPreviewAdapter;
+import com.example.booksmart.models.Conversation;
 import com.example.booksmart.viewmodels.ChatViewModel;
 import com.example.booksmart.viewmodels.ConversationsViewModel;
+
+import java.util.List;
 
 public class ConversationsFragment extends Fragment {
 
@@ -50,7 +54,13 @@ public class ConversationsFragment extends Fragment {
         chatViewModel = new ViewModelProvider((requireActivity())).get(ChatViewModel.class);
         conversationsViewModel = new ViewModelProvider(requireActivity()).get(ConversationsViewModel.class);
 
-        // TODO: set observer for conversations view model
+        conversationsViewModel.getConversations().observe(getViewLifecycleOwner(), new Observer<List<Conversation>>() {
+            @Override
+            public void onChanged(List<Conversation> conversations) {
+                adapter = new ChatPreviewAdapter(getContext(), conversations);
+                rvConversations.setAdapter(adapter);
+            }
+        });
     }
 
 }
