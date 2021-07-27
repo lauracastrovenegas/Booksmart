@@ -12,22 +12,38 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.example.booksmart.R;
 import com.example.booksmart.adapters.ChatAdapter;
+import com.example.booksmart.models.Listing;
 import com.example.booksmart.models.Message;
 import com.example.booksmart.viewmodels.ChatViewModel;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.util.List;
 
 public class ChatFragment extends Fragment {
+
+    public static final String TAG = "ChatFragment";
+    private static final String KEY_NAME = "name";
+    private static final String KEY_IMAGE = "image";
 
     ChatViewModel chatViewModel;
     RecyclerView rvMessages;
@@ -36,6 +52,9 @@ public class ChatFragment extends Fragment {
     EditText etInput;
     ImageButton ibSend;
     ImageView ivBack;
+    ImageView ivUserProfilePhoto;
+    TextView tvUserName;
+    ImageView ivListingPreview;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -45,6 +64,9 @@ public class ChatFragment extends Fragment {
         etInput = view.findViewById(R.id.etMessage);
         ibSend = view.findViewById(R.id.ibSend);
         ivBack = view.findViewById(R.id.ibChatBack);
+        ivUserProfilePhoto = view.findViewById(R.id.ivOtherUserProfileImageChat);
+        tvUserName = view.findViewById(R.id.tvOtherUserNameChat);
+        ivListingPreview = view.findViewById(R.id.ivListingImagePreview);
         rvMessages = view.findViewById(R.id.rvMessages);
 
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -68,6 +90,53 @@ public class ChatFragment extends Fragment {
 
         chatViewModel.getSelected().observe(getViewLifecycleOwner(), conversation -> {
             chatViewModel.setMessages(conversation.getMessages());
+
+            ParseUser currentUser = ParseUser.getCurrentUser();
+
+            // Get other user
+            List<ParseUser> users = conversation.getUsers();
+            ParseObject otherUser;
+            if (currentUser.getObjectId().equals(users.get(0).getObjectId())){
+                otherUser = users.get(1);
+            } else {
+                otherUser = users.get(0);
+            }
+
+            try {
+                otherUser = otherUser.fetchIfNeeded();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            // Set name and profile photo of other user
+            String name = (otherUser.getString(KEY_NAME).split(" "))[0];
+            tvUserName.setText(name);
+
+            ParseFile profileImage = otherUser.getParseFile(KEY_IMAGE);
+            Glide.with(getContext())
+                    .load(profileImage.getUrl())
+                    .circleCrop()
+                    .into(ivUserProfilePhoto);
+
+            // Set preview photo for listings
+            Listing listing = conversation.getListing();
+            listing.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject object, ParseException e) {
+                    if (e != null){
+                        Log.e(TAG, e.getMessage(), e);
+                        return;
+                    }
+
+                    ParseFile listingImage = ((Listing) object).getImage();
+                    if (listingImage != null) {
+                        Glide.with(getActivity())
+                                .load(((ParseFile) listingImage).getUrl())
+                                .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(15, 15, 15, 15)))
+                                .into(ivListingPreview);
+                    }
+                }
+            });
         });
 
         chatViewModel.getMessages().observe(getViewLifecycleOwner(), new Observer<List<Message>>() {
