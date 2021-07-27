@@ -35,12 +35,12 @@ public class ProfileViewModel extends AndroidViewModel {
         listingsArrayList = new ArrayList<>();
         listingsSkip = 0;
 
-        setClient(application);
+        setRepository(application);
 
         itemRepository.queryUserListings(listingsSkip, ParseUser.getCurrentUser());
     }
 
-    private void setClient(Application application) {
+    private void setRepository(Application application) {
         itemRepository = new ItemRepository(application.getBaseContext()) {
             @Override
             public void onAllItemsFetched(List<Item> items) {

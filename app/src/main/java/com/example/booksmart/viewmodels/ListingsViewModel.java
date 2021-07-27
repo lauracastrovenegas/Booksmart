@@ -33,12 +33,12 @@ public class ListingsViewModel extends AndroidViewModel {
         skip = 0;
         startIndex = 0;
 
-        setClient(application);
+        setRepository(application);
 
         itemRepository.onInitialLoad();
     }
 
-    private void setClient(Application application) {
+    private void setRepository(Application application) {
         itemRepository = new ItemRepository(application.getBaseContext()) {
             @Override
             public void onAllItemsFetched(List<Item> fetchedItems) {
