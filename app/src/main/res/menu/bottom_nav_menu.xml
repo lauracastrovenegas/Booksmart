@@ -17,7 +17,7 @@
         android:title="@string/title_listings" />
 
     <item
-        android:id="@+id/navigation_chat"
+        android:id="@+id/navigation_conversation"
         android:icon="@drawable/chat_icon_selector"
         android:title="@string/title_chat" />
 
