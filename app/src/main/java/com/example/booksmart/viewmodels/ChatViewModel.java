@@ -35,4 +35,8 @@ public class ChatViewModel extends AndroidViewModel {
     public void setMessages(List<Message> messages) {
         this.messages.setValue(messages);
     }
+
+    public MutableLiveData<List<Message>> getMessages() {
+        return messages;
+    }
 }
