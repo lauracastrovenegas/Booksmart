@@ -1,6 +1,7 @@
 package com.example.booksmart.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +16,17 @@ import com.example.booksmart.R;
 import com.example.booksmart.models.Conversation;
 import com.example.booksmart.models.Listing;
 import com.example.booksmart.models.Message;
+import com.parse.GetCallback;
+import com.parse.GetFileCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 
 public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.ViewHolder> {
@@ -79,12 +85,12 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
             ParseUser currentUser = ParseUser.getCurrentUser();
 
             // Get other user
-            ParseUser[] users = conversation.getUsers();
-            ParseUser otherUser;
-            if (currentUser.equals(users[0])){
-                otherUser = users[1];
+            List<ParseUser> users = conversation.getUsers();
+            ParseObject otherUser;
+            if (currentUser.getObjectId().equals(users.get(0).getObjectId())){
+                otherUser = users.get(1);
             } else {
-                otherUser = users[0];
+                otherUser = users.get(0);
             }
 
             try {
@@ -94,7 +100,7 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
             }
 
             // Set name and profile photo of other user
-            String name = otherUser.getString(KEY_NAME);
+            String name = (otherUser.getString(KEY_NAME).split(" "))[0];
             tvUserName.setText(name);
 
             ParseFile profileImage = otherUser.getParseFile(KEY_IMAGE);
@@ -105,7 +111,7 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
 
             // Set Text for last message preview and date
             Message lastMessage = conversation.getLastMessage();
-            if (lastMessage.getUser().equals(currentUser)){
+            if (lastMessage.getUser().getObjectId().equals(currentUser.getObjectId())){
                 tvLastMessage.setText("You: " + lastMessage.getBody());
             } else {
                 tvLastMessage.setText(name + ": " + lastMessage.getBody());
@@ -115,16 +121,23 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
 
             // Set preview photo for listings
             Listing listing = conversation.getListing();
-            try {
-                listing = listing.fetchIfNeeded();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            ParseFile listingImage = listing.getImage();
-            Glide.with(context)
-                    .load(listingImage.getUrl())
-                    .centerCrop()
-                    .into(ivListingPreview);
+            listing.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
+                @Override
+                public void done(ParseObject object, ParseException e) {
+                    if (e != null){
+                        Log.e(TAG, e.getMessage(), e);
+                        return;
+                    }
+
+                    ParseFile listingImage = ((Listing) object).getImage();
+                    if (listingImage != null) {
+                        Glide.with(context)
+                                .load(((ParseFile) listingImage).getUrl())
+                                .centerCrop()
+                                .into(ivListingPreview);
+                    }
+                }
+            });
         }
     }
 }
