@@ -23,15 +23,8 @@ public class Conversation extends ParseObject {
         return (Listing) getParseObject(LISTING_KEY);
     }
 
-    public String getPreview(){
-        Message lastMessage = getMessages()[0];
-        String messageBody = lastMessage.getBody();
-        String userName = lastMessage.getUser().getString(NAME_KEY);
-        if (userName.equals(ParseUser.getCurrentUser().getString(NAME_KEY))){
-            return "You: " + messageBody;
-        }
-
-        return userName + ": " + messageBody;
+    public Message getLastMessage(){
+        return getMessages()[0];
     }
 
     public void setUsers(ParseUser user1, ParseUser user2) {
