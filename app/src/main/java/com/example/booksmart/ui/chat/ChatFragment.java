@@ -28,9 +28,13 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.example.booksmart.R;
 import com.example.booksmart.adapters.ChatAdapter;
+import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
 import com.example.booksmart.models.Message;
+import com.example.booksmart.ui.listings.ListingDetailFragment;
+import com.example.booksmart.ui.listings.ListingsFragment;
 import com.example.booksmart.viewmodels.ChatViewModel;
+import com.example.booksmart.viewmodels.ListingDetailViewModel;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -46,6 +50,7 @@ public class ChatFragment extends Fragment {
     private static final String KEY_IMAGE = "image";
 
     ChatViewModel chatViewModel;
+    ListingDetailViewModel listingDetailViewModel;
     RecyclerView rvMessages;
     ChatAdapter adapter;
     LinearLayoutManager linearLayoutManager;
@@ -86,6 +91,7 @@ public class ChatFragment extends Fragment {
     }
 
     private void setViewModel() {
+        listingDetailViewModel = new ViewModelProvider((requireActivity())).get(ListingDetailViewModel.class);
         chatViewModel = new ViewModelProvider((requireActivity())).get(ChatViewModel.class);
 
         chatViewModel.getSelected().observe(getViewLifecycleOwner(), conversation -> {
@@ -137,6 +143,15 @@ public class ChatFragment extends Fragment {
                     }
                 }
             });
+
+            ivListingPreview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listingDetailViewModel.select(listing);
+                    listingDetailViewModel.setPreviousFragment(new ChatFragment());
+                    goToDetail();
+                }
+            });
         });
 
         chatViewModel.getMessages().observe(getViewLifecycleOwner(), new Observer<List<Message>>() {
@@ -146,6 +161,15 @@ public class ChatFragment extends Fragment {
                 rvMessages.setAdapter(adapter);
             }
         });
+    }
+
+    private void goToDetail(){
+        Fragment fragment = new ListingDetailFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in, R.anim.slide_out_left);
+        transaction.replace(R.id.nav_host_fragment_activity_main, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void goToFragment(Fragment fragment){
