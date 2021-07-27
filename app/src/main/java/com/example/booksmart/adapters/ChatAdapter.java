@@ -94,18 +94,19 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
 
         ImageView ivUserPhoto;
         TextView tvBody;
-        TextView tvName;
+        TextView tvTime;
 
         public IncomingMessageViewHolder(View itemView) {
             super(itemView);
-            ivUserPhoto = (ImageView)itemView.findViewById(R.id.ivProfileOther);
-            tvBody = (TextView)itemView.findViewById(R.id.tvBody);
-            tvName = (TextView)itemView.findViewById(R.id.tvName);
+            ivUserPhoto = itemView.findViewById(R.id.ivProfileOther);
+            tvBody = itemView.findViewById(R.id.tvBody);
+            tvTime = itemView.findViewById(R.id.tvTime);
         }
 
         @Override
         public void bind(Message message) {
             tvBody.setText(message.getBody());
+            tvTime.setText(message.getCreatedAtTime());
 
             ParseUser user = message.getUser();
             try {
@@ -113,7 +114,6 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            tvName.setText(user.getString(NAME_KEY));
 
             ParseFile profileImage = user.getParseFile(IMAGE_KEY);
             if (profileImage != null) {
@@ -128,16 +128,19 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
     public class OutgoingMessageViewHolder extends MessageViewHolder {
         ImageView ivUserPhoto;
         TextView tvBody;
+        TextView tvTime;
 
         public OutgoingMessageViewHolder(View itemView) {
             super(itemView);
-            ivUserPhoto = (ImageView)itemView.findViewById(R.id.ivProfileMe);
-            tvBody = (TextView)itemView.findViewById(R.id.tvBody);
+            ivUserPhoto = itemView.findViewById(R.id.ivProfileMe);
+            tvBody = itemView.findViewById(R.id.tvBody);
+            tvTime = itemView.findViewById(R.id.tvTime);
         }
 
         @Override
         public void bind(Message message) {
             tvBody.setText(message.getBody());
+            tvTime.setText(message.getCreatedAtTime());
 
             ParseFile profileImage = currentUser.getParseFile(IMAGE_KEY);
             if (profileImage != null) {
