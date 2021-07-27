@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.example.booksmart.R;
 import com.example.booksmart.models.Conversation;
 import com.example.booksmart.models.Listing;
@@ -117,7 +120,7 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
                 tvLastMessage.setText(name + ": " + lastMessage.getBody());
             }
 
-            tvDate.setText(lastMessage.getCreatedAt().toString());
+            tvDate.setText(lastMessage.getCreatedAtDate());
 
             // Set preview photo for listings
             Listing listing = conversation.getListing();
@@ -133,7 +136,7 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
                     if (listingImage != null) {
                         Glide.with(context)
                                 .load(((ParseFile) listingImage).getUrl())
-                                .centerCrop()
+                                .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(15, 15, 15, 15)))
                                 .into(ivListingPreview);
                     }
                 }

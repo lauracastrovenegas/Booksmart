@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp">
+    android:padding="10dp">
 
     <ImageView
         android:id="@+id/ivOtherUserProfileImage"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="15dp"
+        android:layout_marginEnd="10dp"
         android:layout_centerVertical="true"
         tools:srcCompat="@tools:sample/avatars" />
 
@@ -21,15 +22,17 @@
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="15dp"
+        android:layout_marginStart="10dp"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/tvOtherUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
+        android:layout_toStartOf="@+id/ivListingPreviewImage"
         android:layout_toEndOf="@+id/ivOtherUserProfileImage"
         android:textColor="@color/black"
+        android:fontFamily="@font/work_sans_medium"
         android:textSize="@dimen/font_size_medium"
         tools:text="@string/user_name_placeholder" />
 
@@ -37,21 +40,21 @@
         android:id="@+id/tvLastMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
         android:layout_below="@id/tvOtherUserName"
+        android:layout_toStartOf="@+id/ivListingPreviewImage"
         android:layout_toEndOf="@+id/ivOtherUserProfileImage"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="@color/black"
         android:textSize="@dimen/font_size_small"
-        android:maxLines="1"
-        android:ellipsize="end"
         tools:text="@string/message_preview_placeholder" />
 
     <TextView
         android:id="@+id/tvTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_below="@id/tvLastMessage"
+        android:layout_below="@+id/tvLastMessage"
+        android:layout_toStartOf="@+id/ivListingPreviewImage"
         android:layout_toEndOf="@+id/ivOtherUserProfileImage"
         android:textSize="@dimen/font_size_small"
         tools:text="@string/timestamp_placeholder" />
