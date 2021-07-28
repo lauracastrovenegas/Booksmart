@@ -248,7 +248,6 @@ public class ListingDetailFragment extends Fragment {
                     if(e.getCode() == ParseException.OBJECT_NOT_FOUND){
                         Conversation newConversation = new Conversation();
                         newConversation.setUsers(listing.getUser(), ParseUser.getCurrentUser());
-                        newConversation.setMessages(new ArrayList<Message>());
                         newConversation.setListing(listing);
                         conversationsViewModel.addNewConversation(newConversation);
                         chatViewModel.select(newConversation);

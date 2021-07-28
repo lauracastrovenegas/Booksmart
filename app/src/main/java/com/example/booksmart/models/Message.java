@@ -13,6 +13,7 @@ import java.util.Date;
 public class Message extends ParseObject {
     public static final String USER_KEY = "user";
     public static final String BODY_KEY = "body";
+    public static final String CONVO_KEY = "conversation";
     private static final String DATE_FORMAT = "MMMM dd, yyyy";
     private static final String TIME_FORMAT = "hh:mm";
 
@@ -24,12 +25,20 @@ public class Message extends ParseObject {
         return getString(BODY_KEY);
     }
 
+    public Conversation getConversation(){
+        return (Conversation) getParseObject(CONVO_KEY);
+    }
+
     public void setUser(ParseUser user) {
         put(USER_KEY, user);
     }
 
     public void setBody(String body) {
         put(BODY_KEY, body);
+    }
+
+    public void setConversation(Conversation conversation){
+        put(CONVO_KEY, conversation);
     }
 
     public String getCreatedAtDate(){

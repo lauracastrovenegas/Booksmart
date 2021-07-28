@@ -95,8 +95,6 @@ public class ChatFragment extends Fragment {
         chatViewModel = new ViewModelProvider((requireActivity())).get(ChatViewModel.class);
 
         chatViewModel.getSelected().observe(getViewLifecycleOwner(), conversation -> {
-            chatViewModel.setMessages(conversation.getMessages());
-
             ParseUser currentUser = ParseUser.getCurrentUser();
 
             // Get other user
