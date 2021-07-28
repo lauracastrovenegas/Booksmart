@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.booksmart.ConversationRepository;
 import com.example.booksmart.models.Conversation;
+import com.example.booksmart.models.Listing;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,13 @@ public class ConversationsViewModel extends AndroidViewModel {
     public ConversationsViewModel(Application application){
         super(application);
 
-        repository = new ConversationRepository(application);
+        repository = new ConversationRepository(application) {
+            @Override
+            protected void onDone() {
+                conversations = repository.getConversations();
+            }
+        };
+
         conversations = repository.getConversations();
     }
 

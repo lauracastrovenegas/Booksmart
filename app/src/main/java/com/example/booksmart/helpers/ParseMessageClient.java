@@ -60,35 +60,21 @@ public abstract class ParseMessageClient {
 
     }
 
-    public void saveNewConversation(ParseUser user, Listing listing){
-        Conversation conversation = new Conversation();
-        conversation.setUsers(user, ParseUser.getCurrentUser());
-        conversation.setListing(listing);
-
-        Message message1 = new Message();
-        message1.setBody("This is a message");
-        message1.setUser(user);
-
-        Message message2 = new Message();
-        message2.setBody("This is another message");
-        message2.setUser(ParseUser.getCurrentUser());
-
-        List<Message> messages = new ArrayList<>();
-        messages.add(message2);
-        messages.add(message1);
-
-
-        conversation.setMessages(messages);
-
+    public void saveNewConversation(Conversation conversation){
         conversation.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if(e != null){
                     Log.e(TAG, e.getMessage(), e);
                 }
+
+                Log.i(TAG, conversation.toString());
+                onNewConversationSaved(conversation);
             }
         });
     }
+
+    protected abstract void onNewConversationSaved(Conversation conversation);
 
     public abstract void onAllConversationsFetched(List<Conversation> conversation);
 }

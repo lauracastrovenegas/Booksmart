@@ -26,7 +26,12 @@ import com.bumptech.glide.Glide;
 import com.example.booksmart.R;
 import com.example.booksmart.helpers.DeviceDimensionsHelper;
 import com.example.booksmart.models.Book;
+import com.example.booksmart.models.Conversation;
 import com.example.booksmart.models.Item;
+import com.example.booksmart.models.Message;
+import com.example.booksmart.ui.chat.ChatFragment;
+import com.example.booksmart.viewmodels.ChatViewModel;
+import com.example.booksmart.viewmodels.ConversationsViewModel;
 import com.example.booksmart.viewmodels.ListingDetailViewModel;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -35,6 +40,7 @@ import com.example.booksmart.models.Listing;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListingDetailFragment extends Fragment {
@@ -44,6 +50,9 @@ public class ListingDetailFragment extends Fragment {
     public static final String TAG = "ListingDetailFragment";
     public static final int IMAGE_HEIGHT = 800;
 
+    ChatViewModel chatViewModel;
+    ConversationsViewModel conversationsViewModel;
+    ListingDetailViewModel listingDetailViewModel;
     ImageView ivImage;
     ImageView ivUserProfileImage;
     TextView tvTitle;
@@ -87,7 +96,9 @@ public class ListingDetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ListingDetailViewModel listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
+        chatViewModel = new ViewModelProvider(requireActivity()).get(ChatViewModel.class);
+        conversationsViewModel = new ViewModelProvider(requireActivity()).get(ConversationsViewModel.class);
+        listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
 
         listingDetailViewModel.getPreviousFragment().observe(getViewLifecycleOwner(), fragment -> {
             ivClose.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +161,13 @@ public class ListingDetailFragment extends Fragment {
                             return true;
                         }
                     });
+                } else {
+                    btnMessageSeller.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startConversation((Listing) item);
+                        }
+                    });
                 }
 
             } else {
@@ -203,6 +221,16 @@ public class ListingDetailFragment extends Fragment {
         });
     }
 
+    private void startConversation(Listing listing) {
+        Conversation conversation = new Conversation();
+        conversation.setUsers(listing.getUser(), ParseUser.getCurrentUser());
+        conversation.setMessages(new ArrayList<Message>());
+        conversation.setListing(listing);
+        conversationsViewModel.addNewConversation(conversation);
+        chatViewModel.select(conversation);
+        goToChat();
+    }
+
     private String setAuthorString(List<String> authors){
         if (authors.size() > 0){
             String authorString = "By " + authors.get(0);
@@ -214,6 +242,15 @@ public class ListingDetailFragment extends Fragment {
         }
 
         return "";
+    }
+
+    private void goToChat(){
+        Fragment fragment = new ChatFragment();
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in, R.anim.slide_out_left);
+        transaction.replace(R.id.nav_host_fragment_activity_main, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void goToFragment(Fragment fragment){
