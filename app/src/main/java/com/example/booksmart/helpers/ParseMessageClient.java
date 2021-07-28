@@ -24,6 +24,7 @@ public abstract class ParseMessageClient {
     public static final String MESSAGES_KEY = "messages";
     public static final String USERS_KEY = "users";
     public static final String QUERY_ERROR = "Unable to fetch all conversations";
+    private static final String LISTING_KEY = "listing";
 
     Context context;
 
@@ -34,6 +35,7 @@ public abstract class ParseMessageClient {
     public void queryAllConversations(){
         ParseQuery query = ParseQuery.getQuery(Conversation.class);
         query.include(MESSAGES_KEY);
+        query.include(LISTING_KEY);
         query.include(USERS_KEY);
         query.addDescendingOrder(DESCENDING_ORDER_KEY);
 
@@ -45,7 +47,14 @@ public abstract class ParseMessageClient {
                     return;
                 }
 
-                onAllConversationsFetched(conversations);
+                List<Conversation> userConversations = new ArrayList<>();
+                for (int i = 0; i < conversations.size(); i++){
+                    List<ParseUser> users = conversations.get(i).getUsers();
+                    if (ParseUser.getCurrentUser().getObjectId().equals(users.get(0).getObjectId()) || ParseUser.getCurrentUser().getObjectId().equals(users.get(1).getObjectId())){
+                        userConversations.add(conversations.get(i));
+                    }
+                }
+                onAllConversationsFetched(userConversations);
             }
         });
 

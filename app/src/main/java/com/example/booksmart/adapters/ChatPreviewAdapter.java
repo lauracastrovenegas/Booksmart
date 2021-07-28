@@ -124,23 +124,13 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
 
             // Set preview photo for listings
             Listing listing = conversation.getListing();
-            listing.fetchIfNeededInBackground(new GetCallback<ParseObject>() {
-                @Override
-                public void done(ParseObject object, ParseException e) {
-                    if (e != null){
-                        Log.e(TAG, e.getMessage(), e);
-                        return;
-                    }
-
-                    ParseFile listingImage = ((Listing) object).getImage();
-                    if (listingImage != null) {
-                        Glide.with(context)
-                                .load(((ParseFile) listingImage).getUrl())
-                                .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(15, 15, 15, 15)))
-                                .into(ivListingPreview);
-                    }
-                }
-            });
+            ParseFile listingImage = listing.getImage();
+            if (listingImage != null) {
+                Glide.with(context)
+                        .load(((ParseFile) listingImage).getUrl())
+                        .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(15, 15, 15, 15)))
+                        .into(ivListingPreview);
+            }
         }
     }
 }
