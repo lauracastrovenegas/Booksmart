@@ -15,8 +15,8 @@
 
         <ImageView
             android:id="@+id/ivLoginBack"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_centerVertical="true"
             android:src="?attr/actionModeCloseDrawable"
