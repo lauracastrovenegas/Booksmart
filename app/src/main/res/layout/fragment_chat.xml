@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:fitsSystemWindows="true"
     tools:context=".ui.chat.ChatFragment">
 
     <include android:id="@+id/chat_toolbar"
@@ -38,23 +39,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/ibSend"
-            android:backgroundTint="@color/black"
+            android:layout_centerVertical="true"
+            android:background="@drawable/rounded_edittext"
+            android:textSize="@dimen/font_size_large"
             android:hint="@string/message_hint"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="6dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:imeOptions="actionSend"
+            android:textCursorDrawable="@null"
             android:inputType="textShortMessage" />
 
         <ImageButton
             android:id="@+id/ibSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingRight="10dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:src="@drawable/ic_send"
-            android:background="@color/white"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"/>
+            android:backgroundTint="@color/white" />
 
     </RelativeLayout>
 
