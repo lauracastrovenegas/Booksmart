@@ -25,7 +25,7 @@ public abstract class ParseMessageClient {
     public static final String MESSAGES_KEY = "messages";
     public static final String USERS_KEY = "users";
     public static final String QUERY_ERROR = "Unable to fetch all conversations";
-    private static final String LISTING_KEY = "listing";
+    public static final String LISTING_KEY = "listing";
 
     Context context;
 
@@ -48,7 +48,7 @@ public abstract class ParseMessageClient {
                     Log.e(TAG, QUERY_ERROR, e);
                     return;
                 }
-                
+
                 onAllConversationsFetched(conversations);
             }
         });

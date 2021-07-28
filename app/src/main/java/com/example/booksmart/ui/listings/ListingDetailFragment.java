@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +26,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.bumptech.glide.Glide;
 import com.example.booksmart.R;
 import com.example.booksmart.helpers.DeviceDimensionsHelper;
+import com.example.booksmart.helpers.ParseMessageClient;
 import com.example.booksmart.models.Book;
 import com.example.booksmart.models.Conversation;
 import com.example.booksmart.models.Item;
@@ -33,8 +35,11 @@ import com.example.booksmart.ui.chat.ChatFragment;
 import com.example.booksmart.viewmodels.ChatViewModel;
 import com.example.booksmart.viewmodels.ConversationsViewModel;
 import com.example.booksmart.viewmodels.ListingDetailViewModel;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.example.booksmart.models.Listing;
 
@@ -222,13 +227,38 @@ public class ListingDetailFragment extends Fragment {
     }
 
     private void startConversation(Listing listing) {
-        Conversation conversation = new Conversation();
-        conversation.setUsers(listing.getUser(), ParseUser.getCurrentUser());
-        conversation.setMessages(new ArrayList<Message>());
-        conversation.setListing(listing);
-        conversationsViewModel.addNewConversation(conversation);
-        chatViewModel.select(conversation);
-        goToChat();
+        getConversation(listing);
+    }
+
+    // Check if conversation for this listing already exists, navigate to conversation
+    private void getConversation(Listing listing){
+        ParseQuery query = ParseQuery.getQuery(Conversation.class);
+        query.include(ParseMessageClient.MESSAGES_KEY);
+        query.include(ParseMessageClient.LISTING_KEY);
+        query.include(ParseMessageClient.USERS_KEY);
+        query.whereEqualTo(ParseMessageClient.LISTING_KEY, listing);
+        query.whereEqualTo(ParseMessageClient.USERS_KEY, ParseUser.getCurrentUser());
+
+        query.getFirstInBackground(new GetCallback<Conversation>(){
+            public void done(Conversation conversation, ParseException e){
+                if (e == null){ // conversation already exists
+                    chatViewModel.select(conversation);
+                    goToChat();
+                } else { // conversation does not exist -> start new conversation
+                    if(e.getCode() == ParseException.OBJECT_NOT_FOUND){
+                        Conversation newConversation = new Conversation();
+                        newConversation.setUsers(listing.getUser(), ParseUser.getCurrentUser());
+                        newConversation.setMessages(new ArrayList<Message>());
+                        newConversation.setListing(listing);
+                        conversationsViewModel.addNewConversation(newConversation);
+                        chatViewModel.select(newConversation);
+                        goToChat();
+                    } else {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
+                }
+            }
+        });
     }
 
     private String setAuthorString(List<String> authors){
