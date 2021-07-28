@@ -8,6 +8,7 @@ import com.example.booksmart.models.Listing;
 import com.example.booksmart.models.Message;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -37,6 +38,7 @@ public abstract class ParseMessageClient {
         query.include(MESSAGES_KEY);
         query.include(LISTING_KEY);
         query.include(USERS_KEY);
+        query.whereEqualTo(USERS_KEY, ParseUser.getCurrentUser());
         query.addDescendingOrder(DESCENDING_ORDER_KEY);
 
         query.findInBackground(new FindCallback<Conversation>(){
@@ -46,15 +48,8 @@ public abstract class ParseMessageClient {
                     Log.e(TAG, QUERY_ERROR, e);
                     return;
                 }
-
-                List<Conversation> userConversations = new ArrayList<>();
-                for (int i = 0; i < conversations.size(); i++){
-                    List<ParseUser> users = conversations.get(i).getUsers();
-                    if (ParseUser.getCurrentUser().getObjectId().equals(users.get(0).getObjectId()) || ParseUser.getCurrentUser().getObjectId().equals(users.get(1).getObjectId())){
-                        userConversations.add(conversations.get(i));
-                    }
-                }
-                onAllConversationsFetched(userConversations);
+                
+                onAllConversationsFetched(conversations);
             }
         });
 
