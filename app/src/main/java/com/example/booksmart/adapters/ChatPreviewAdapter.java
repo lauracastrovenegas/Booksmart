@@ -63,6 +63,16 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
         return conversations.size();
     }
 
+    public void clear(){
+        conversations.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Conversation> newConversations){
+        conversations.addAll(newConversations);
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private static final String KEY_NAME = "name";
@@ -114,13 +124,18 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
 
             // Set Text for last message preview and date
             Message lastMessage = conversation.getLastMessage();
-            if (lastMessage.getUser().getObjectId().equals(currentUser.getObjectId())){
-                tvLastMessage.setText("You: " + lastMessage.getBody());
+            if (lastMessage != null){
+                if (lastMessage.getUser().getObjectId().equals(currentUser.getObjectId())){
+                    tvLastMessage.setText("You: " + lastMessage.getBody());
+                } else {
+                    tvLastMessage.setText(name + ": " + lastMessage.getBody());
+                }
+
+                tvDate.setText(lastMessage.getCreatedAtDate());
             } else {
-                tvLastMessage.setText(name + ": " + lastMessage.getBody());
+                tvDate.setText(conversation.getCreatedAt().toString());
             }
 
-            tvDate.setText(lastMessage.getCreatedAtDate());
 
             // Set preview photo for listings
             Listing listing = conversation.getListing();

@@ -28,6 +28,10 @@ public class Conversation extends ParseObject {
     }
 
     public Message getLastMessage(){
+        if (getMessages().isEmpty()){
+            return null;
+        }
+
         return getMessages().get(0);
     }
 

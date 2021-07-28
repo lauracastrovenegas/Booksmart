@@ -28,6 +28,7 @@ import com.example.booksmart.viewmodels.ConversationsViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConversationsFragment extends Fragment {
@@ -49,6 +50,9 @@ public class ConversationsFragment extends Fragment {
 
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvConversations.setLayoutManager(linearLayoutManager);
+
+        adapter = new ChatPreviewAdapter(getContext(), new ArrayList<>());
+        rvConversations.setAdapter(adapter);
 
         setViewModels();
 
@@ -79,8 +83,8 @@ public class ConversationsFragment extends Fragment {
         conversationsViewModel.getConversations().observe(getViewLifecycleOwner(), new Observer<List<Conversation>>() {
             @Override
             public void onChanged(List<Conversation> conversations) {
-                adapter = new ChatPreviewAdapter(getContext(), conversations);
-                rvConversations.setAdapter(adapter);
+                adapter.clear();
+                adapter.addAll(conversations);
 
                 if (conversations.isEmpty()){
                     tvNoMessages.setVisibility(View.VISIBLE);
