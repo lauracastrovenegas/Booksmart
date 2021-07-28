@@ -133,7 +133,7 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
 
                 tvDate.setText(lastMessage.getCreatedAtDate());
             } else {
-                tvDate.setText(conversation.getCreatedAt().toString());
+                tvDate.setText(conversation.getCreatedAtDate());
             }
 
 
