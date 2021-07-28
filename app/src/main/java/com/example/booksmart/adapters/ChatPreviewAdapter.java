@@ -16,11 +16,13 @@ import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.example.booksmart.R;
+import com.example.booksmart.helpers.ParseMessageClient;
 import com.example.booksmart.models.Conversation;
 import com.example.booksmart.models.Listing;
 import com.example.booksmart.models.Message;
 import com.parse.GetCallback;
 import com.parse.GetFileCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
@@ -83,6 +85,8 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
         TextView tvUserName;
         TextView tvLastMessage;
         TextView tvDate;
+        ParseUser currentUser;
+        String name;
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -95,7 +99,7 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
         }
 
         public void bind(Conversation conversation) {
-            ParseUser currentUser = ParseUser.getCurrentUser();
+            currentUser = ParseUser.getCurrentUser();
 
             // Get other user
             List<ParseUser> users = conversation.getUsers();
@@ -113,7 +117,7 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
             }
 
             // Set name and profile photo of other user
-            String name = (otherUser.getString(KEY_NAME).split(" "))[0];
+            name = (otherUser.getString(KEY_NAME).split(" "))[0];
             tvUserName.setText(name);
 
             ParseFile profileImage = otherUser.getParseFile(KEY_IMAGE);
@@ -122,20 +126,9 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
                     .circleCrop()
                     .into(ivProfilePhoto);
 
-            // Set Text for last message preview and date
-            Message lastMessage = conversation.getLastMessage();
-            if (lastMessage != null){
-                if (lastMessage.getUser().getObjectId().equals(currentUser.getObjectId())){
-                    tvLastMessage.setText("You: " + lastMessage.getBody());
-                } else {
-                    tvLastMessage.setText(name + ": " + lastMessage.getBody());
-                }
-
-                tvDate.setText(lastMessage.getCreatedAtDate());
-            } else {
-                tvDate.setText(conversation.getCreatedAtDate());
-            }
-
+            // get last message and set textview
+            ParseMessageClient client = setParseClient(conversation);
+            client.getLastMessage(conversation);
 
             // Set preview photo for listings
             Listing listing = conversation.getListing();
@@ -146,6 +139,28 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
                         .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(15, 15, 15, 15)))
                         .into(ivListingPreview);
             }
+        }
+
+        private ParseMessageClient setParseClient(Conversation conversation){
+            ParseMessageClient parseMessageClient = new ParseMessageClient(context) {
+                @Override
+                protected void onMessageFetched(Message message) {
+                    // Set Text for last message preview and date
+                    if (message != null){
+                        if (message.getUser().getObjectId().equals(currentUser.getObjectId())){
+                            tvLastMessage.setText("You: " + message.getBody());
+                        } else {
+                            tvLastMessage.setText(name + ": " + message.getBody());
+                        }
+
+                        tvDate.setText(message.getCreatedAtDate());
+                    } else {
+                        tvDate.setText(conversation.getCreatedAtDate());
+                    }
+                }
+            };
+
+            return parseMessageClient;
         }
     }
 }
