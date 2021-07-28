@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.booksmart.R;
 import com.example.booksmart.adapters.ChatPreviewAdapter;
@@ -36,6 +37,7 @@ public class ConversationsFragment extends Fragment {
     RecyclerView rvConversations;
     ChatPreviewAdapter adapter;
     LinearLayoutManager linearLayoutManager;
+    TextView tvNoMessages;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -43,6 +45,7 @@ public class ConversationsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_conversations, container, false);
 
         rvConversations = view.findViewById(R.id.rvConversations);
+        tvNoMessages = view.findViewById(R.id.tvNoMessagesText);
 
         linearLayoutManager = new LinearLayoutManager(getContext());
         rvConversations.setLayoutManager(linearLayoutManager);
@@ -78,6 +81,12 @@ public class ConversationsFragment extends Fragment {
             public void onChanged(List<Conversation> conversations) {
                 adapter = new ChatPreviewAdapter(getContext(), conversations);
                 rvConversations.setAdapter(adapter);
+
+                if (conversations.isEmpty()){
+                    tvNoMessages.setVisibility(View.VISIBLE);
+                } else {
+                    tvNoMessages.setVisibility(View.INVISIBLE);
+                }
             }
         });
     }
