@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/etLoginUsername"
             android:layout_marginBottom="30dp"
-            android:fontFamily="@font/work_sans"
+            android:fontFamily="@font/work_sans_semibold"
             android:gravity="center"
             android:text="@string/welcome_back"
             android:textColor="@color/black"
