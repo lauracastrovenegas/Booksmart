@@ -78,15 +78,78 @@ public class ParseMessageClient {
         });
     }
 
+    public void getConversation(Listing listing){
+        ParseQuery query = ParseQuery.getQuery(Conversation.class);
+        query.include(ParseMessageClient.MESSAGES_KEY);
+        query.include(ParseMessageClient.LISTING_KEY);
+        query.include(ParseMessageClient.USERS_KEY);
+        query.whereEqualTo(ParseMessageClient.LISTING_KEY, listing);
+        query.whereEqualTo(ParseMessageClient.USERS_KEY, ParseUser.getCurrentUser());
+
+        query.getFirstInBackground(new GetCallback<Conversation>(){
+            public void done(Conversation conversation, ParseException e){
+                if (e == null){ // conversation already exists
+                    onConversationFetched(conversation);
+                } else { // conversation does not exist -> start new conversation
+                    if(e.getCode() == ParseException.OBJECT_NOT_FOUND){
+                        Conversation newConversation = new Conversation();
+                        newConversation.setUsers(listing.getUser(), ParseUser.getCurrentUser());
+                        newConversation.setListing(listing);
+                        onConversationFetched(newConversation);
+                    } else {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
+                }
+            }
+        });
+    }
+
     public void saveMessage(Message message){
-        message.saveInBackground(new SaveCallback() {
+        // Check if conversation exists
+        Conversation conversation = message.getConversation();
+        conversation.fetchInBackground(new GetCallback<ParseObject>() {
             @Override
-            public void done(ParseException e) {
+            public void done(ParseObject object, ParseException e) {
                 if (e != null){
-                    Log.e(TAG, e.getMessage(), e);
+                    if (e.getCode() == ParseException.OBJECT_NOT_FOUND){
+                        // Conversation does not exists - save it first
+                        conversation.saveInBackground(new SaveCallback() {
+                            @Override
+                            public void done(ParseException e) {
+                                if(e != null){
+                                    Log.e(TAG, e.getMessage(), e);
+                                }
+
+                                // save message after saving new conversation
+                                message.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if (e != null){
+                                            Log.e(TAG, e.getMessage(), e);
+                                        }
+
+                                        onMessageSaved(message);
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
+                    return;
                 }
 
-                onMessageSaved(message);
+                // Conversation exists - save message
+                message.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null){
+                            Log.e(TAG, e.getMessage(), e);
+                        }
+
+                        onMessageSaved(message);
+                    }
+                });
             }
         });
     }
@@ -166,7 +229,13 @@ public class ParseMessageClient {
                             e.printStackTrace();
                         }
                         if (conversation.getUsers().get(0).getObjectId().equals(ParseUser.getCurrentUser().getObjectId()) || conversation.getUsers().get(1).getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
-                            onNewMessageFound(message);
+                            conversation.setUnread(true);
+                            conversation.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    onNewMessageFound(message);
+                                }
+                            });
                         }
                     }
                 });
@@ -185,6 +254,8 @@ public class ParseMessageClient {
     protected void onNewConversationSaved(Conversation conversation){};
 
     protected void onAllConversationsFetched(List<Conversation> conversation){};
+
+    protected void onConversationFetched(Conversation conversation) {};
 
 
 }
