@@ -1,6 +1,8 @@
 package com.example.booksmart.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -82,6 +86,7 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
 
         ImageView ivProfilePhoto;
         ImageView ivListingPreview;
+        ImageView ivUnreadIcon;
         TextView tvUserName;
         TextView tvLastMessage;
         TextView tvDate;
@@ -93,6 +98,7 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
 
             ivProfilePhoto = itemView.findViewById(R.id.ivOtherUserProfileImage);
             ivListingPreview = itemView.findViewById(R.id.ivListingPreviewImage);
+            ivUnreadIcon = itemView.findViewById(R.id.ivUnreadIcon);
             tvUserName = itemView.findViewById(R.id.tvOtherUserName);
             tvLastMessage = itemView.findViewById(R.id.tvLastMessage);
             tvDate = itemView.findViewById(R.id.tvTime);
@@ -143,6 +149,7 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
 
         private ParseMessageClient setParseClient(Conversation conversation){
             ParseMessageClient parseMessageClient = new ParseMessageClient(context) {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 protected void onMessageFetched(Message message) {
                     // Set Text for last message preview and date
@@ -154,6 +161,16 @@ public class ChatPreviewAdapter extends RecyclerView.Adapter<ChatPreviewAdapter.
                         }
 
                         tvDate.setText(message.getCreatedAtDate());
+
+                        // Mark as read/unread is message is unread and the last message was sent by the other user
+                        if (conversation.isUnread() && !message.getUser().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
+                            ivUnreadIcon.setVisibility(View.VISIBLE);
+                            Typeface medium_font = context.getResources().getFont(R.font.work_sans_medium);
+                            tvLastMessage.setTypeface(medium_font);
+                            tvDate.setTypeface(medium_font);
+                        } else {
+                            ivUnreadIcon.setVisibility(View.INVISIBLE);
+                        }
                     } else {
                         tvDate.setText(conversation.getCreatedAtDate());
                     }
