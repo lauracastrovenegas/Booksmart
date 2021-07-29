@@ -20,11 +20,14 @@ import android.widget.TextView;
 import com.example.booksmart.R;
 import com.example.booksmart.adapters.ChatPreviewAdapter;
 import com.example.booksmart.helpers.ItemClickSupport;
+import com.example.booksmart.helpers.ParseMessageClient;
 import com.example.booksmart.models.Conversation;
 import com.example.booksmart.models.Item;
+import com.example.booksmart.models.Message;
 import com.example.booksmart.ui.listings.ListingsFragment;
 import com.example.booksmart.viewmodels.ChatViewModel;
 import com.example.booksmart.viewmodels.ConversationsViewModel;
+import com.parse.ParseUser;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -70,6 +73,20 @@ public class ConversationsFragment extends Fragment {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                         Conversation conversation = conversationsViewModel.getConversation(position);
+
+                        ParseMessageClient parseMessageClient = new ParseMessageClient(getContext()){
+                            @Override
+                            protected void onMessageFetched(Message message) {
+                                if (message != null){
+                                    if (conversation.isUnread() && !message.getUser().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
+                                        conversation.setUnread(false);
+                                        conversation.saveInBackground();
+                                    }
+                                }
+                            }
+                        };
+
+                        parseMessageClient.getLastMessage(conversation);
                         chatViewModel.select(conversation);
                         goChatView();
                     }
