@@ -22,13 +22,7 @@ public class ConversationsViewModel extends AndroidViewModel {
     public ConversationsViewModel(Application application){
         super(application);
 
-        repository = new ConversationRepository(application) {
-            @Override
-            protected void onDone() {
-                conversations = repository.getConversations();
-            }
-        };
-
+        repository = new ConversationRepository(application);
         conversations = repository.getConversations();
     }
 

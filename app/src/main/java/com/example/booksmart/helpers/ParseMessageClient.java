@@ -95,7 +95,11 @@ public class ParseMessageClient {
             @Override
             public void done(List<Message> messages, ParseException e) {
                 if (e != null){
-                    Log.e(TAG, e.getMessage(), e);
+                    if (e.getCode() == ParseException.OTHER_CAUSE){
+                        onAllMessagesFetched(null);
+                    } else {
+                        Log.e(TAG, e.getMessage(), e);
+                    }
                     return;
                 }
 

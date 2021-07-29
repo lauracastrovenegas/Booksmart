@@ -31,7 +31,9 @@ public class ChatRepository {
 
             @Override
             protected void onAllMessagesFetched(List<Message> allMessages) {
-                messages.setValue(allMessages);
+                if (allMessages != null){
+                    messages.setValue(allMessages);
+                }
             }
 
             @Override

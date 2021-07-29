@@ -11,7 +11,7 @@ import com.example.booksmart.models.Listing;
 
 import java.util.List;
 
-public abstract class ConversationRepository {
+public class ConversationRepository {
 
     MutableLiveData<List<Conversation>> conversations;
     ParseMessageClient parseClient;
@@ -31,7 +31,6 @@ public abstract class ConversationRepository {
             @Override
             protected void onNewConversationSaved(Conversation conversation) {
                 parseClient.queryAllConversations();
-                onDone();
             }
 
             @Override
@@ -49,5 +48,5 @@ public abstract class ConversationRepository {
         parseClient.saveNewConversation(conversation);
     }
 
-    protected abstract void onDone();
+    protected void onDone(){};
 }
