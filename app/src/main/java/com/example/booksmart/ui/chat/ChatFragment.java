@@ -14,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -163,15 +165,32 @@ public class ChatFragment extends Fragment {
         ibSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String body = etInput.getText().toString();
-                Message message = new Message();
-                message.setBody(body);
-                message.setUser(ParseUser.getCurrentUser());
-                message.setConversation(conversation);
-                chatViewModel.saveMessage(message);
-                etInput.setText(null);
+                sendMessage(conversation);
             }
         });
+
+        // set on click listener for keyboard's send button
+        etInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    sendMessage(conversation);
+                }
+                return false;
+            }
+        });
+    }
+
+    private void sendMessage(Conversation conversation) {
+        String body = etInput.getText().toString();
+        if (!body.isEmpty() || body == null){
+            Message message = new Message();
+            message.setBody(body);
+            message.setUser(ParseUser.getCurrentUser());
+            message.setConversation(conversation);
+            chatViewModel.saveMessage(message);
+            etInput.setText(null);
+        }
     }
 
     private void hideKeyboard() {
