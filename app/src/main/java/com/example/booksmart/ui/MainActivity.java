@@ -2,6 +2,7 @@ package com.example.booksmart.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import com.example.booksmart.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -25,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         navView.setItemIconTintList(null);
         NavigationUI.setupWithNavController(navView, navController);
+
+        // prevent toolbar from hiding when keyboard opens
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     @Override
