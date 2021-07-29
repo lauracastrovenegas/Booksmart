@@ -45,7 +45,7 @@ public class ParseClient {
     private static final String ERROR_SAVING_IMAGE = "Could not save image uploaded. Please try again!";
     public static final String NAME_KEY = "name";
     private static final String SIGN_UP_FAILURE = "Unable to create account for user!";
-    public static final String LOGIN_FAILURE = "Unable to login.";
+    public static final String LOGIN_FAILURE = "Unable to login: ";
     private static final String USERNAME_TAKEN_MSG = "Sorry, that username is already taken.";
     public static final String EMAIL_TAKEN_MSG = "An account already exists for that email.";
 
@@ -87,6 +87,7 @@ public class ParseClient {
                             Log.e(TAG, e.getMessage(), e);
                             break;
                     }
+                    onSignUpUnsuccessful();
                     return;
                 }
 
@@ -103,6 +104,7 @@ public class ParseClient {
             public void done(ParseUser user, ParseException e) {
                 if (e != null){
                     Toast.makeText(context, LOGIN_FAILURE + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    onLogInUnsuccessful();
                     return;
                 }
 
@@ -224,6 +226,10 @@ public class ParseClient {
     }
 
     public void onUserLoggedIn(){};
+
+    public void onLogInUnsuccessful() {}
+
+    public void onSignUpUnsuccessful() {};
 
     public void onUserFetched(ParseUser user){};
 

@@ -31,6 +31,7 @@ import com.example.booksmart.models.Listing;
 import com.example.booksmart.ui.WelcomeActivity;
 import com.example.booksmart.helpers.Colleges;
 import com.example.booksmart.models.User;
+import com.example.booksmart.ui.listings.ListingDetailFragment;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -148,6 +149,17 @@ public class SignupFragment extends Fragment {
             }
 
             @Override
+            public void onLogInUnsuccessful() {
+                pb.setVisibility(View.GONE);
+                goLoginFragment();
+            }
+
+            @Override
+            public void onSignUpUnsuccessful() {
+                pb.setVisibility(View.GONE);
+            }
+
+            @Override
             public void onUserLoggedIn() {
                 Log.i(TAG, "onUserLoggedIn()");
                 pb.setVisibility(View.GONE);
@@ -221,6 +233,10 @@ public class SignupFragment extends Fragment {
 
     private void goWelcomeFragment(){
         replaceFragment(new WelcomeFragment());
+    }
+
+    private void goLoginFragment(){
+        replaceFragment(new LoginFragment());
     }
 
     private void replaceFragment(Fragment fragment) {

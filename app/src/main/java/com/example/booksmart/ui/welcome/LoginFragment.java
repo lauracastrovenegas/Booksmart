@@ -100,6 +100,11 @@ public class LoginFragment extends Fragment {
                 ((WelcomeActivity) getActivity()).goMainActivity();
                 Toast.makeText(getContext(), SUCCESS_MSG, Toast.LENGTH_SHORT).show();
             }
+
+            @Override
+            public void onLogInUnsuccessful() {
+                pb.setVisibility(View.GONE);
+            }
         };
     }
 
