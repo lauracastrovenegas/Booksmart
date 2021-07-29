@@ -37,18 +37,19 @@
             android:id="@+id/etMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/ibSend"
             android:layout_centerVertical="true"
-            android:background="@drawable/rounded_edittext"
-            android:textSize="@dimen/font_size_large"
-            android:hint="@string/message_hint"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="6dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_toLeftOf="@+id/ibSend"
+            android:background="@drawable/rounded_edittext"
+            android:fontFamily="@font/work_sans"
+            android:hint="@string/message_hint"
             android:imeOptions="actionSend"
+            android:inputType="textShortMessage"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="6dp"
             android:textCursorDrawable="@null"
-            android:inputType="textShortMessage" />
+            android:textSize="@dimen/font_size_large" />
 
         <ImageButton
             android:id="@+id/ibSend"
