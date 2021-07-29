@@ -193,7 +193,7 @@
                 android:id="@+id/btnListingPost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ivListingImagePreview"
+                android:layout_below="@+id/ivListingImagePreviewOutline"
                 android:layout_alignParentStart="false"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
@@ -210,7 +210,7 @@
                 android:id="@+id/pbLoadingPost"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ivListingImagePreview"
+                android:layout_below="@+id/ivListingImagePreviewOutline"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
                 android:layout_toEndOf="@+id/btnListingPost"
@@ -235,15 +235,22 @@
                 android:textSize="@dimen/font_size_medium"
                 app:cornerRadius="@dimen/button_corner_radius" />
 
-            <ImageView
-                android:id="@+id/ivListingImagePreview"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ivListingImagePreviewOutline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/btnListingSelect"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
-                android:scaleType="centerCrop"
-                tools:src="@tools:sample/avatars" />
+                app:cardCornerRadius="10dp">
+                <ImageView
+                    android:id="@+id/ivListingImagePreview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    tools:src="@tools:sample/avatars" />
+
+            </androidx.cardview.widget.CardView>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

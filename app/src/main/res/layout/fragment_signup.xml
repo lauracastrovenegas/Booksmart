@@ -177,22 +177,28 @@
                 android:textSize="@dimen/font_size_small"
                 app:cornerRadius="@dimen/button_corner_radius" />
 
-            <ImageView
-                android:id="@+id/ivProfileImagePreview"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ivProfileImagePreviewOutline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/btnSignupSelect"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:scaleType="centerCrop"
-                tools:src="@tools:sample/avatars" />
-
+                app:cardCornerRadius="10dp">
+                <ImageView
+                    android:id="@+id/ivProfileImagePreview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    tools:src="@tools:sample/avatars" />
+             </androidx.cardview.widget.CardView>
+            
             <Button
                 android:id="@+id/btnCreateAccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ivProfileImagePreview"
+                android:layout_below="@+id/ivProfileImagePreviewOutline"
                 android:layout_alignParentStart="false"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="0dp"
@@ -209,7 +215,7 @@
                 android:id="@+id/pbLoadingSignup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ivProfileImagePreview"
+                android:layout_below="@+id/ivProfileImagePreviewOutline"
                 android:layout_marginStart="10dp"
                 android:layout_toEndOf="@+id/btnCreateAccount"
                 android:visibility="invisible"
