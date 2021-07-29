@@ -3,6 +3,7 @@ package com.example.booksmart.models;
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -17,6 +18,7 @@ public class Conversation extends ParseObject {
     public static final String USERS_KEY = "users";
     public static final String LISTING_KEY = "listing";
     private static final String DATE_FORMAT = "MMMM dd, yyyy";
+    private static final String READ_KEY = "isUnread";
 
     public List<ParseUser> getUsers() {
         return (ArrayList) get(USERS_KEY);
@@ -24,6 +26,10 @@ public class Conversation extends ParseObject {
 
     public Listing getListing(){
         return (Listing) getParseObject(LISTING_KEY);
+    }
+
+    public Boolean isUnread() {
+        return getBoolean(READ_KEY);
     }
 
     public void setUsers(ParseUser user1, ParseUser user2) {
@@ -36,6 +42,10 @@ public class Conversation extends ParseObject {
 
     public void setListing(Listing listing){
         put(LISTING_KEY, listing);
+    }
+
+    public void setUnread(Boolean isRead){
+        put(READ_KEY, isRead);
     }
 
     public String getCreatedAtDate(){
