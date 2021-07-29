@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -122,6 +123,7 @@ public class ListingFormFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 goListingTimeline();
+                hideKeyboard();
             }
         });
 
@@ -211,5 +213,11 @@ public class ListingFormFragment extends Fragment {
         image.requestLayout();
         image.getLayoutParams().height = height;
         image.getLayoutParams().width = width;
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager)
+                getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(etTitle.getWindowToken(), 0);
     }
 }

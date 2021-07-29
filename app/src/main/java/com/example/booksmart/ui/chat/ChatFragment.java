@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -85,6 +86,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 goToFragment(new ConversationsFragment());
+                hideKeyboard();
             }
         });
 
@@ -169,6 +171,12 @@ public class ChatFragment extends Fragment {
                 etInput.setText(null);
             }
         });
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager)
+                getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(etInput.getWindowToken(), 0);
     }
 
     private void goToDetail(){
