@@ -81,6 +81,7 @@ public class ChatFragment extends Fragment {
         rvMessages.setLayoutManager(linearLayoutManager);
 
         setViewModel();
+        chatViewModel.setMessageLiveQuery();
 
         ivBack.setOnClickListener(new View.OnClickListener() {
             @Override

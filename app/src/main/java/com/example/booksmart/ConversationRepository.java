@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.booksmart.helpers.ParseMessageClient;
 import com.example.booksmart.models.Conversation;
 import com.example.booksmart.models.Listing;
+import com.example.booksmart.models.Message;
 
 import java.util.List;
 
@@ -37,6 +38,11 @@ public class ConversationRepository {
             public void onAllConversationsFetched(List<Conversation> conversation) {
                 conversations.setValue(conversation);
             }
+
+            @Override
+            protected void onNewMessageFound(Message message) {
+                parseClient.queryAllConversations();
+            }
         };
     }
 
@@ -49,4 +55,8 @@ public class ConversationRepository {
     }
 
     protected void onDone(){};
+
+    public void setMessageLiveQuery() {
+        parseClient.setMessageLiveQuery();
+    }
 }

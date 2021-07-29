@@ -49,4 +49,7 @@ public class ChatViewModel extends AndroidViewModel {
     }
 
 
+    public void setMessageLiveQuery() {
+        chatRepository.setMessageLiveQuery();
+    }
 }

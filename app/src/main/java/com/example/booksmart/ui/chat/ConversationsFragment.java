@@ -55,6 +55,7 @@ public class ConversationsFragment extends Fragment {
         rvConversations.setAdapter(adapter);
 
         setViewModels();
+        conversationsViewModel.setMessageLiveQuery();
 
         return view;
     }

@@ -1,6 +1,8 @@
 package com.example.booksmart.helpers;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -16,7 +18,11 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.livequery.ParseLiveQueryClient;
+import com.parse.livequery.SubscriptionHandling;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,6 +135,46 @@ public class ParseMessageClient {
             }
         });
     }
+
+    public void setMessageLiveQuery(){
+        ParseLiveQueryClient parseLiveQueryClient = null;
+
+        try {
+            parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient(new URI("wss://booksmartapp.b4a.io/"));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        ParseQuery query = ParseQuery.getQuery(Message.class);
+        query.include(CONVO_KEY);
+        query.whereNotEqualTo(USER_KEY, ParseUser.getCurrentUser());
+
+        // Connect to Parse server
+        SubscriptionHandling<Message> subscriptionHandling = parseLiveQueryClient.subscribe(query);
+
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.CREATE, new SubscriptionHandling.HandleEventCallback<Message>() {
+            @Override
+            public void onEvent(ParseQuery<Message> query, final Message message) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        Log.i(TAG, "new Message" + message.getBody());
+                        Conversation conversation =  message.getConversation();
+                        try {
+                            conversation.fetchIfNeeded();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        if (conversation.getUsers().get(0).getObjectId().equals(ParseUser.getCurrentUser().getObjectId()) || conversation.getUsers().get(1).getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
+                            onNewMessageFound(message);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    protected void onNewMessageFound(Message message) {}
 
     protected void onMessageFetched(Message message){};
 
