@@ -100,23 +100,6 @@ public class LoginFragment extends Fragment {
                 ((WelcomeActivity) getActivity()).goMainActivity();
                 Toast.makeText(getContext(), SUCCESS_MSG, Toast.LENGTH_SHORT).show();
             }
-
-            @Override
-            public void onUserFetched(ParseUser user) {}
-
-            @Override
-            public void onQueryUserListingsDone(List<Listing> allListings, ParseException e) {
-
-            }
-
-            @Override
-            public void onListingSaved(Listing listing) {}
-
-            @Override
-            public void onQueryListingsDone(List<Listing> items, ParseException e) {}
-
-            @Override
-            public void onParseImageSaved(ParseFile image) {}
         };
     }
 

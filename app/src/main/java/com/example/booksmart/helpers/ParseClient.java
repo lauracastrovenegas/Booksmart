@@ -34,7 +34,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ParseClient {
+public class ParseClient {
 
     public static final String TAG = "Parse Client";
     public static final int LISTING_LIMIT = 15;
@@ -223,15 +223,15 @@ public abstract class ParseClient {
         }
     }
 
-    public abstract void onUserLoggedIn();
+    public void onUserLoggedIn(){};
 
-    public abstract void onUserFetched(ParseUser user);
+    public void onUserFetched(ParseUser user){};
 
-    public abstract void onQueryListingsDone(List<Listing> items, ParseException e);
+    public void onQueryListingsDone(List<Listing> items, ParseException e){};
 
-    public abstract void onQueryUserListingsDone(List<Listing> allListings, ParseException e);
+    public void onQueryUserListingsDone(List<Listing> allListings, ParseException e){};
 
-    public abstract void onListingSaved(Listing listing);
+    public void onListingSaved(Listing listing){};
 
-    public abstract void onParseImageSaved(ParseFile image);
+    public void onParseImageSaved(ParseFile image){};
 }
