@@ -31,25 +31,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_marginStart="5dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="0dp"
-        android:layout_toStartOf="@+id/ibToolbarOptions"
-        android:layout_toEndOf="@+id/ivToolbarLogo"
+        android:layout_marginHorizontal="60dp"
         android:fontFamily="@font/work_sans_light"
         android:gravity="center"
         android:textColor="@color/black"
         android:textSize="@dimen/font_size_subheading"
-        tools:text="@string/school_name_placeholder" />
+        tools:text="@string/school_name_placeholder"/>
 
-    <ImageButton
-        android:id="@+id/ibToolbarOptions"
+    <SearchView
+        android:id="@+id/ibToolbarSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="10dp"
-        android:backgroundTint="@color/white"
-        app:srcCompat="@drawable/ic_menu_hamburger" />
+        android:cursorVisible="false"
+        android:background="@color/white"/>
 
 </RelativeLayout>
