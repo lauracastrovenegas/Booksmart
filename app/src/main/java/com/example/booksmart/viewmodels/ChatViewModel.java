@@ -33,6 +33,9 @@ public class ChatViewModel extends AndroidViewModel {
         chatRepository.fetchMessages();
     }
 
+    public void saveMessage(Message message) {
+        chatRepository.saveMessage(message);
+    }
     public MutableLiveData<Conversation> getSelected() {
         return conversation;
     }
@@ -44,4 +47,6 @@ public class ChatViewModel extends AndroidViewModel {
     public MutableLiveData<List<Message>> getMessages() {
         return messages;
     }
+
+
 }

@@ -28,6 +28,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.GranularRoundedCorners;
 import com.example.booksmart.R;
 import com.example.booksmart.adapters.ChatAdapter;
+import com.example.booksmart.models.Conversation;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
 import com.example.booksmart.models.Message;
@@ -95,51 +96,7 @@ public class ChatFragment extends Fragment {
         chatViewModel = new ViewModelProvider((requireActivity())).get(ChatViewModel.class);
 
         chatViewModel.getSelected().observe(getViewLifecycleOwner(), conversation -> {
-            ParseUser currentUser = ParseUser.getCurrentUser();
-
-            // Get other user
-            List<ParseUser> users = conversation.getUsers();
-            ParseObject otherUser;
-            if (currentUser.getObjectId().equals(users.get(0).getObjectId())){
-                otherUser = users.get(1);
-            } else {
-                otherUser = users.get(0);
-            }
-
-            try {
-                otherUser = otherUser.fetchIfNeeded();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            // Set name and profile photo of other user
-            String name = (otherUser.getString(KEY_NAME).split(" "))[0];
-            tvUserName.setText(name);
-
-            ParseFile profileImage = otherUser.getParseFile(KEY_IMAGE);
-            Glide.with(getContext())
-                    .load(profileImage.getUrl())
-                    .circleCrop()
-                    .into(ivUserProfilePhoto);
-
-            // Set preview photo for listings
-            Listing listing = conversation.getListing();
-            ParseFile listingImage = listing.getImage();
-            if (listingImage != null) {
-                Glide.with(getActivity())
-                        .load(((ParseFile) listingImage).getUrl())
-                        .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(15, 15, 15, 15)))
-                        .into(ivListingPreview);
-            }
-
-            ivListingPreview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listingDetailViewModel.select(listing);
-                    listingDetailViewModel.setPreviousFragment(new ChatFragment());
-                    goToDetail();
-                }
-            });
+            setUI(conversation);
         });
 
         chatViewModel.getMessages().observe(getViewLifecycleOwner(), new Observer<List<Message>>() {
@@ -147,6 +104,69 @@ public class ChatFragment extends Fragment {
             public void onChanged(List<Message> messages) {
                 adapter = new ChatAdapter(getContext(), ParseUser.getCurrentUser(), messages);
                 rvMessages.setAdapter(adapter);
+            }
+        });
+    }
+
+    private void setUI(Conversation conversation){
+        ParseUser currentUser = ParseUser.getCurrentUser();
+
+        // Get other user
+        List<ParseUser> users = conversation.getUsers();
+        ParseObject otherUser;
+        if (currentUser.getObjectId().equals(users.get(0).getObjectId())){
+            otherUser = users.get(1);
+        } else {
+            otherUser = users.get(0);
+        }
+
+        try {
+            otherUser = otherUser.fetchIfNeeded();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        // Set name and profile photo of other user
+        String name = (otherUser.getString(KEY_NAME).split(" "))[0];
+        tvUserName.setText(name);
+
+        ParseFile profileImage = otherUser.getParseFile(KEY_IMAGE);
+        Glide.with(getContext())
+                .load(profileImage.getUrl())
+                .circleCrop()
+                .into(ivUserProfilePhoto);
+
+        // Set preview photo for listings
+        Listing listing = conversation.getListing();
+        ParseFile listingImage = listing.getImage();
+        if (listingImage != null) {
+            Glide.with(getActivity())
+                    .load(((ParseFile) listingImage).getUrl())
+                    .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(15, 15, 15, 15)))
+                    .into(ivListingPreview);
+        }
+
+        // set on click listener for listing preview image
+        ivListingPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listingDetailViewModel.select(listing);
+                listingDetailViewModel.setPreviousFragment(new ChatFragment());
+                goToDetail();
+            }
+        });
+
+        // set on click listener for send button
+        ibSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String body = etInput.getText().toString();
+                Message message = new Message();
+                message.setBody(body);
+                message.setUser(ParseUser.getCurrentUser());
+                message.setConversation(conversation);
+                chatViewModel.saveMessage(message);
+                etInput.setText(null);
             }
         });
     }

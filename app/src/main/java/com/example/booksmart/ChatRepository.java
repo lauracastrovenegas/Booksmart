@@ -59,4 +59,8 @@ public class ChatRepository {
     public void setConversation(Conversation conversation) {
         this.conversation.setValue(conversation);
     }
+
+    public void saveMessage(Message message) {
+        parseClient.saveMessage(message);
+    }
 }
