@@ -3,9 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:paddingVertical="10dp"
     android:paddingLeft="15dp"
     android:paddingRight="60dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="1dp"
     android:clipToPadding="false">
 
     <TextView
@@ -16,7 +17,6 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="2dp"
         android:layout_toRightOf="@+id/ivProfileOther"
-        android:paddingBottom="4dp"
         android:textSize="@dimen/font_size_small"
         tools:text="@string/timestamp_placeholder" />
 

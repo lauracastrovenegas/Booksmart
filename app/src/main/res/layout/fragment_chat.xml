@@ -16,8 +16,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/chat_toolbar"
         android:layout_above="@id/etSendMessage"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="0dp" />
+        android:layout_centerHorizontal="true"/>
 
     <View
         android:id="@+id/divider"
