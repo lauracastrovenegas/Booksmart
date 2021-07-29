@@ -56,7 +56,6 @@ public class ListingDetailFragment extends Fragment {
     public static final int IMAGE_HEIGHT = 800;
 
     ChatViewModel chatViewModel;
-    ConversationsViewModel conversationsViewModel;
     ListingDetailViewModel listingDetailViewModel;
     ImageView ivImage;
     ImageView ivUserProfileImage;
@@ -102,7 +101,6 @@ public class ListingDetailFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         chatViewModel = new ViewModelProvider(requireActivity()).get(ChatViewModel.class);
-        conversationsViewModel = new ViewModelProvider(requireActivity()).get(ConversationsViewModel.class);
         listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
 
         listingDetailViewModel.getPreviousFragment().observe(getViewLifecycleOwner(), fragment -> {
@@ -232,32 +230,16 @@ public class ListingDetailFragment extends Fragment {
 
     // Check if conversation for this listing already exists, navigate to conversation
     private void getConversation(Listing listing){
-        ParseQuery query = ParseQuery.getQuery(Conversation.class);
-        query.include(ParseMessageClient.MESSAGES_KEY);
-        query.include(ParseMessageClient.LISTING_KEY);
-        query.include(ParseMessageClient.USERS_KEY);
-        query.whereEqualTo(ParseMessageClient.LISTING_KEY, listing);
-        query.whereEqualTo(ParseMessageClient.USERS_KEY, ParseUser.getCurrentUser());
-
-        query.getFirstInBackground(new GetCallback<Conversation>(){
-            public void done(Conversation conversation, ParseException e){
-                if (e == null){ // conversation already exists
-                    chatViewModel.select(conversation);
-                    goToChat();
-                } else { // conversation does not exist -> start new conversation
-                    if(e.getCode() == ParseException.OBJECT_NOT_FOUND){
-                        Conversation newConversation = new Conversation();
-                        newConversation.setUsers(listing.getUser(), ParseUser.getCurrentUser());
-                        newConversation.setListing(listing);
-                        conversationsViewModel.addNewConversation(newConversation);
-                        chatViewModel.select(newConversation);
-                        goToChat();
-                    } else {
-                        Log.e(TAG, e.getMessage(), e);
-                    }
-                }
+        ParseMessageClient parseMessageClient = new ParseMessageClient(getContext()){
+            @Override
+            protected void onConversationFetched(Conversation conversation) {
+                chatViewModel.select(conversation);
+                chatViewModel.setMessages(new ArrayList<Message>());
+                goToChat();
             }
-        });
+        };
+
+        parseMessageClient.getConversation(listing);
     }
 
     private String setAuthorString(List<String> authors){
