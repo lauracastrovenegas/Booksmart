@@ -45,6 +45,7 @@
     <string name="post_listing_button">Post Listing</string>
     <string name="message_seller">Message Seller</string>
     <string name="google_books_link">Get Book</string>
+    <string name="check_pdf_link">Check for Free PDF</string>
     <string name="edit_listing">Edit</string>
     <string name="remove_listing">Remove</string>
     <string name="login">Log in</string>

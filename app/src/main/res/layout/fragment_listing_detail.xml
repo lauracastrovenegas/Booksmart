@@ -186,6 +186,7 @@
                     android:fontFamily="@font/work_sans"
                     android:text="@string/message_seller"
                     android:textAllCaps="false"
+                    android:visibility="invisible"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_size_large"
                     app:cornerRadius="@dimen/button_corner_radius" />
@@ -196,11 +197,28 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tvListingDescription"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginVertical="@dimen/activity_vertical_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:backgroundTint="@color/purple_500"
                     android:fontFamily="@font/work_sans"
+                    android:visibility="gone"
                     android:text="@string/google_books_link"
                     android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_size_large"
+                    app:cornerRadius="@dimen/button_corner_radius"  />
+
+                <Button
+                    android:id="@+id/btnPDFLink"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/btnGoogleBooksLink"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="20dp"
+                    android:backgroundTint="@color/purple_500"
+                    android:fontFamily="@font/work_sans"
+                    android:text="@string/check_pdf_link"
+                    android:textAllCaps="false"
+                    android:visibility="gone"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_size_large"
                     app:cornerRadius="@dimen/button_corner_radius"  />

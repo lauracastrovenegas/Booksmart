@@ -68,6 +68,7 @@ public class ListingDetailFragment extends Fragment {
     TextView tvDescription;
     Button btnMessageSeller;
     Button btnLinkToGoogle;
+    Button btnCheckPDF;
     Toolbar toolbar;
     ProgressBar progressBar;
 
@@ -89,6 +90,7 @@ public class ListingDetailFragment extends Fragment {
         tvDescription = itemView.findViewById(R.id.tvListingDescription);
         btnMessageSeller = itemView.findViewById(R.id.btnMessageSeller);
         btnLinkToGoogle = itemView.findViewById(R.id.btnGoogleBooksLink);
+        btnCheckPDF = itemView.findViewById(R.id.btnPDFLink);
         ivClose = itemView.findViewById(R.id.ivClose);
         progressBar = itemView.findViewById(R.id.pbListingDetail);
         toolbar = itemView.findViewById(R.id.detail_toolbar);
@@ -145,11 +147,9 @@ public class ListingDetailFragment extends Fragment {
                 tvUserUsername.setText(((Listing) item).getParseUser(Listing.KEY_USER).getUsername());
                 btnCourse.setText(((Listing) item).getString(Listing.KEY_COURSE));
                 tvDescription.setText(((Listing) item).getString(Listing.KEY_DESCRIPTION));
-                btnLinkToGoogle.setVisibility(View.GONE);
                 tvAuthors.setVisibility(View.GONE);
 
                 if (user.getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
-                    btnMessageSeller.setVisibility(View.GONE);
                     toolbar.inflateMenu(R.menu.detail_options_menu);
                     toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                         @Override
@@ -165,6 +165,7 @@ public class ListingDetailFragment extends Fragment {
                         }
                     });
                 } else {
+                    btnMessageSeller.setVisibility(View.VISIBLE);
                     btnMessageSeller.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -212,10 +213,19 @@ public class ListingDetailFragment extends Fragment {
                 }
 
                 btnMessageSeller.setVisibility(View.GONE);
+                btnCheckPDF.setVisibility(View.VISIBLE);
+                btnLinkToGoogle.setVisibility(View.VISIBLE);
                 btnLinkToGoogle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((Book) item).getGoogleLink())));
+                    }
+                });
+
+                btnCheckPDF.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((Book) item).getFindPDFLink())));
                     }
                 });
             }

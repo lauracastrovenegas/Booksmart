@@ -34,6 +34,7 @@ public class Book implements Item {
     String description;
     String imageLink;
     String googleLink;
+    String findPDFLink;
     String saleability;
     String price;
 
@@ -71,7 +72,9 @@ public class Book implements Item {
         } else {
             book.price = null;
         }
+
         book.googleLink = "https://www.google.com/books/edition/" + book.title.replace(" ","_") + "/" + book.id + "?hl=en&kptab=getbook";
+        book.findPDFLink = "http://libgen.rs/search.php?req=" + book.title.replace(' ', '+') + "+" + (book.getAuthors().isEmpty() ? "" : book.getAuthors().get(0).replace(' ', '+')) + "&open=0&res=25&view=simple&phrase=1&column=def";
 
         return book;
     }
@@ -118,6 +121,10 @@ public class Book implements Item {
 
     public String getGoogleLink(){
         return googleLink;
+    }
+
+    public String getFindPDFLink() {
+        return findPDFLink;
     }
 
     public String getPrice(){
