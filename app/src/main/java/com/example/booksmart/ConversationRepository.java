@@ -50,12 +50,6 @@ public class ConversationRepository {
         return conversations;
     }
 
-    public void addNewConversation(Conversation conversation) {
-        parseClient.saveNewConversation(conversation);
-    }
-
-    protected void onDone(){};
-
     public void setMessageLiveQuery() {
         parseClient.setMessageLiveQuery();
     }

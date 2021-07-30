@@ -30,10 +30,6 @@ public class ConversationsViewModel extends AndroidViewModel {
         return conversations;
     }
 
-    public void addNewConversation(Conversation conversation){
-        repository.addNewConversation(conversation);
-    }
-
     public Conversation getConversation(int position){
         return conversations.getValue().get(position);
     }
