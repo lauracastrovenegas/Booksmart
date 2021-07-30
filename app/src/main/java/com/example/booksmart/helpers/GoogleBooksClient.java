@@ -21,7 +21,7 @@ import java.util.List;
 public class GoogleBooksClient {
 
     public static final String TAG = "GoogleBooksClient";
-    public static final int LISTING_LIMIT = 30;
+    public static final int LISTING_LIMIT = 15;
     public static final String GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1/volumes?fields=items(id,volumeInfo,saleInfo)&printType=books&maxResults=" + String.valueOf(LISTING_LIMIT) + "&q=";
     public static final String DEFAULT_QUERY = "college+textbook";
     public static final String ITEMS_KEY = "items";
@@ -35,11 +35,12 @@ public class GoogleBooksClient {
     }
 
     public void fetchBooks(String queryString, long start){
-        Log.i(TAG, "fetchBooks()");
         if (queryString.equals("")){
             queryString = DEFAULT_QUERY;
+        } else {
+            queryString = queryString.replace(' ', '+');
         }
-        Log.i(TAG, queryString);
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, GOOGLE_BOOKS_URL + queryString + "&startIndex=" + String.valueOf(start), null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -48,7 +49,6 @@ public class GoogleBooksClient {
                             List<Book> newBooks = Book.fromJsonArray(response.getJSONArray(ITEMS_KEY));
                             startIndex = start + newBooks.size() + 2;
 
-                            //Log.i(TAG, newBooks.get(0).getTitle());
                             onBooksFetched(newBooks);
                         } catch (JSONException e) {
                             Log.e(TAG, e.getMessage(), e);
