@@ -48,6 +48,7 @@ public class ParseClient {
     public static final String LOGIN_FAILURE = "Unable to login: ";
     private static final String USERNAME_TAKEN_MSG = "Sorry, that username is already taken.";
     public static final String EMAIL_TAKEN_MSG = "An account already exists for that email.";
+    private static final String TITLE_KEY = "title";
 
     Context context;
     ParseUser user;
@@ -127,14 +128,13 @@ public class ParseClient {
     }
 
     // Query posts for a specific user
-    public void queryUserListings(int skipValue, ParseUser user) {
+    public void queryUserListings(ParseUser user) {
         user.fetchInBackground(new GetCallback<ParseObject>() {
             @Override
             public void done(ParseObject object, ParseException e) {
                 ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
                 query.include(Listing.KEY_USER);
                 query.whereEqualTo(Listing.KEY_USER, user);
-                query.setSkip(skipValue);
                 query.addDescendingOrder(DESCENDING_ORDER_KEY);
 
                 query.findInBackground(new FindCallback<Listing>() {
@@ -154,12 +154,21 @@ public class ParseClient {
     }
 
     // Query all listings from skipValue to skipValue + LISTING_LIMIT
-    public void queryListings(int skipValue) {
-        Log.i(TAG, "queryListings()");
-        Log.i(TAG, String.valueOf(skipValue));
+    public void queryListings(int skipValue, String queryString) {
+        user = ParseUser.getCurrentUser();
+        try {
+            user.fetchIfNeeded();
+            currentUserSchool = user.getString(KEY_SCHOOL);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
         query.include(Listing.KEY_USER);
         query.whereEqualTo(KEY_SCHOOL, currentUserSchool);
+        if (!queryString.equals("")){
+            query.whereContains(TITLE_KEY, queryString);
+        }
         query.setSkip(skipValue);
         query.setLimit(LISTING_LIMIT);
         query.addDescendingOrder(DESCENDING_ORDER_KEY);
@@ -173,8 +182,7 @@ public class ParseClient {
                     return;
                 }
 
-                allListings.size();
-                onQueryListingsDone(allListings, e);
+                onQueryListingsDone(allListings, queryString, e);
             }
         });
     }
@@ -233,7 +241,7 @@ public class ParseClient {
 
     public void onUserFetched(ParseUser user){};
 
-    public void onQueryListingsDone(List<Listing> items, ParseException e){};
+    public void onQueryListingsDone(List<Listing> items, String query, ParseException e){};
 
     public void onQueryUserListingsDone(List<Listing> allListings, ParseException e){};
 
