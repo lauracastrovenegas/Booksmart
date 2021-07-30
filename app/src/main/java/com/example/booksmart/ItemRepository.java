@@ -50,7 +50,6 @@ public class ItemRepository {
     ParseClient parseClient;
     MutableLiveData<List<Item>> items;
     List<Item> itemList;
-    List<Item> currentList;
     int skip;
     long startIndex;
     String title;
@@ -63,7 +62,6 @@ public class ItemRepository {
         setParseClient();
         setGoogleClient();
         itemList = new ArrayList<>();
-        currentList = new ArrayList<>();
         items = new MutableLiveData<>();
         skip = 0;
         startIndex = 0;
@@ -77,13 +75,8 @@ public class ItemRepository {
             public void onBooksFetched(List<Book> newBooks) {
                 Log.i(TAG, "onBooksFetched()");
                 startIndex = startIndex + newBooks.size();
-                currentList.addAll(newBooks);
-                if (currentList.size() > GoogleBooksClient.LISTING_LIMIT){
-                    Collections.shuffle(currentList);
-                }
-                itemList.addAll(currentList);
+                itemList.addAll(newBooks);
                 items.setValue(itemList);
-                currentList.clear();
                 onAllItemsFetched(itemList);
             }
         };
@@ -100,7 +93,7 @@ public class ItemRepository {
                     return;
                 }
 
-                currentList.addAll(allListings);
+                itemList.addAll(allListings);
                 skip = skip + allListings.size();
 
                 googleClient.fetchBooks(queryString, startIndex);
