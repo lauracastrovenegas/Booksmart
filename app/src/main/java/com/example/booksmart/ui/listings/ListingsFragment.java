@@ -2,11 +2,14 @@ package com.example.booksmart.ui.listings;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,12 +25,14 @@ import com.example.booksmart.helpers.EndlessRecyclerViewScrollListener;
 import com.example.booksmart.helpers.ItemClickSupport;
 import com.example.booksmart.R;
 import com.example.booksmart.adapters.ItemAdapter;
+import com.example.booksmart.models.Book;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.viewmodels.ListingDetailViewModel;
 import com.example.booksmart.viewmodels.ListingsViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.ParseUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListingsFragment extends Fragment {
@@ -46,7 +51,9 @@ public class ListingsFragment extends Fragment {
     FloatingActionButton btnCompose;
     ProgressBar pb;
     TextView toolbarTitleSchool;
-    Boolean fragmentRecreated; // Indicates if fragment has just been created
+    Boolean listRefreshed; // Indicates if fragment has just been created
+    SearchView searchView;
+    String currentSearchQuery;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -56,12 +63,17 @@ public class ListingsFragment extends Fragment {
         rvListings = view.findViewById(R.id.rvListing);
         pb = view.findViewById(R.id.pbLoadingListings);
         toolbarTitleSchool = view.findViewById(R.id.tvToolbarTitleSchool);
+        searchView = view.findViewById(R.id.svToolbarSearch);
 
         toolbarTitleSchool.setText(ParseUser.getCurrentUser().getString(KEY_SCHOOL));
-        fragmentRecreated = true;
+        listRefreshed = true;
+        currentSearchQuery = "";
 
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_SPAN);
         rvListings.setLayoutManager(gridLayoutManager);
+
+        adapter = new ItemAdapter(getContext(), new ArrayList<>());
+        rvListings.setAdapter(adapter);
 
         setViewModels();
         setEndlessScrollListener();
@@ -71,6 +83,24 @@ public class ListingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 goListingForm();
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                currentSearchQuery = query;
+                listRefreshed = true;
+                listingsViewModel.fetchItems(currentSearchQuery);
+                rvListings.setVisibility(View.INVISIBLE);
+                pb.setVisibility(View.VISIBLE);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
 
@@ -99,24 +129,6 @@ public class ListingsFragment extends Fragment {
         );
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        saveRecyclerViewState();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        saveRecyclerViewState();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        saveRecyclerViewState();
-    }
-
     private void setViewModels(){
         listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
         listingsViewModel = new ViewModelProvider(requireActivity()).get(ListingsViewModel.class);
@@ -127,33 +139,32 @@ public class ListingsFragment extends Fragment {
             public void onChanged(List<Item> items) {
                 // only instantiate adapter and set adapter for rv right after the fragment has been created
                 // every time after that initial set up, just notify the adapter
-                if (fragmentRecreated){
-                    adapter = new ItemAdapter(getContext(), items);
-                    rvListings.setAdapter(adapter);
-                    scrollListener.resetState();
-
-                    fragmentRecreated = false;
-                    rvListings.setVisibility(View.VISIBLE);
-                    pb.setVisibility(View.GONE);
+                Log.i(TAG, "onChanged");
+                Log.i(TAG, String.valueOf(listRefreshed));
+                if (listRefreshed){
+                    rvListings.scrollToPosition(0);
+                    listRefreshed = false;
                 }
 
+                adapter.clear();
+                adapter.addAll(items);
                 adapter.notifyDataSetChanged();
+                Log.i(TAG, String.valueOf(items.size()));
                 scrollListener.setLoading(false);
+                rvListings.setVisibility(View.VISIBLE);
+                pb.setVisibility(View.GONE);
             }
         });
-
-        // restore state of recycler view if any saved in ListingsViewModel
-        if (listingsViewModel.getRecyclerViewState() != null){
-            rvListings.getLayoutManager().onRestoreInstanceState(listingsViewModel.getRecyclerViewState());
-        }
     }
 
     private void setEndlessScrollListener() {
         scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                Log.i(TAG, "onLoadMore()");
                 scrollListener.setLoading(true);
-                listingsViewModel.fetchMoreItems();
+                listRefreshed = false;
+                listingsViewModel.fetchMoreItems(currentSearchQuery);
             }
         };
 
@@ -172,6 +183,7 @@ public class ListingsFragment extends Fragment {
                 scrollListener.resetState();
                 scrollListener.setLoading(false);
                 listingsViewModel.setRecyclerViewState(null);
+                listRefreshed = true;
             }
         });
 
