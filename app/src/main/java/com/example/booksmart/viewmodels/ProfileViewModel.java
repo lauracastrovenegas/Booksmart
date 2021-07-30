@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.booksmart.ItemRepository;
+import com.example.booksmart.ProfileRepository;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
 import com.parse.ParseException;
@@ -24,34 +25,13 @@ public class ProfileViewModel extends AndroidViewModel {
     public static final String TAG = "ProfileViewModel";
 
     MutableLiveData<List<Item>> listings;
-    List<Item> listingsArrayList;
-    ItemRepository itemRepository;
-    int listingsSkip;
+    ProfileRepository profileRepository;
 
     public ProfileViewModel(Application application) {
         super(application);
 
-        listings = new MutableLiveData<>();
-        listingsArrayList = new ArrayList<>();
-        listingsSkip = 0;
-
-        setRepository(application);
-
-        itemRepository.queryUserListings(listingsSkip, ParseUser.getCurrentUser());
-    }
-
-    private void setRepository(Application application) {
-        itemRepository = new ItemRepository(application.getBaseContext()) {
-            @Override
-            public void onAllItemsFetched(List<Item> items) {
-                listingsArrayList.addAll(items);
-                listings.setValue(listingsArrayList);
-                Log.i(TAG, listingsArrayList.toString());
-            }
-
-            @Override
-            public void listingSaved(Listing listing) {}
-        };
+        profileRepository = new ProfileRepository(application.getBaseContext());
+        listings = profileRepository.getListings();
     }
 
     public LiveData<List<Item>> getListings() {
@@ -59,27 +39,6 @@ public class ProfileViewModel extends AndroidViewModel {
     }
 
     public Item getListing(int position){
-        return listingsArrayList.get(position);
-    }
-
-    public List<Item> getListingsArrayList(){
-        return listingsArrayList;
-    }
-
-    public void addToListings(String title, String description, String price, String course, File photoFile) {
-        Listing listing = new Listing();
-        listing.setTitle(title);
-        listing.setDescription(description);
-        listing.setPrice(Integer.parseInt(price));
-        listing.setCourse(course);
-        listing.setUser(ParseUser.getCurrentUser());
-        ParseFile image = new ParseFile(photoFile);
-        image.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                listing.setImage(image);
-                listingsArrayList.add(0, listing);
-            }
-        });
+        return listings.getValue().get(position);
     }
 }
