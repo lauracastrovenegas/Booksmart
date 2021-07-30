@@ -32,6 +32,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class ItemRepository {
@@ -48,6 +50,7 @@ public class ItemRepository {
     ParseClient parseClient;
     MutableLiveData<List<Item>> items;
     List<Item> itemList;
+    List<Item> currentList;
     int skip;
     long startIndex;
     String title;
@@ -60,6 +63,7 @@ public class ItemRepository {
         setParseClient();
         setGoogleClient();
         itemList = new ArrayList<>();
+        currentList = new ArrayList<>();
         items = new MutableLiveData<>();
         skip = 0;
         startIndex = 0;
@@ -73,11 +77,13 @@ public class ItemRepository {
             public void onBooksFetched(List<Book> newBooks) {
                 Log.i(TAG, "onBooksFetched()");
                 startIndex = startIndex + newBooks.size();
-                //Log.i(TAG, newBooks.get(0).getTitle());
-                itemList.addAll(newBooks);
+                currentList.addAll(newBooks);
+                if (currentList.size() > GoogleBooksClient.LISTING_LIMIT){
+                    Collections.shuffle(currentList);
+                }
+                itemList.addAll(currentList);
                 items.setValue(itemList);
-                //Log.i(TAG, ((Book) items.getValue().get(0)).getTitle());
-                Log.i(TAG, String.valueOf(itemList.size()));
+                currentList.clear();
                 onAllItemsFetched(itemList);
             }
         };
@@ -94,7 +100,7 @@ public class ItemRepository {
                     return;
                 }
 
-                itemList.addAll(allListings);
+                currentList.addAll(allListings);
                 skip = skip + allListings.size();
 
                 googleClient.fetchBooks(queryString, startIndex);
