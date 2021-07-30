@@ -2,11 +2,13 @@ package com.example.booksmart.viewmodels;
 
 import android.app.Application;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.example.booksmart.ItemRepository;
+import com.example.booksmart.models.Book;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
 
@@ -19,42 +21,21 @@ public class ListingsViewModel extends AndroidViewModel {
     public static final String TAG = "ListingsViewModel";
 
     MutableLiveData<List<Item>> items;
-    List<Item> itemArrayList;
     ItemRepository itemRepository;
-    int skip;
-    long startIndex;
     Parcelable recyclerViewState;
 
     public ListingsViewModel(Application application) {
         super(application);
 
-        itemArrayList = new ArrayList<>();
         items = new MutableLiveData<>();
-        skip = 0;
-        startIndex = 0;
-
-        setRepository(application);
-
-        itemRepository.onInitialLoad();
-    }
-
-    private void setRepository(Application application) {
-        itemRepository = new ItemRepository(application.getBaseContext()) {
+        itemRepository = new ItemRepository(application){
             @Override
-            public void onAllItemsFetched(List<Item> fetchedItems) {
-                itemArrayList.addAll(fetchedItems);
-                items.setValue(itemArrayList);
-
-                skip = itemRepository.getCurrentSkip();
-                startIndex = itemRepository.getCurrentStart();
-            }
-
-            @Override
-            public void listingSaved(Listing listing) {
-                itemArrayList.add(0, listing);
-                items.setValue(itemArrayList);
+            public void onAllItemsFetched(List<Item> allItems) {
+                Log.i(TAG, "onAllItemsFetched()");
+                items.setValue(allItems);
             }
         };
+
     }
 
     public LiveData<List<Item>> getItems() {
@@ -62,22 +43,19 @@ public class ListingsViewModel extends AndroidViewModel {
     }
 
     public Item getItem(int position){
-        return itemArrayList.get(position);
+        return items.getValue().get(position);
     }
 
-    public List<Item> getItemArrayList(){
-        return itemArrayList;
+    public void fetchItems(String query){
+        itemRepository.fetchItems(0, 0, query);
     }
 
-    public void fetchMoreItems(){
-        itemRepository.fetchItems(skip, startIndex);
+    public void fetchMoreItems(String query){
+        itemRepository.fetchMoreItems(query);
     }
 
     public void resetList(){
-        itemArrayList.clear();
-        skip = 0;
-        startIndex = 0;
-        fetchMoreItems();
+        itemRepository.fetchItems(0, 0, "");
     }
 
     public void postListing(String title, String description, String price, String course, File photoFile){
