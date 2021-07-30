@@ -40,7 +40,7 @@
         tools:text="@string/school_name_placeholder"/>
 
     <SearchView
-        android:id="@+id/ibToolbarSearch"
+        android:id="@+id/svToolbarSearch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
