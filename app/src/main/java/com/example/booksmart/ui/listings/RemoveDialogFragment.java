@@ -23,6 +23,7 @@ import com.example.booksmart.helpers.ParseMessageClient;
 import com.example.booksmart.models.Conversation;
 import com.example.booksmart.models.Listing;
 import com.example.booksmart.ui.MainActivity;
+import com.example.booksmart.viewmodels.ConversationsViewModel;
 import com.example.booksmart.viewmodels.ListingDetailViewModel;
 import com.example.booksmart.viewmodels.ListingsViewModel;
 import com.parse.DeleteCallback;
@@ -38,6 +39,7 @@ public class RemoveDialogFragment extends DialogFragment {
     Listing listing;
     ListingDetailViewModel viewModel;
     ListingsViewModel listingsViewModel;
+    ConversationsViewModel conversationsViewModel;
     ListingDetailFragment callback;
     ParseMessageClient parseClient;
 
@@ -45,11 +47,29 @@ public class RemoveDialogFragment extends DialogFragment {
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         callback = (ListingDetailFragment) getTargetFragment();
-        parseClient = new ParseMessageClient(getContext());
+        parseClient = new ParseMessageClient(getContext()){
+            @Override
+            protected void onConversationsRemoved() {
+                conversationsViewModel.refreshConversations();
+                listing.deleteInBackground(new DeleteCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e != null){
+                            Toast.makeText(getContext(), FAILURE, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        listingsViewModel.fetchItems("");
+                        callback.onRemove();
+                    }
+                });
+            }
+        };
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        conversationsViewModel = new ViewModelProvider(requireActivity()).get(ConversationsViewModel.class);
         listingsViewModel = new ViewModelProvider(requireActivity()).get(ListingsViewModel.class);
         viewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
         listing = (Listing) viewModel.getSelected().getValue();
@@ -59,18 +79,6 @@ public class RemoveDialogFragment extends DialogFragment {
                 .setPositiveButton(R.string.remove_listing, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         parseClient.removeConversations(listing);
-                        listing.deleteInBackground(new DeleteCallback() {
-                            @Override
-                            public void done(ParseException e) {
-                                if (e != null){
-                                    Toast.makeText(getContext(), FAILURE, Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-
-                                listingsViewModel.fetchItems("");
-                                callback.onRemove();
-                            }
-                        });
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

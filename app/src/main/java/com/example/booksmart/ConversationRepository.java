@@ -31,7 +31,7 @@ public class ConversationRepository {
         parseClient = new ParseMessageClient(context) {
             @Override
             protected void onNewConversationSaved(Conversation conversation) {
-                parseClient.queryAllConversations();
+                refreshConversations();
             }
 
             @Override
@@ -41,12 +41,12 @@ public class ConversationRepository {
 
             @Override
             protected void onNewMessageFound(Message message) {
-                parseClient.queryAllConversations();
+                refreshConversations();
             }
 
             @Override
             protected void onConversationsRemoved() {
-                parseClient.queryAllConversations();
+                refreshConversations();
             }
         };
     }
@@ -57,5 +57,9 @@ public class ConversationRepository {
 
     public void setMessageLiveQuery() {
         parseClient.setMessageLiveQuery();
+    }
+
+    public void refreshConversations(){
+        parseClient.queryAllConversations();
     }
 }

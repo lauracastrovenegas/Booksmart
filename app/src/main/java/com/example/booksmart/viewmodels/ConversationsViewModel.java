@@ -34,6 +34,10 @@ public class ConversationsViewModel extends AndroidViewModel {
         return conversations.getValue().get(position);
     }
 
+    public void refreshConversations(){
+        repository.refreshConversations();
+    }
+
     public void setMessageLiveQuery() {
         repository.setMessageLiveQuery();
     }

@@ -249,6 +249,7 @@ public class ParseMessageClient {
             @Override
             public void done(List<Conversation> conversations, ParseException e) {
                 for (int i = 0; i < conversations.size(); i++){
+                    Log.i(TAG, conversations.get(i).toString());
                     conversations.get(i).deleteInBackground();
                 }
 
