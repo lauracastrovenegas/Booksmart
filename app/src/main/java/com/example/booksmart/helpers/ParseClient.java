@@ -297,6 +297,23 @@ public class ParseClient {
         });
     }
 
+    public void markAsSold(Listing listing){
+        listing.setSold(true);
+        listing.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null){
+                    Toast.makeText(context, "Failed to mark listing as sold. Please try again", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                onListingUpdated();
+            }
+        });
+    }
+
+    public void onListingUpdated() {}
+
     public void onFavoritesUpdated() {}
 
     public void onQueryUserFavoritesDone(List<Favorite> favorites, ParseException e) { }
