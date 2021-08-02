@@ -39,6 +39,7 @@ import com.example.booksmart.ui.chat.ChatFragment;
 import com.example.booksmart.viewmodels.ChatViewModel;
 import com.example.booksmart.viewmodels.ConversationsViewModel;
 import com.example.booksmart.viewmodels.ListingDetailViewModel;
+import com.example.booksmart.viewmodels.ProfileViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.parse.DeleteCallback;
 import com.parse.GetCallback;
@@ -48,6 +49,7 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.example.booksmart.models.Listing;
+import com.parse.SaveCallback;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -63,6 +65,7 @@ public class ListingDetailFragment extends Fragment {
 
     ChatViewModel chatViewModel;
     ListingDetailViewModel listingDetailViewModel;
+    ProfileViewModel profileViewModel;
     ParseClient parseClient;
     ParseMessageClient parseMessageClient;
     ImageView ivImage;
@@ -117,8 +120,10 @@ public class ListingDetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        chatViewModel = new ViewModelProvider(requireActivity()).get(ChatViewModel.class);
-        listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
+        ViewModelProvider viewModelProvider = new ViewModelProvider(requireActivity());
+        chatViewModel = viewModelProvider.get(ChatViewModel.class);
+        profileViewModel = viewModelProvider.get(ProfileViewModel.class);
+        listingDetailViewModel = viewModelProvider.get(ListingDetailViewModel.class);
 
         listingDetailViewModel.getPreviousFragment().observe(getViewLifecycleOwner(), fragment -> {
             ivClose.setOnClickListener(new View.OnClickListener() {
@@ -284,6 +289,11 @@ public class ListingDetailFragment extends Fragment {
                     btnSave.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_heart_active, 0, 0, 0);
                 }
             }
+
+            @Override
+            public void onFavoritesUpdated() {
+                profileViewModel.refreshFavorites();
+            }
         };
     }
 
@@ -313,14 +323,9 @@ public class ListingDetailFragment extends Fragment {
 
     private void saveFavorite(){
         if (existingFavorite == null && isFavorite){
-            favorite.saveInBackground();
+            parseClient.saveFavorite(favorite);
         } else if (existingFavorite != null && isFavorite == false){
-            existingFavorite.deleteInBackground(new DeleteCallback() {
-                @Override
-                public void done(ParseException e) {
-                    // refresh favorites
-                }
-            });
+            parseClient.removeFavorite(existingFavorite);
         }
     }
 

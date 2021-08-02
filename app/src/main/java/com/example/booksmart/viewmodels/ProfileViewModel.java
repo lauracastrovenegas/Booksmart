@@ -52,4 +52,8 @@ public class ProfileViewModel extends AndroidViewModel {
     public Item getFavorite(int position){
         return favorites.getValue().get(position);
     }
+
+    public void refreshFavorites() {
+        profileRepository.refreshFavorites();
+    }
 }

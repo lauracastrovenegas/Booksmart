@@ -96,4 +96,8 @@ public class ProfileRepository {
     public Boolean allItemsParsed(){
         return favoriteList.size() == items.size();
     }
+
+    public void refreshFavorites() {
+        parseClient.queryUserFavorites(ParseUser.getCurrentUser());
+    }
 }

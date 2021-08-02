@@ -18,6 +18,7 @@ import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
 import com.example.booksmart.models.User;
 import com.example.booksmart.ui.WelcomeActivity;
+import com.parse.DeleteCallback;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.LogInCallback;
@@ -277,6 +278,26 @@ public class ParseClient {
             }
         });
     }
+
+    public void saveFavorite(Favorite favorite){
+        favorite.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                onFavoritesUpdated();
+            }
+        });
+    }
+
+    public void removeFavorite(Favorite favorite){
+        favorite.deleteInBackground(new DeleteCallback() {
+            @Override
+            public void done(ParseException e) {
+                onFavoritesUpdated();
+            }
+        });
+    }
+
+    public void onFavoritesUpdated() {}
 
     public void onQueryUserFavoritesDone(List<Favorite> favorites, ParseException e) { }
 
