@@ -32,7 +32,6 @@ import java.util.List;
 public class HorizontalItemAdapter extends RecyclerView.Adapter {
 
     public static final String TAG = "HorizontalItemAdapter";
-    public static final int HEIGHT = 500;
     public static final int CORNER_RADIUS = 40;
 
     List<Item> items;
@@ -124,7 +123,7 @@ public class HorizontalItemAdapter extends RecyclerView.Adapter {
             if (image != null){
                 Glide.with(context)
                         .load(image.getUrl())
-                        .override(screenWidth/2, HEIGHT)
+                        .override(screenWidth/2, screenWidth/2)
                         .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(CORNER_RADIUS, CORNER_RADIUS, 0, 0)))
                         .into(ivImage);
             }
@@ -180,11 +179,15 @@ public class HorizontalItemAdapter extends RecyclerView.Adapter {
             if (!imageUrl.isEmpty()){
                 Glide.with(context)
                         .load(imageUrl)
-                        .override(screenWidth/2,HEIGHT)
+                        .override(screenWidth/2,screenWidth/2)
                         .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(CORNER_RADIUS, CORNER_RADIUS, 0, 0)))
                         .into(ivImage);
             } else {
-                ivImage.setImageResource(R.drawable.book_cover_placeholder);
+                Glide.with(context)
+                        .load(R.drawable.book_cover_placeholder)
+                        .override(screenWidth/2,(screenWidth/2))
+                        .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(45, 45, 0, 0)))
+                        .into(ivImage);
             }
 
             tvUserUsername.setText(book.getUserName());
