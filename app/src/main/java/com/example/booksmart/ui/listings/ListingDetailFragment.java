@@ -27,9 +27,11 @@ import androidx.appcompat.widget.Toolbar;
 import com.bumptech.glide.Glide;
 import com.example.booksmart.R;
 import com.example.booksmart.helpers.DeviceDimensionsHelper;
+import com.example.booksmart.helpers.ParseClient;
 import com.example.booksmart.helpers.ParseMessageClient;
 import com.example.booksmart.models.Book;
 import com.example.booksmart.models.Conversation;
+import com.example.booksmart.models.Favorite;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Message;
 import com.example.booksmart.ui.MainActivity;
@@ -38,6 +40,7 @@ import com.example.booksmart.viewmodels.ChatViewModel;
 import com.example.booksmart.viewmodels.ConversationsViewModel;
 import com.example.booksmart.viewmodels.ListingDetailViewModel;
 import com.google.android.material.snackbar.Snackbar;
+import com.parse.DeleteCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -60,6 +63,8 @@ public class ListingDetailFragment extends Fragment {
 
     ChatViewModel chatViewModel;
     ListingDetailViewModel listingDetailViewModel;
+    ParseClient parseClient;
+    ParseMessageClient parseMessageClient;
     ImageView ivImage;
     ImageView ivUserProfileImage;
     TextView tvTitle;
@@ -75,6 +80,9 @@ public class ListingDetailFragment extends Fragment {
     Button btnRemove;
     Button btnSold;
     ProgressBar progressBar;
+    Favorite existingFavorite;
+    Favorite favorite;
+    Boolean isFavorite;
 
     public ListingDetailFragment() {}
 
@@ -99,6 +107,9 @@ public class ListingDetailFragment extends Fragment {
         ivClose = itemView.findViewById(R.id.ivClose);
         progressBar = itemView.findViewById(R.id.pbListingDetail);
         progressBar.setVisibility(View.VISIBLE);
+        isFavorite = false;
+
+        setParseClient();
 
         return itemView;
     }
@@ -151,8 +162,8 @@ public class ListingDetailFragment extends Fragment {
                 tvDescription.setText(((Listing) item).getDescription());
                 tvAuthors.setVisibility(View.GONE);
 
+                // This listing belongs to the current user
                 if (user.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
-                    // This listing belongs to the current user
                     btnRemove.setVisibility(View.VISIBLE);
                     btnSold.setVisibility(View.VISIBLE);
 
@@ -176,25 +187,26 @@ public class ListingDetailFragment extends Fragment {
                         }
                     });
 
-                } else {
-                    btnMessageSeller.setVisibility(View.VISIBLE);
+                } else { // Listing does not belong to current user
+                    checkIfFavorite(item);
                     btnSave.setVisibility(View.VISIBLE);
+                    btnSave.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            toggleFavorite(item);
+                        }
+                    });
 
+                    btnMessageSeller.setVisibility(View.VISIBLE);
                     btnMessageSeller.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             startConversation((Listing) item);
                         }
                     });
-
-                    btnSave.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            Toast.makeText(getContext(), "Favorite!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
                 }
             } else { // Item is a book
+                checkIfFavorite(item);
                 String image = ((Book) item).getImage();
                 int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getContext());
                 if (image.isEmpty() || image == null){
@@ -233,25 +245,83 @@ public class ListingDetailFragment extends Fragment {
                 }
 
                 btnLinkToGoogle.setVisibility(View.VISIBLE);
-                btnSave.setVisibility(View.VISIBLE);
-
                 btnLinkToGoogle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((Book) item).getGoogleLink())));
                     }
                 });
-            }
 
-            btnSave.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getContext(), "Favorite!", Toast.LENGTH_SHORT).show();
-                }
-            });
+                btnSave.setVisibility(View.VISIBLE);
+                btnSave.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        toggleFavorite(item);
+                    }
+                });
+            }
 
             progressBar.setVisibility(View.INVISIBLE);
         });
+    }
+
+    public void setParseClient() {
+        parseMessageClient = new ParseMessageClient(getContext()){
+            @Override
+            protected void onConversationFetched(Conversation conversation) {
+                chatViewModel.select(conversation);
+                goToChat();
+            }
+        };
+
+        parseClient = new ParseClient(getContext()){
+            @Override
+            public void onItemFavorite(Favorite favorite) {
+                existingFavorite = favorite;
+                if (existingFavorite != null){
+                    isFavorite = true;
+                    btnSave.setText("Saved");
+                    btnSave.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_heart_active, 0, 0, 0);
+                }
+            }
+        };
+    }
+
+    private void toggleFavorite(Item item) {
+        if (!isFavorite){ // Not a favorite
+            favorite = new Favorite();
+            favorite.setUser(ParseUser.getCurrentUser());
+            favorite.setType(item.getType());
+            if (item.getType() == Item.TYPE_BOOK){
+                favorite.setBookId(((Book) item).getId());
+            } else {
+                favorite.setListing((Listing) item);
+            }
+            btnSave.setText("Saved");
+            btnSave.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_heart_active, 0, 0, 0);
+        } else { // Already a favorite
+            favorite = null;
+            btnSave.setText("Save");
+            btnSave.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_heart, 0, 0, 0);
+        }
+        isFavorite = !isFavorite;
+    }
+
+    private void checkIfFavorite(Item item) {
+        parseClient.checkItemFavorite(item);
+    }
+
+    private void saveFavorite(){
+        if (existingFavorite == null && isFavorite){
+            favorite.saveInBackground();
+        } else if (existingFavorite != null && isFavorite == false){
+            existingFavorite.deleteInBackground(new DeleteCallback() {
+                @Override
+                public void done(ParseException e) {
+                    // refresh favorites
+                }
+            });
+        }
     }
 
     private void markSold(boolean b) {
@@ -264,20 +334,12 @@ public class ListingDetailFragment extends Fragment {
         dialogFragment.show(getFragmentManager(), RemoveDialogFragment.class.getSimpleName());
     }
 
-    private void startConversation(Listing listing) {
-        getConversation(listing);
+    public void onRemove() {
+        goToFragment(new ListingsFragment());
     }
 
     // Check if conversation for this listing already exists, navigate to conversation
-    private void getConversation(Listing listing){
-        ParseMessageClient parseMessageClient = new ParseMessageClient(getContext()){
-            @Override
-            protected void onConversationFetched(Conversation conversation) {
-                chatViewModel.select(conversation);
-                goToChat();
-            }
-        };
-
+    private void startConversation(Listing listing) {
         parseMessageClient.getConversation(listing);
     }
 
@@ -295,6 +357,7 @@ public class ListingDetailFragment extends Fragment {
     }
 
     private void goToChat(){
+        saveFavorite();
         Fragment fragment = new ChatFragment();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in, R.anim.slide_out_left);
@@ -304,14 +367,11 @@ public class ListingDetailFragment extends Fragment {
     }
 
     private void goToFragment(Fragment fragment){
+        saveFavorite();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out);
         transaction.replace(R.id.nav_host_fragment_activity_main, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
-    }
-
-    public void onRemove() {
-        goToFragment(new ListingsFragment());
     }
 }

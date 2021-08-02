@@ -15,8 +15,9 @@ import java.util.List;
 public class Favorite extends ParseObject {
     public static final String USER_KEY = "user";
     public static final String LISTING_KEY = "listing";
-    private static final String BOOK_ID_KEY = "bookId";
-    private static final String TYPE_KEY = "type";
+    public static final String BOOK_ID_KEY = "bookId";
+    public static final String TYPE_KEY = "type";
+    public static final String BOOK_KEY = "book";
 
     public ParseUser getUser() {
         return getParseUser(USER_KEY);

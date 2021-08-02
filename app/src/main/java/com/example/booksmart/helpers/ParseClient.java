@@ -11,7 +11,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.booksmart.R;
 import com.example.booksmart.models.Book;
+import com.example.booksmart.models.Favorite;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
 import com.example.booksmart.models.User;
@@ -232,6 +234,31 @@ public class ParseClient {
             onParseImageSaved(null);
         }
     }
+
+    public void checkItemFavorite(Item item){
+        ParseQuery query = ParseQuery.getQuery(Favorite.class);
+        query.whereEqualTo(Favorite.TYPE_KEY, item.getType());
+        if (item.getType() == Item.TYPE_LISTING){
+            query.whereEqualTo(Favorite.LISTING_KEY, item);
+        } else {
+            query.whereEqualTo(Favorite.BOOK_ID_KEY, ((Book) item).getId());
+        }
+        query.getFirstInBackground(new GetCallback<Favorite>(){
+            public void done(Favorite favorite, ParseException e){
+                if (e == null){ // favorite exists
+                    onItemFavorite(favorite);
+                } else { // favorite does not exist
+                    if(e.getCode() != ParseException.OBJECT_NOT_FOUND){
+                        Log.e(TAG, e.getMessage(), e);
+                    }
+
+                    onItemFavorite(null);
+                }
+            }
+        });
+    }
+
+    public void onItemFavorite(Favorite favorite) {}
 
     public void onUserLoggedIn(){};
 
