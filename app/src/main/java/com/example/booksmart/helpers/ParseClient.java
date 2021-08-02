@@ -169,6 +169,7 @@ public class ParseClient {
         ParseQuery<Listing> query = ParseQuery.getQuery(Listing.class);
         query.include(Listing.KEY_USER);
         query.whereEqualTo(KEY_SCHOOL, currentUserSchool);
+        query.whereEqualTo(Listing.KEY_SOLD, false);
         if (!queryString.equals("")){
             query.whereContains(TITLE_KEY, queryString);
         }
