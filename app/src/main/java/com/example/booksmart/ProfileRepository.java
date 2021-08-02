@@ -79,6 +79,9 @@ public class ProfileRepository {
             Favorite favorite = favorites.get(i);
             if (favorite.getType() == Item.TYPE_LISTING){
                 items.add(favorite.getListing());
+                if (allItemsParsed()){
+                    this.favorites.setValue(items);
+                }
             } else {
                 googleClient.fetchBook(favorite.getBookId());
             }
