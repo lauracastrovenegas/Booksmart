@@ -24,36 +24,51 @@
             android:visibility="invisible"
             tools:visibility="visible"/>
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/detail_toolbar"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/ivClose"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="20dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:src="?attr/actionModeCloseDrawable"
+            app:tint="@color/purple_500"/>
+
+        <ToggleButton
+            android:id="@+id/tbFavorite"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/favorite_icon_selector"
+            android:checked="false"
+            android:text=""
+            android:textOff=""
+            android:textOn="" />
+
+        <ImageButton
+            android:id="@+id/ibRemove"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:minHeight="?attr/actionBarSize"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:paddingEnd="10dp">
-
-            <ImageView
-                android:id="@+id/ivClose"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="20dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:src="?attr/actionModeCloseDrawable"
-                app:tint="@color/purple_500"/>
-
-        </androidx.appcompat.widget.Toolbar>
+            android:src="@drawable/ic_remove"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"
+            android:visibility="gone"
+            android:background="@color/white"/>
 
     </RelativeLayout>
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/detail_toolbar_layout"
-            android:scrollbars="vertical"
-            android:isScrollContainer="true">
+    <ScrollView
+        android:id="@+id/detail_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/toolbar_bottom_detail"
+        android:layout_below="@id/detail_toolbar_layout"
+        android:isScrollContainer="true"
+        android:scrollbars="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -138,13 +153,13 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginTop="10dp"
                     android:backgroundTint="@color/purple_500"
+                    android:clickable="false"
                     android:fontFamily="@font/work_sans"
                     android:text="@string/course_name_placeholder"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/font_size_medium"
-                    app:cornerRadius="@dimen/button_corner_radius"
-                    android:clickable="false"/>
+                    app:cornerRadius="@dimen/button_corner_radius" />
 
                 <TextView
                     android:id="@+id/tvListingDescription"
@@ -158,75 +173,17 @@
                     android:textSize="@dimen/font_size_medium"
                     tools:text="@string/long_text_placeholder" />
 
-                <!-- <Button
-                android:id="@+id/btnListingPost"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/ivListingImagePreview"
-                android:layout_alignParentStart="false"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:backgroundTint="@color/purple_500"
-                android:fontFamily="@font/work_sans"
-                android:text="@string/post_listing_button"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="@dimen/font_size_large"
-                app:cornerRadius="@dimen/button_corner_radius"/> -->
-
-                <Button
-                    android:id="@+id/btnMessageSeller"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvListingDescription"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginVertical="@dimen/activity_vertical_margin"
-                    android:backgroundTint="@color/purple_500"
-                    android:fontFamily="@font/work_sans"
-                    android:text="@string/message_seller"
-                    android:textAllCaps="false"
-                    android:visibility="invisible"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/font_size_large"
-                    app:cornerRadius="@dimen/button_corner_radius" />
-
-                <Button
-                    android:id="@+id/btnGoogleBooksLink"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvListingDescription"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="@dimen/activity_vertical_margin"
-                    android:backgroundTint="@color/purple_500"
-                    android:fontFamily="@font/work_sans"
-                    android:visibility="gone"
-                    android:text="@string/google_books_link"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/font_size_large"
-                    app:cornerRadius="@dimen/button_corner_radius"  />
-
-                <Button
-                    android:id="@+id/btnPDFLink"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/btnGoogleBooksLink"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="20dp"
-                    android:backgroundTint="@color/purple_500"
-                    android:fontFamily="@font/work_sans"
-                    android:text="@string/check_pdf_link"
-                    android:textAllCaps="false"
-                    android:visibility="gone"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/font_size_large"
-                    app:cornerRadius="@dimen/button_corner_radius"  />
-
             </RelativeLayout>
 
         </RelativeLayout>
 
-        </ScrollView>
+    </ScrollView>
+
+    <include
+        android:id="@+id/toolbar_bottom_detail"
+        layout="@layout/toolbar_bottom_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

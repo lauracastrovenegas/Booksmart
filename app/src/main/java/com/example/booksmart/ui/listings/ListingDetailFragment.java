@@ -66,10 +66,11 @@ public class ListingDetailFragment extends Fragment {
     ImageView ivClose;
     Button btnCourse;
     TextView tvDescription;
+    Button btnSave;
     Button btnMessageSeller;
     Button btnLinkToGoogle;
-    Button btnCheckPDF;
-    Toolbar toolbar;
+    Button btnRemove;
+    Button btnSold;
     ProgressBar progressBar;
 
     public ListingDetailFragment() {}
@@ -78,7 +79,6 @@ public class ListingDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View itemView = inflater.inflate(R.layout.fragment_listing_detail, container, false);
-        setHasOptionsMenu(true);
 
         ivImage = itemView.findViewById(R.id.ivListingImageDetail);
         ivUserProfileImage = itemView.findViewById(R.id.ivListingUserDetail);
@@ -90,10 +90,11 @@ public class ListingDetailFragment extends Fragment {
         tvDescription = itemView.findViewById(R.id.tvListingDescription);
         btnMessageSeller = itemView.findViewById(R.id.btnMessageSeller);
         btnLinkToGoogle = itemView.findViewById(R.id.btnGoogleBooksLink);
-        btnCheckPDF = itemView.findViewById(R.id.btnPDFLink);
+        btnSave = itemView.findViewById(R.id.btnSaveItem);
+        btnRemove = itemView.findViewById(R.id.btnRemove);
+        btnSold = itemView.findViewById(R.id.btnSold);
         ivClose = itemView.findViewById(R.id.ivClose);
         progressBar = itemView.findViewById(R.id.pbListingDetail);
-        toolbar = itemView.findViewById(R.id.detail_toolbar);
         progressBar.setVisibility(View.VISIBLE);
 
         return itemView;
@@ -149,32 +150,44 @@ public class ListingDetailFragment extends Fragment {
                 tvDescription.setText(((Listing) item).getString(Listing.KEY_DESCRIPTION));
                 tvAuthors.setVisibility(View.GONE);
 
-                if (user.getUsername().equals(ParseUser.getCurrentUser().getUsername())) {
-                    toolbar.inflateMenu(R.menu.detail_options_menu);
-                    toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+                if (user.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                    // This listing belongs to the current user
+                    btnSold.setVisibility(View.VISIBLE);
+                    btnRemove.setVisibility(View.VISIBLE);
+
+                    btnSold.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public boolean onMenuItemClick(MenuItem item) {
-                            int id = item.getItemId();
-                            if (id == R.id.edit_listing) {
-                                Toast.makeText(getContext(), "Edit", Toast.LENGTH_SHORT).show();
-                            }
-                            if (id == R.id.remove_listing) {
-                                Toast.makeText(getContext(), "Remove", Toast.LENGTH_SHORT).show();
-                            }
-                            return true;
+                        public void onClick(View v) {
+                            Toast.makeText(getContext(), "Sold!", Toast.LENGTH_SHORT).show();
                         }
                     });
+
+                    btnRemove.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getContext(), "Remove Listing!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
                 } else {
                     btnMessageSeller.setVisibility(View.VISIBLE);
+                    btnSave.setVisibility(View.VISIBLE);
+
                     btnMessageSeller.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             startConversation((Listing) item);
                         }
                     });
-                }
 
-            } else {
+                    btnSave.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(getContext(), "Favorite!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            } else { // Item is a book
                 String image = ((Book) item).getImage();
                 int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getContext());
                 if (image.isEmpty() || image == null){
@@ -212,23 +225,23 @@ public class ListingDetailFragment extends Fragment {
                     tvPrice.setVisibility(View.GONE);
                 }
 
-                btnMessageSeller.setVisibility(View.GONE);
-                btnCheckPDF.setVisibility(View.VISIBLE);
                 btnLinkToGoogle.setVisibility(View.VISIBLE);
+                btnSave.setVisibility(View.VISIBLE);
+
                 btnLinkToGoogle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((Book) item).getGoogleLink())));
                     }
                 });
-
-                btnCheckPDF.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((Book) item).getFindPDFLink())));
-                    }
-                });
             }
+
+            btnSave.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getContext(), "Favorite!", Toast.LENGTH_SHORT).show();
+                }
+            });
 
             progressBar.setVisibility(View.INVISIBLE);
         });

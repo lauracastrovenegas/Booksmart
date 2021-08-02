@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="5dp"
+    android:paddingHorizontal="@dimen/activity_horizontal_margin">
+
+    <Button
+        android:id="@+id/btnMessageSeller"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="5dp"
+        android:text="@string/message_seller"
+        android:drawableLeft="@drawable/ic_chat"
+        android:backgroundTint="@color/purple_500"
+        android:fontFamily="@font/work_sans"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size_large"
+        android:visibility="gone"
+        app:cornerRadius="@dimen/button_corner_radius"/>
+
+    <Button
+        android:id="@+id/btnSold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="5dp"
+        android:text="Mark as Sold"
+        android:backgroundTint="@color/purple_500"
+        android:fontFamily="@font/work_sans"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size_large"
+        android:visibility="gone"
+        app:cornerRadius="@dimen/button_corner_radius"/>
+
+    <Button
+        android:id="@+id/btnGoogleBooksLink"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="5dp"
+        android:text="@string/google_books_link"
+        android:drawableLeft="@drawable/ic_shopping_cart"
+        android:backgroundTint="@color/purple_500"
+        android:fontFamily="@font/work_sans"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size_large"
+        android:visibility="gone"
+        app:cornerRadius="@dimen/button_corner_radius"/>
+
+    <Button
+        android:id="@+id/btnRemove"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_trash"
+        android:text="@string/remove_listing"
+        android:backgroundTint="@color/purple_500"
+        android:fontFamily="@font/work_sans"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size_large"
+        android:visibility="gone"
+        app:cornerRadius="@dimen/button_corner_radius"/>
+
+    <Button
+        android:id="@+id/btnSaveItem"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/ic_heart"
+        android:text="@string/save_listing"
+        android:backgroundTint="@color/purple_500"
+        android:fontFamily="@font/work_sans"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size_large"
+        android:visibility="gone"
+        app:cornerRadius="@dimen/button_corner_radius"/>
+</LinearLayout>
