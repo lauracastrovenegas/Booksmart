@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,10 +52,14 @@ public class ProfileFragment extends Fragment {
     TextView tvUserName;
     TextView tvUserSchool;
     TextView tvNoListingText;
+    TextView tvNoFavorites;
     ImageButton ibOptions;
     RecyclerView rvListings;
+    RecyclerView rvFavorites;
     HorizontalItemAdapter listingAdapter;
+    HorizontalItemAdapter favoriteAdapter;
     LinearLayoutManager listingsLayoutManager;
+    LinearLayoutManager favoritesLayoutManager;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,8 +71,10 @@ public class ProfileFragment extends Fragment {
         tvUserName = view.findViewById(R.id.tvProfileUserName);
         tvUserSchool = view.findViewById(R.id.tvProfileSchoolName);
         tvNoListingText = view.findViewById(R.id.tvNoListingsText);
+        tvNoFavorites = view.findViewById(R.id.tvNoFavoritesText);
         ibOptions = view.findViewById(R.id.ibToolbarOptionsProfile);
         rvListings = view.findViewById(R.id.rvProfileListings);
+        rvFavorites = view.findViewById(R.id.rvProfileFavorites);
 
         user = ParseUser.getCurrentUser();
 
@@ -75,6 +82,11 @@ public class ProfileFragment extends Fragment {
         rvListings.setAdapter(listingAdapter);
         listingsLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvListings.setLayoutManager(listingsLayoutManager);
+
+        favoriteAdapter = new HorizontalItemAdapter(getContext(), new ArrayList<>());
+        rvFavorites.setAdapter(favoriteAdapter);
+        favoritesLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvFavorites.setLayoutManager(favoritesLayoutManager);
 
         setViewModels();
 
@@ -120,12 +132,25 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Click listener for items in the recycler view
+        // Click listener for items in the 'my listings' recycler view
         ItemClickSupport.addTo(rvListings).setOnItemClickListener(
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
                         Item item = profileViewModel.getListing(position);
+                        listingDetailViewModel.setPreviousFragment(new ProfileFragment());
+                        listingDetailViewModel.select(item);
+                        goDetailView();
+                    }
+                }
+        );
+
+        // Click listener for items in the 'saved items' recycler view
+        ItemClickSupport.addTo(rvFavorites).setOnItemClickListener(
+                new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        Item item = profileViewModel.getFavorite(position);
                         listingDetailViewModel.setPreviousFragment(new ProfileFragment());
                         listingDetailViewModel.select(item);
                         goDetailView();
@@ -143,7 +168,7 @@ public class ProfileFragment extends Fragment {
         listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
 
-        // set observer for profile view model
+        // set observer for profile view model listings
         profileViewModel.getListings().observe(getViewLifecycleOwner(), new Observer<List<Item>>(){
             @Override
             public void onChanged(List<Item> items) {
@@ -152,6 +177,19 @@ public class ProfileFragment extends Fragment {
                 if (items.size() == 0){
                     rvListings.setVisibility(View.GONE);
                     tvNoListingText.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        // set observer for profile view model favorites
+        profileViewModel.getFavorites().observe(getViewLifecycleOwner(), new Observer<List<Item>>(){
+            @Override
+            public void onChanged(List<Item> items) {
+                favoriteAdapter = new HorizontalItemAdapter(getContext(), items);
+                rvFavorites.setAdapter(favoriteAdapter);
+                if (items.size() == 0){
+                    rvFavorites.setVisibility(View.GONE);
+                    tvNoFavorites.setVisibility(View.VISIBLE);
                 }
             }
         });
