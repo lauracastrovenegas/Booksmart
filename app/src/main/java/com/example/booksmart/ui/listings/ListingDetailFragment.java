@@ -270,6 +270,12 @@ public class ListingDetailFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onPause() {
+        saveFavorite();
+        super.onPause();
+    }
+
     public void setParseClient() {
         parseMessageClient = new ParseMessageClient(getContext()){
             @Override
