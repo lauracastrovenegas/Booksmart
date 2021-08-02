@@ -62,4 +62,8 @@ public class ConversationRepository {
     public void refreshConversations(){
         parseClient.queryAllConversations();
     }
+
+    public void setConversationLiveQuery() {
+        parseClient.setConversationLiveQuery();
+    }
 }

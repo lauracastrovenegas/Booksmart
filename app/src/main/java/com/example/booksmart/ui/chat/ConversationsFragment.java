@@ -59,6 +59,7 @@ public class ConversationsFragment extends Fragment {
 
         setViewModels();
         conversationsViewModel.setMessageLiveQuery();
+        conversationsViewModel.setConversationLiveQuery();
 
         return view;
     }

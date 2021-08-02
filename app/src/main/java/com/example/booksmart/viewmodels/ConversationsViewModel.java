@@ -41,4 +41,8 @@ public class ConversationsViewModel extends AndroidViewModel {
     public void setMessageLiveQuery() {
         repository.setMessageLiveQuery();
     }
+
+    public void setConversationLiveQuery() {
+        repository.setConversationLiveQuery();
+    }
 }

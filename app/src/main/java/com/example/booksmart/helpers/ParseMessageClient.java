@@ -242,6 +242,35 @@ public class ParseMessageClient {
         });
     }
 
+    public void setConversationLiveQuery(){
+        ParseLiveQueryClient parseLiveQueryClient = null;
+
+        try {
+            parseLiveQueryClient = ParseLiveQueryClient.Factory.getClient(new URI("wss://booksmartapp.b4a.io/"));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        ParseQuery query = ParseQuery.getQuery(Conversation.class);
+
+        // Connect to Parse server
+        SubscriptionHandling<Conversation> subscriptionHandling = parseLiveQueryClient.subscribe(query);
+
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.DELETE, new SubscriptionHandling.HandleEventCallback<Conversation>() {
+            @Override
+            public void onEvent(ParseQuery<Conversation> query, final Conversation conversation) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        if (conversation.getUsers().get(0).getObjectId().equals(ParseUser.getCurrentUser().getObjectId()) || conversation.getUsers().get(1).getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                            onConversationsRemoved();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     public void removeConversations(Listing listing){
         ParseQuery query = ParseQuery.getQuery(Conversation.class);
         query.whereEqualTo(LISTING_KEY, listing);
