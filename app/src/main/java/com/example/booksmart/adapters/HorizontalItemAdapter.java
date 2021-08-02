@@ -21,7 +21,9 @@ import com.example.booksmart.helpers.DeviceDimensionsHelper;
 import com.example.booksmart.models.Book;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseUser;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -105,9 +107,16 @@ public class HorizontalItemAdapter extends RecyclerView.Adapter {
         public void bind(int position) {
             Listing listing = (Listing) items.get(position);
 
+            ParseUser user = listing.getUser();
+            try {
+                user = user.fetchIfNeeded();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
             tvTitle.setText(listing.getTitle());
             tvPrice.setText("$" + String.valueOf(listing.getPrice()));
-            tvUserUsername.setText(listing.getUser().getUsername());
+            tvUserUsername.setText(user.getUsername());
 
             int screenWidth = DeviceDimensionsHelper.getDisplayWidth(context);
 
@@ -120,7 +129,7 @@ public class HorizontalItemAdapter extends RecyclerView.Adapter {
                         .into(ivImage);
             }
 
-            ParseFile profileImage = listing.getUser().getParseFile(Listing.KEY_IMAGE);
+            ParseFile profileImage = user.getParseFile(Listing.KEY_IMAGE);
             if (profileImage != null){
                 Glide.with(context)
                         .load(profileImage.getUrl())
@@ -141,6 +150,7 @@ public class HorizontalItemAdapter extends RecyclerView.Adapter {
         TextView tvTitle;
         TextView tvPrice;
         TextView tvUserUsername;
+        RelativeLayout rlContainer;
 
         public BookViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -150,6 +160,7 @@ public class HorizontalItemAdapter extends RecyclerView.Adapter {
             tvTitle = itemView.findViewById(R.id.tvListingTitle);
             tvPrice = itemView.findViewById(R.id.tvListingPrice);
             tvUserUsername = itemView.findViewById(R.id.tvListingUser);
+            rlContainer = itemView.findViewById(R.id.rlItemListing);
         }
 
         public void bind(int position) {
@@ -178,6 +189,10 @@ public class HorizontalItemAdapter extends RecyclerView.Adapter {
 
             tvUserUsername.setText(book.getUserName());
             ivUserProfileImage.setImageResource(R.drawable.google_books_logo);
+
+            RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) rlContainer.getLayoutParams();
+            layoutParams.width = screenWidth/2;
+            rlContainer.setLayoutParams(layoutParams);
         }
     }
 }
