@@ -56,7 +56,7 @@ public class ProfileRepository {
 
             @Override
             public void onListingSaved(Listing listing) {
-                parseClient.queryUserListings(ParseUser.getCurrentUser());
+                refreshListings();
             }
         };
     }
@@ -99,5 +99,9 @@ public class ProfileRepository {
 
     public void refreshFavorites() {
         parseClient.queryUserFavorites(ParseUser.getCurrentUser());
+    }
+
+    public void refreshListings() {
+        parseClient.queryUserListings(ParseUser.getCurrentUser());
     }
 }

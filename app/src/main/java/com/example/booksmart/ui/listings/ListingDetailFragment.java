@@ -346,6 +346,7 @@ public class ListingDetailFragment extends Fragment {
     }
 
     public void onRemove() {
+        profileViewModel.refreshListings();
         goToFragment(new ListingsFragment());
     }
 

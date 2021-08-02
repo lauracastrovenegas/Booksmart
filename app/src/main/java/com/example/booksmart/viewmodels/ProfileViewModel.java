@@ -56,4 +56,8 @@ public class ProfileViewModel extends AndroidViewModel {
     public void refreshFavorites() {
         profileRepository.refreshFavorites();
     }
+
+    public void refreshListings() {
+        profileRepository.refreshListings();
+    }
 }
