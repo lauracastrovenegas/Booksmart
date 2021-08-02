@@ -33,10 +33,12 @@
 
     <!-- Profile Fragment -->
     <string name="profile_listings_title">My Listings</string>
+    <string name="profile_favorites_title">Saved Items</string>
     <string name="profile_resource_title">My Resources</string>
     <string name="profile_saved_listings_title">My Saved Listings</string>
     <string name="profile_saved_resources_title">My Saved Resources</string>
     <string name="profile_no_listings">You do not have any active listings!</string>
+    <string name="profile_no_favorites">You have not saved any listings!</string>
     <string name="profile_no_resources">You have not uploaded any resources!</string>
 
     <!-- Button Text -->
