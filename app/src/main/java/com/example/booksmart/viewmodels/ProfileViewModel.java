@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.booksmart.ItemRepository;
 import com.example.booksmart.ProfileRepository;
+import com.example.booksmart.models.Favorite;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Listing;
 import com.parse.ParseException;
@@ -25,6 +26,7 @@ public class ProfileViewModel extends AndroidViewModel {
     public static final String TAG = "ProfileViewModel";
 
     MutableLiveData<List<Item>> listings;
+    MutableLiveData<List<Item>> favorites;
     ProfileRepository profileRepository;
 
     public ProfileViewModel(Application application) {
@@ -32,13 +34,22 @@ public class ProfileViewModel extends AndroidViewModel {
 
         profileRepository = new ProfileRepository(application.getBaseContext());
         listings = profileRepository.getListings();
+        favorites = profileRepository.getFavorites();
     }
 
     public LiveData<List<Item>> getListings() {
         return listings;
     }
 
+    public MutableLiveData<List<Item>> getFavorites() {
+        return favorites;
+    }
+
     public Item getListing(int position){
         return listings.getValue().get(position);
+    }
+
+    public Item getFavorite(int position){
+        return favorites.getValue().get(position);
     }
 }
