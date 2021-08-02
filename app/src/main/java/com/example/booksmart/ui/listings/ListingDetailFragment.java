@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -31,6 +32,7 @@ import com.example.booksmart.models.Book;
 import com.example.booksmart.models.Conversation;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Message;
+import com.example.booksmart.ui.MainActivity;
 import com.example.booksmart.ui.chat.ChatFragment;
 import com.example.booksmart.viewmodels.ChatViewModel;
 import com.example.booksmart.viewmodels.ConversationsViewModel;
@@ -170,8 +172,7 @@ public class ListingDetailFragment extends Fragment {
                     btnRemove.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // Remove listing
-                            Toast.makeText(getContext(), "Remove Listing!", Toast.LENGTH_SHORT).show();
+                            showRemoveDialog();
                         }
                     });
 
@@ -257,6 +258,12 @@ public class ListingDetailFragment extends Fragment {
 
     }
 
+    private void showRemoveDialog(){
+        DialogFragment dialogFragment = new RemoveDialogFragment();
+        dialogFragment.setTargetFragment(this, MainActivity.REMOVE_REQUEST);
+        dialogFragment.show(getFragmentManager(), RemoveDialogFragment.class.getSimpleName());
+    }
+
     private void startConversation(Listing listing) {
         getConversation(listing);
     }
@@ -266,8 +273,8 @@ public class ListingDetailFragment extends Fragment {
         ParseMessageClient parseMessageClient = new ParseMessageClient(getContext()){
             @Override
             protected void onConversationFetched(Conversation conversation) {
-                chatViewModel.select(conversation);
                 chatViewModel.setMessages(new ArrayList<Message>());
+                chatViewModel.select(conversation);
                 goToChat();
             }
         };
@@ -303,5 +310,9 @@ public class ListingDetailFragment extends Fragment {
         transaction.replace(R.id.nav_host_fragment_activity_main, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    public void onRemove() {
+        goToFragment(new ListingsFragment());
     }
 }

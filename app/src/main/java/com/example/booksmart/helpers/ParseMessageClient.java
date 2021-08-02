@@ -85,6 +85,7 @@ public class ParseMessageClient {
         query.include(ParseMessageClient.USERS_KEY);
         query.whereEqualTo(ParseMessageClient.LISTING_KEY, listing);
         query.whereEqualTo(ParseMessageClient.USERS_KEY, ParseUser.getCurrentUser());
+        query.whereNotEqualTo(LISTING_KEY, null);
 
         query.getFirstInBackground(new GetCallback<Conversation>(){
             public void done(Conversation conversation, ParseException e){
@@ -242,6 +243,23 @@ public class ParseMessageClient {
             }
         });
     }
+
+    public void removeConversations(Listing listing){
+        ParseQuery query = ParseQuery.getQuery(Conversation.class);
+        query.whereEqualTo(LISTING_KEY, listing);
+        query.findInBackground(new FindCallback<Conversation>(){
+            @Override
+            public void done(List<Conversation> conversations, ParseException e) {
+                for (int i = 0; i < conversations.size(); i++){
+                    conversations.get(i).deleteInBackground();
+                }
+
+                onConversationsRemoved();
+            }
+        });
+    }
+
+    protected void onConversationsRemoved() {}
 
     protected void onNewMessageFound(Message message) {}
 

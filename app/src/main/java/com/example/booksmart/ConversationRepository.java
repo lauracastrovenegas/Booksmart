@@ -43,6 +43,11 @@ public class ConversationRepository {
             protected void onNewMessageFound(Message message) {
                 parseClient.queryAllConversations();
             }
+
+            @Override
+            protected void onConversationsRemoved() {
+                parseClient.queryAllConversations();
+            }
         };
     }
 
