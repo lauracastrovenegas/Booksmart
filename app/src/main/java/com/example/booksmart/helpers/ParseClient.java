@@ -258,6 +258,28 @@ public class ParseClient {
         });
     }
 
+    public void queryUserFavorites(ParseUser currentUser) {
+        ParseQuery query = ParseQuery.getQuery(Favorite.class);
+        query.include(Favorite.LISTING_KEY);
+        query.include(Listing.KEY_USER);
+        query.whereEqualTo(Favorite.USER_KEY, currentUser);
+        query.addDescendingOrder(DESCENDING_ORDER_KEY);
+        query.findInBackground(new FindCallback<Favorite>() {
+
+            @Override
+            public void done(List<Favorite> favorites, ParseException e) {
+                if (e != null){
+                    Log.e(TAG, QUERY_ERROR, e);
+                    return;
+                }
+
+                onQueryUserFavoritesDone(favorites, e);
+            }
+        });
+    }
+
+    public void onQueryUserFavoritesDone(List<Favorite> favorites, ParseException e) { }
+
     public void onItemFavorite(Favorite favorite) {}
 
     public void onUserLoggedIn(){};
