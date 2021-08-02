@@ -169,6 +169,7 @@ public class ListingDetailFragment extends Fragment {
 
                 // This listing belongs to the current user
                 if (user.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                    checkIfSold((Listing) item);
                     btnRemove.setVisibility(View.VISIBLE);
                     btnSold.setVisibility(View.VISIBLE);
 
@@ -180,7 +181,7 @@ public class ListingDetailFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             if (!((Listing) item).isSold()){
-                                // Set as sold
+                                showSoldDialog();
                             }
                         }
                     });
@@ -303,6 +304,10 @@ public class ListingDetailFragment extends Fragment {
         };
     }
 
+    private void checkIfFavorite(Item item) {
+        parseClient.checkItemFavorite(item);
+    }
+
     private void toggleFavorite(Item item) {
         if (!isFavorite){ // Not a favorite
             favorite = new Favorite();
@@ -323,20 +328,12 @@ public class ListingDetailFragment extends Fragment {
         isFavorite = !isFavorite;
     }
 
-    private void checkIfFavorite(Item item) {
-        parseClient.checkItemFavorite(item);
-    }
-
     private void saveFavorite(){
         if (existingFavorite == null && isFavorite){
             parseClient.saveFavorite(favorite);
         } else if (existingFavorite != null && isFavorite == false){
             parseClient.removeFavorite(existingFavorite);
         }
-    }
-
-    private void markSold(boolean b) {
-
     }
 
     private void showRemoveDialog(){
@@ -348,6 +345,27 @@ public class ListingDetailFragment extends Fragment {
     public void onRemove() {
         profileViewModel.refreshListings();
         goToFragment(new ListingsFragment());
+    }
+
+    private void checkIfSold(Listing listing) {
+        if (listing.isSold()){
+            btnSold.setText("Sold");
+            btnSold.setClickable(false);
+            btnSold.setBackgroundColor(getActivity().getResources().getColor(R.color.gray));
+        }
+    }
+
+    private void showSoldDialog(){
+        DialogFragment dialogFragment = new SoldDialogFragment();
+        dialogFragment.setTargetFragment(this, MainActivity.REMOVE_REQUEST);
+        dialogFragment.show(getFragmentManager(), SoldDialogFragment.class.getSimpleName());
+    }
+
+    public void onSold() {
+        profileViewModel.refreshListings();
+        btnSold.setText("Sold");
+        btnSold.setClickable(false);
+        btnSold.setBackgroundColor(getActivity().getResources().getColor(R.color.gray));
     }
 
     // Check if conversation for this listing already exists, navigate to conversation
