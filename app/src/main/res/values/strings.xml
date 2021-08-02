@@ -43,7 +43,7 @@
     <string name="select_photo">Select Photo</string>
     <string name="capture_photo">Capture Photo</string>
     <string name="post_listing_button">Post Listing</string>
-    <string name="message_seller">Message Seller</string>
+    <string name="message_seller">Ask Seller</string>
     <string name="google_books_link">Get Book</string>
     <string name="check_pdf_link">Check for Free PDF</string>
     <string name="edit_listing">Edit</string>
@@ -70,4 +70,5 @@
     <string name="timestamp_placeholder">Jul 21</string>
     <string name="message_hint">Type a message...</string>
     <string name="message_placeholder">This is a message I am sending</string>
+    <string name="save_listing">Save</string>
 </resources>
