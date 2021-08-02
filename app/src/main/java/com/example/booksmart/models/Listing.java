@@ -23,6 +23,7 @@ public class Listing extends ParseObject implements Item {
     public static final String KEY_ALL_IMAGES = "images";
     public static final String KEY_COURSE = "course";
     public static final String KEY_SCHOOL = "school";
+    private static final String KEY_SOLD = "isSold";
 
     private static final String DATE_FORMAT = "MMMM dd, yyyy";
 
@@ -60,6 +61,14 @@ public class Listing extends ParseObject implements Item {
 
     public void setPrice(int price){
         put(KEY_PRICE, price);
+    }
+
+    public Boolean isSold(){
+        return getBoolean(KEY_SOLD);
+    }
+
+    public void setSold(Boolean isSold){
+        put(KEY_SOLD, isSold);
     }
 
     public ParseFile getImage(){

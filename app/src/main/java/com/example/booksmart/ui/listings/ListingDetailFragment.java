@@ -35,6 +35,7 @@ import com.example.booksmart.ui.chat.ChatFragment;
 import com.example.booksmart.viewmodels.ChatViewModel;
 import com.example.booksmart.viewmodels.ConversationsViewModel;
 import com.example.booksmart.viewmodels.ListingDetailViewModel;
+import com.google.android.material.snackbar.Snackbar;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
@@ -127,8 +128,6 @@ public class ListingDetailFragment extends Fragment {
                 ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 ParseFile image = ((Listing) item).getParseFile(Listing.KEY_IMAGE);
                 if (image != null){
-                    int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getContext());
-
                     Glide.with(getContext())
                             .load(image.getUrl())
                             .centerCrop()
@@ -143,28 +142,35 @@ public class ListingDetailFragment extends Fragment {
                             .into(ivUserProfileImage);
                 }
 
-                tvTitle.setText(((Listing) item).getString(Listing.KEY_TITLE));
-                tvPrice.setText("$" + String.valueOf(((Listing) item).getInt(Listing.KEY_PRICE)));
-                tvUserUsername.setText(((Listing) item).getParseUser(Listing.KEY_USER).getUsername());
-                btnCourse.setText(((Listing) item).getString(Listing.KEY_COURSE));
-                tvDescription.setText(((Listing) item).getString(Listing.KEY_DESCRIPTION));
+                tvTitle.setText(((Listing) item).getTitle());
+                tvPrice.setText("$" + String.valueOf(((Listing) item).getPrice()));
+                tvUserUsername.setText(((Listing) item).getUser().getUsername());
+                btnCourse.setText(((Listing) item).getCourse());
+                tvDescription.setText(((Listing) item).getDescription());
                 tvAuthors.setVisibility(View.GONE);
 
                 if (user.getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
                     // This listing belongs to the current user
-                    btnSold.setVisibility(View.VISIBLE);
                     btnRemove.setVisibility(View.VISIBLE);
+                    btnSold.setVisibility(View.VISIBLE);
+
+                    if (((Listing) item).isSold()){
+                        btnSold.setText("Sold");
+                    }
 
                     btnSold.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Toast.makeText(getContext(), "Sold!", Toast.LENGTH_SHORT).show();
+                            if (!((Listing) item).isSold()){
+                                // Set as sold
+                            }
                         }
                     });
 
                     btnRemove.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            // Remove listing
                             Toast.makeText(getContext(), "Remove Listing!", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -245,6 +251,10 @@ public class ListingDetailFragment extends Fragment {
 
             progressBar.setVisibility(View.INVISIBLE);
         });
+    }
+
+    private void markSold(boolean b) {
+
     }
 
     private void startConversation(Listing listing) {
