@@ -128,7 +128,11 @@ public class Book implements Item {
     }
 
     public String getPrice(){
-        return price;
+        if (price != null) {
+            return "$" + price;
+        }
+
+        return null;
     }
 
     public String getUserName(){

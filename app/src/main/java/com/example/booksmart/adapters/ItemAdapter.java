@@ -155,7 +155,7 @@ public class ItemAdapter extends RecyclerView.Adapter {
 
             tvTitle.setText(book.getTitle());
             if (book.getPrice() != null){
-                tvPrice.setText("$" + book.getPrice());
+                tvPrice.setText(book.getPrice());
             } else {
                 tvPrice.setVisibility(View.GONE);
             }
