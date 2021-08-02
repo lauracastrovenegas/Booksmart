@@ -11,6 +11,7 @@ import com.example.booksmart.models.Conversation;
 import com.example.booksmart.models.Listing;
 import com.example.booksmart.models.Message;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChatViewModel extends AndroidViewModel {
@@ -28,6 +29,7 @@ public class ChatViewModel extends AndroidViewModel {
     }
 
     public void select(Conversation conversation) {
+        setMessages(new ArrayList<>());
         chatRepository.setConversation(conversation);
         this.conversation = chatRepository.getConversation();
         chatRepository.fetchMessages();

@@ -273,7 +273,6 @@ public class ListingDetailFragment extends Fragment {
         ParseMessageClient parseMessageClient = new ParseMessageClient(getContext()){
             @Override
             protected void onConversationFetched(Conversation conversation) {
-                chatViewModel.setMessages(new ArrayList<Message>());
                 chatViewModel.select(conversation);
                 goToChat();
             }

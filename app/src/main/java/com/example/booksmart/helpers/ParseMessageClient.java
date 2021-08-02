@@ -80,12 +80,10 @@ public class ParseMessageClient {
 
     public void getConversation(Listing listing){
         ParseQuery query = ParseQuery.getQuery(Conversation.class);
-        query.include(ParseMessageClient.MESSAGES_KEY);
         query.include(ParseMessageClient.LISTING_KEY);
         query.include(ParseMessageClient.USERS_KEY);
         query.whereEqualTo(ParseMessageClient.LISTING_KEY, listing);
         query.whereEqualTo(ParseMessageClient.USERS_KEY, ParseUser.getCurrentUser());
-        query.whereNotEqualTo(LISTING_KEY, null);
 
         query.getFirstInBackground(new GetCallback<Conversation>(){
             public void done(Conversation conversation, ParseException e){
