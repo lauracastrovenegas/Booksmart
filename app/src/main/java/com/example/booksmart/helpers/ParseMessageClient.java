@@ -278,11 +278,24 @@ public class ParseMessageClient {
             @Override
             public void done(List<Conversation> conversations, ParseException e) {
                 for (int i = 0; i < conversations.size(); i++){
-                    Log.i(TAG, conversations.get(i).toString());
+                    clearMessages(conversations.get(i));
                     conversations.get(i).deleteInBackground();
                 }
 
                 onConversationsRemoved();
+            }
+        });
+    }
+
+    public void clearMessages(Conversation conversation){
+        ParseQuery innerQuery = ParseQuery.getQuery(Message.class);
+        innerQuery.whereEqualTo(Message.CONVO_KEY, conversation);
+        innerQuery.findInBackground(new FindCallback<Message>() {
+            @Override
+            public void done(List<Message> messages, ParseException e) {
+                for (int i = 0; i < messages.size(); i++){
+                    messages.get(i).deleteInBackground();
+                }
             }
         });
     }
