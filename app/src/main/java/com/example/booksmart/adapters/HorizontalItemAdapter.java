@@ -184,9 +184,9 @@ public class HorizontalItemAdapter extends RecyclerView.Adapter {
                         .into(ivImage);
             } else {
                 Glide.with(context)
-                        .load(R.drawable.book_cover_placeholder)
+                        .load(R.drawable.book_cover_placeholder_orange)
                         .override(screenWidth/2,(screenWidth/2))
-                        .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(45, 45, 0, 0)))
+                        .transform(new MultiTransformation(new CenterCrop(), new GranularRoundedCorners(CORNER_RADIUS, CORNER_RADIUS, 0, 0)))
                         .into(ivImage);
             }
 

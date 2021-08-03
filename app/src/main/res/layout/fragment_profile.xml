@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 tools:src="@tools:sample/avatars" />
 
             <TextView
@@ -67,9 +67,7 @@
                 android:id="@+id/rlListingsProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tvProfileSchoolName"
-                android:layout_marginTop="30dp"
-                android:background="@color/purple_500"
+                android:layout_below="@id/rlFavoritesProfile"
                 android:paddingHorizontal="@dimen/activity_horizontal_margin"
                 android:paddingVertical="10dp">
 
@@ -80,7 +78,7 @@
                     android:layout_marginBottom="5dp"
                     android:fontFamily="@font/work_sans"
                     android:text="@string/profile_listings_title"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/font_size_subheading" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -97,7 +95,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="0dp"
                     android:text="@string/profile_no_listings"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black"
                     android:visibility="invisible" />
 
             </RelativeLayout>
@@ -106,8 +104,9 @@
                 android:id="@+id/rlFavoritesProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/rlListingsProfile"
-                android:background="@color/white"
+                android:layout_below="@id/tvProfileSchoolName"
+                android:layout_marginTop="20dp"
+                android:background="@color/purple_500"
                 android:paddingHorizontal="@dimen/activity_horizontal_margin"
                 android:paddingVertical="10dp">
 
@@ -118,7 +117,7 @@
                     android:layout_marginBottom="5dp"
                     android:fontFamily="@font/work_sans"
                     android:text="@string/profile_favorites_title"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/font_size_subheading" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -135,7 +134,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="0dp"
                     android:text="@string/profile_no_favorites"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:visibility="invisible" />
 
             </RelativeLayout>

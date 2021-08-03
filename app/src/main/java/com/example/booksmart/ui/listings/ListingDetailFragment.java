@@ -245,7 +245,7 @@ public class ListingDetailFragment extends Fragment {
                 ivUserProfileImage.setImageResource(R.drawable.google_books_logo);
 
                 if (((Book) item).getPrice() != null){
-                    tvPrice.setText("$" + String.valueOf(((Book) item).getPrice()));
+                    tvPrice.setText(String.valueOf(((Book) item).getPrice()));
                 } else {
                     tvPrice.setVisibility(View.GONE);
                 }
