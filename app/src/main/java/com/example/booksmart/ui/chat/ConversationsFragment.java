@@ -24,6 +24,7 @@ import com.example.booksmart.helpers.ParseMessageClient;
 import com.example.booksmart.models.Conversation;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.models.Message;
+import com.example.booksmart.ui.MainActivity;
 import com.example.booksmart.ui.listings.ListingsFragment;
 import com.example.booksmart.viewmodels.ChatViewModel;
 import com.example.booksmart.viewmodels.ConversationsViewModel;
@@ -110,8 +111,36 @@ public class ConversationsFragment extends Fragment {
                 } else {
                     tvNoMessages.setVisibility(View.INVISIBLE);
                 }
+
+                allRead(conversations);
             }
         });
+
+        conversationsViewModel.getNotification().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                ((MainActivity) getActivity()).setNotification(aBoolean);
+            }
+        });
+    }
+
+    private void allRead(List<Conversation> conversations) {
+        ParseMessageClient parseMessageClient = new ParseMessageClient(getContext()){
+            @Override
+            protected void onMessageFetched(Message message) {
+                if (!message.getUser().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
+                    ((MainActivity) getActivity()).setNotification(true);
+                } else {
+                    ((MainActivity) getActivity()).setNotification(false);
+                }
+            }
+        };
+
+        for (int i = 0; i < conversations.size(); i++){
+            if (conversations.get(i).isUnread()){
+                parseMessageClient.getLastMessage(conversations.get(i));
+            }
+        }
     }
 
     private void goChatView() {

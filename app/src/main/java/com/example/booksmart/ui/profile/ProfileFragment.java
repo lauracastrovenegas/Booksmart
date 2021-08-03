@@ -22,11 +22,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.booksmart.R;
+import com.example.booksmart.ui.MainActivity;
 import com.example.booksmart.ui.WelcomeActivity;
 import com.example.booksmart.adapters.HorizontalItemAdapter;
 import com.example.booksmart.helpers.ItemClickSupport;
 import com.example.booksmart.models.Item;
 import com.example.booksmart.ui.listings.ListingDetailFragment;
+import com.example.booksmart.viewmodels.ConversationsViewModel;
 import com.example.booksmart.viewmodels.ListingDetailViewModel;
 import com.example.booksmart.viewmodels.ProfileViewModel;
 import com.parse.ParseFile;
@@ -45,6 +47,7 @@ public class ProfileFragment extends Fragment {
 
     ProfileViewModel profileViewModel;
     ListingDetailViewModel listingDetailViewModel;
+    ConversationsViewModel conversationsViewModel;
     ParseUser user;
     Button btnLogout;
     TextView tvUsername;
@@ -167,6 +170,7 @@ public class ProfileFragment extends Fragment {
     private void setViewModels(){
         listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
         profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+        conversationsViewModel = new ViewModelProvider(requireActivity()).get(ConversationsViewModel.class);
 
         // set observer for profile view model listings
         profileViewModel.getListings().observe(getViewLifecycleOwner(), new Observer<List<Item>>(){
@@ -191,6 +195,13 @@ public class ProfileFragment extends Fragment {
                     rvFavorites.setVisibility(View.GONE);
                     tvNoFavorites.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+
+        conversationsViewModel.getNotification().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                ((MainActivity) getActivity()).setNotification(aBoolean);
             }
         });
     }

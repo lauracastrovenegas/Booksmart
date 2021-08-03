@@ -27,6 +27,8 @@ import com.example.booksmart.R;
 import com.example.booksmart.adapters.ItemAdapter;
 import com.example.booksmart.models.Book;
 import com.example.booksmart.models.Item;
+import com.example.booksmart.ui.MainActivity;
+import com.example.booksmart.viewmodels.ConversationsViewModel;
 import com.example.booksmart.viewmodels.ListingDetailViewModel;
 import com.example.booksmart.viewmodels.ListingsViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -43,6 +45,7 @@ public class ListingsFragment extends Fragment {
 
     ListingsViewModel listingsViewModel;
     ListingDetailViewModel listingDetailViewModel;
+    ConversationsViewModel conversationsViewModel;
     SwipeRefreshLayout swipeContainer;
     EndlessRecyclerViewScrollListener scrollListener;
     RecyclerView rvListings;
@@ -132,6 +135,7 @@ public class ListingsFragment extends Fragment {
     private void setViewModels(){
         listingDetailViewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
         listingsViewModel = new ViewModelProvider(requireActivity()).get(ListingsViewModel.class);
+        conversationsViewModel = new ViewModelProvider(requireActivity()).get(ConversationsViewModel.class);
 
         // set observer for listings view model
         listingsViewModel.getItems().observe(getViewLifecycleOwner(), new Observer<List<Item>>(){
@@ -153,6 +157,13 @@ public class ListingsFragment extends Fragment {
                 scrollListener.setLoading(false);
                 rvListings.setVisibility(View.VISIBLE);
                 pb.setVisibility(View.GONE);
+            }
+        });
+
+        conversationsViewModel.getNotification().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                ((MainActivity) getActivity()).setNotification(aBoolean);
             }
         });
     }
