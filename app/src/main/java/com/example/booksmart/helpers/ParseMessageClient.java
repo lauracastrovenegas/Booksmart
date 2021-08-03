@@ -10,16 +10,22 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.booksmart.models.Conversation;
 import com.example.booksmart.models.Listing;
 import com.example.booksmart.models.Message;
+import com.example.booksmart.ui.MainActivity;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.SendCallback;
 import com.parse.livequery.ParseLiveQueryClient;
 import com.parse.livequery.SubscriptionHandling;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -59,7 +65,15 @@ public class ParseMessageClient {
                     return;
                 }
 
+                Boolean unread = false;
+                for (int i = 0; i < conversations.size(); i++){
+                    if (conversations.get(i).isUnread()){
+                        unread = true;
+                    }
+                }
+
                 onAllConversationsFetched(conversations);
+                setNotification(unread);
             }
         });
 
@@ -233,6 +247,9 @@ public class ParseMessageClient {
                                 @Override
                                 public void done(ParseException e) {
                                     onNewMessageFound(message);
+                                    if (!message.getUser().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
+                                        setNotification(true);
+                                    }
                                 }
                             });
                         }
@@ -269,6 +286,20 @@ public class ParseMessageClient {
                 });
             }
         });
+
+        subscriptionHandling.handleEvent(SubscriptionHandling.Event.UPDATE, new SubscriptionHandling.HandleEventCallback<Conversation>() {
+            @Override
+            public void onEvent(ParseQuery<Conversation> query, final Conversation conversation) {
+                Handler handler = new Handler(Looper.getMainLooper());
+                handler.post(new Runnable() {
+                    public void run() {
+                        if (conversation.getUsers().get(0).getObjectId().equals(ParseUser.getCurrentUser().getObjectId()) || conversation.getUsers().get(1).getObjectId().equals(ParseUser.getCurrentUser().getObjectId())) {
+                            onConversationsUpdated();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     public void removeConversations(Listing listing){
@@ -300,9 +331,13 @@ public class ParseMessageClient {
         });
     }
 
+    protected void setNotification(Boolean notification){}
+
     protected void onConversationsRemoved(Listing listing) {}
 
     protected void onConversationsRemoved() {}
+
+    protected void onConversationsUpdated() {}
 
     protected void onNewMessageFound(Message message) {}
 
