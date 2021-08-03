@@ -17,6 +17,7 @@ public class ConversationsViewModel extends AndroidViewModel {
     public static final String TAG = "conversationViewModel";
 
     MutableLiveData<List<Conversation>> conversations;
+    MutableLiveData<Boolean> notification;
     ConversationRepository repository;
 
     public ConversationsViewModel(Application application){
@@ -24,6 +25,7 @@ public class ConversationsViewModel extends AndroidViewModel {
 
         repository = new ConversationRepository(application);
         conversations = repository.getConversations();
+        notification = repository.getNotification();
     }
 
     public MutableLiveData<List<Conversation>> getConversations() {
@@ -44,5 +46,13 @@ public class ConversationsViewModel extends AndroidViewModel {
 
     public void setConversationLiveQuery() {
         repository.setConversationLiveQuery();
+    }
+
+    public MutableLiveData<Boolean> getNotification() {
+        return notification;
+    }
+
+    public void setNotification(Boolean notification) {
+        repository.setNotification(notification);
     }
 }
