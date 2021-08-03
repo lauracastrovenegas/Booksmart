@@ -1,6 +1,7 @@
 package com.example.booksmart.ui.listings;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -56,6 +57,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import nl.dionsegijn.konfetti.KonfettiView;
+import nl.dionsegijn.konfetti.models.Shape;
+import nl.dionsegijn.konfetti.models.Size;
+
 public class ListingDetailFragment extends Fragment {
 
     public static final String KEY = "detail_listing";
@@ -86,6 +91,7 @@ public class ListingDetailFragment extends Fragment {
     Favorite existingFavorite;
     Favorite favorite;
     Boolean isFavorite;
+    KonfettiView konfettiView;
 
     public ListingDetailFragment() {}
 
@@ -109,6 +115,7 @@ public class ListingDetailFragment extends Fragment {
         btnSold = itemView.findViewById(R.id.btnSold);
         ivClose = itemView.findViewById(R.id.ivClose);
         progressBar = itemView.findViewById(R.id.pbListingDetail);
+        konfettiView = itemView.findViewById(R.id.viewKonfetti);
         progressBar.setVisibility(View.VISIBLE);
         isFavorite = false;
 
@@ -362,10 +369,24 @@ public class ListingDetailFragment extends Fragment {
     }
 
     public void onSold() {
+        showConfetti();
         profileViewModel.refreshListings();
         btnSold.setText("Sold");
         btnSold.setClickable(false);
         btnSold.setBackgroundColor(getActivity().getResources().getColor(R.color.gray));
+    }
+
+    private void showConfetti() {
+        konfettiView.build()
+                .addColors(Color.rgb(255,115,71), Color.rgb(169,138,255), Color.rgb(55,0,179))
+                .setDirection(0.0, 359.0)
+                .setSpeed(1f, 5f)
+                .setFadeOutEnabled(true)
+                .setTimeToLive(2000L)
+                .addShapes(Shape.Square.INSTANCE, Shape.Circle.INSTANCE)
+                .addSizes(new Size(12, 5f))
+                .setPosition(-50f, konfettiView.getWidth() + 50f, -50f, -50f)
+                .streamFor(300, 3000L);
     }
 
     // Check if conversation for this listing already exists, navigate to conversation

@@ -7,6 +7,12 @@
     android:background="@color/white"
     tools:context=".ui.listings.ListingDetailFragment">
 
+    <nl.dionsegijn.konfetti.KonfettiView
+        android:id="@+id/viewKonfetti"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="2dp"/>
+
     <RelativeLayout
         android:id="@+id/detail_toolbar_layout"
         android:layout_width="match_parent"
