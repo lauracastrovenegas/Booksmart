@@ -282,7 +282,7 @@ public class ParseMessageClient {
                     conversations.get(i).deleteInBackground();
                 }
 
-                onConversationsRemoved();
+                onConversationsRemoved(listing);
             }
         });
     }
@@ -299,6 +299,8 @@ public class ParseMessageClient {
             }
         });
     }
+
+    protected void onConversationsRemoved(Listing listing) {}
 
     protected void onConversationsRemoved() {}
 

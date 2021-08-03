@@ -26,6 +26,7 @@ import com.example.booksmart.ui.MainActivity;
 import com.example.booksmart.viewmodels.ConversationsViewModel;
 import com.example.booksmart.viewmodels.ListingDetailViewModel;
 import com.example.booksmart.viewmodels.ListingsViewModel;
+import com.example.booksmart.viewmodels.ProfileViewModel;
 import com.parse.DeleteCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -39,18 +40,27 @@ public class RemoveDialogFragment extends DialogFragment {
     Listing listing;
     ListingDetailViewModel viewModel;
     ListingsViewModel listingsViewModel;
+    ProfileViewModel profileViewModel;
     ConversationsViewModel conversationsViewModel;
     ListingDetailFragment callback;
-    ParseMessageClient parseClient;
+    ParseMessageClient parseMessageClient;
+    ParseClient parseClient;
 
     @Override
     public void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         callback = (ListingDetailFragment) getTargetFragment();
-        parseClient = new ParseMessageClient(getContext()){
+        parseMessageClient = new ParseMessageClient(getContext()){
             @Override
-            protected void onConversationsRemoved() {
+            protected void onConversationsRemoved(Listing listing) {
                 conversationsViewModel.refreshConversations();
+                parseClient.removeFavorites(listing);
+            }
+        };
+
+        parseClient = new ParseClient(getContext()){
+            @Override
+            public void onFavoritesUpdated() {
                 listing.deleteInBackground(new DeleteCallback() {
                     @Override
                     public void done(ParseException e) {
@@ -59,6 +69,7 @@ public class RemoveDialogFragment extends DialogFragment {
                             return;
                         }
 
+                        profileViewModel.refreshListings();
                         listingsViewModel.fetchItems("");
                         callback.onRemove();
                     }
@@ -69,16 +80,17 @@ public class RemoveDialogFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        profileViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
         conversationsViewModel = new ViewModelProvider(requireActivity()).get(ConversationsViewModel.class);
         listingsViewModel = new ViewModelProvider(requireActivity()).get(ListingsViewModel.class);
         viewModel = new ViewModelProvider(requireActivity()).get(ListingDetailViewModel.class);
         listing = (Listing) viewModel.getSelected().getValue();
-        // Use the Builder class for convenient dialog construction
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage(R.string.remove_listing_confirm)
                 .setPositiveButton(R.string.remove_listing, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        parseClient.removeConversations(listing);
+                        parseMessageClient.removeConversations(listing);
                     }
                 })
                 .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
