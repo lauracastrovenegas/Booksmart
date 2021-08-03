@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         badge = navView.getOrCreateBadge(R.id.navigation_conversation);
+        badge.setBackgroundColor(getResources().getColor(R.color.orange_500));
         badge.setVisible(false);
 
         // prevent toolbar from hiding when keyboard opens
