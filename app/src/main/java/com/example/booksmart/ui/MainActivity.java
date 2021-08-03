@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.example.booksmart.R;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import androidx.navigation.ui.NavigationUI;
 public class MainActivity extends AppCompatActivity {
 
     public static final int REMOVE_REQUEST = 202;
+    BadgeDrawable badge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +31,15 @@ public class MainActivity extends AppCompatActivity {
         navView.setItemIconTintList(null);
         NavigationUI.setupWithNavController(navView, navController);
 
+        badge = navView.getOrCreateBadge(R.id.navigation_conversation);
+        badge.setVisible(false);
+
         // prevent toolbar from hiding when keyboard opens
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+    }
+
+    public void setNotification(Boolean visible){
+        badge.setVisible(visible);
     }
 
     @Override
