@@ -298,6 +298,21 @@ public class ParseClient {
         });
     }
 
+    public void removeFavorites(Listing listing){
+        ParseQuery query = ParseQuery.getQuery(Favorite.class);
+        query.whereEqualTo(Favorite.LISTING_KEY, listing);
+        query.findInBackground(new FindCallback<Favorite>() {
+            @Override
+            public void done(List<Favorite> favorites, ParseException e) {
+                for(int i = 0; i < favorites.size(); i++){
+                    favorites.get(i).deleteInBackground();
+                }
+
+                onFavoritesUpdated();
+            }
+        });
+    }
+
     public void markAsSold(Listing listing){
         listing.setSold(true);
         listing.saveInBackground(new SaveCallback() {
