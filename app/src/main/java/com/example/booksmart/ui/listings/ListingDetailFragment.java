@@ -143,7 +143,7 @@ public class ListingDetailFragment extends Fragment {
 
         listingDetailViewModel.getSelected().observe(getViewLifecycleOwner(), item -> {
             if (item.getType() == Item.TYPE_LISTING){
-                ParseUser user = ((Listing) item).getParseUser("user");
+                ParseUser user = ((Listing) item).getUser();
                 try {
                     user = user.fetchIfNeeded();
                 } catch (ParseException parseException) {
@@ -179,10 +179,6 @@ public class ListingDetailFragment extends Fragment {
                     checkIfSold((Listing) item);
                     btnRemove.setVisibility(View.VISIBLE);
                     btnSold.setVisibility(View.VISIBLE);
-
-                    if (((Listing) item).isSold()){
-                        btnSold.setText("Sold");
-                    }
 
                     btnSold.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -359,6 +355,7 @@ public class ListingDetailFragment extends Fragment {
             btnSold.setText("Sold");
             btnSold.setClickable(false);
             btnSold.setBackgroundColor(getActivity().getResources().getColor(R.color.gray));
+            ivImage.setColorFilter(R.color.sold_tint);
         }
     }
 
@@ -374,6 +371,7 @@ public class ListingDetailFragment extends Fragment {
         btnSold.setText("Sold");
         btnSold.setClickable(false);
         btnSold.setBackgroundColor(getActivity().getResources().getColor(R.color.gray));
+        ivImage.setColorFilter(R.color.sold_tint);
     }
 
     private void showConfetti() {

@@ -128,6 +128,10 @@ public class HorizontalItemAdapter extends RecyclerView.Adapter {
                         .into(ivImage);
             }
 
+            if (listing.isSold()){
+                ivImage.setColorFilter(R.color.sold_tint);
+            }
+
             ParseFile profileImage = user.getParseFile(Listing.KEY_IMAGE);
             if (profileImage != null){
                 Glide.with(context)
