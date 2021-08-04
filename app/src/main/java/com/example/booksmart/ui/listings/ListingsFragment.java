@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -54,6 +55,7 @@ public class ListingsFragment extends Fragment {
     FloatingActionButton btnCompose;
     ProgressBar pb;
     TextView toolbarTitleSchool;
+    ImageView ivLogo;
     Boolean listRefreshed; // Indicates if fragment has just been created
     SearchView searchView;
     String currentSearchQuery;
@@ -65,10 +67,11 @@ public class ListingsFragment extends Fragment {
         btnCompose = view.findViewById(R.id.btnAddListing);
         rvListings = view.findViewById(R.id.rvListing);
         pb = view.findViewById(R.id.pbLoadingListings);
+        ivLogo = view.findViewById(R.id.ivToolbarLogo);
         toolbarTitleSchool = view.findViewById(R.id.tvToolbarTitleSchool);
         searchView = view.findViewById(R.id.svToolbarSearch);
 
-        toolbarTitleSchool.setText(ParseUser.getCurrentUser().getString(KEY_SCHOOL));
+        //toolbarTitleSchool.setText(ParseUser.getCurrentUser().getString(KEY_SCHOOL));
         listRefreshed = true;
         currentSearchQuery = "";
 
@@ -89,6 +92,19 @@ public class ListingsFragment extends Fragment {
             }
         });
 
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (searchView.isIconified()){
+                    toolbarTitleSchool.setVisibility(View.VISIBLE);
+                    ivLogo.setVisibility(View.GONE);
+                } else {
+                    toolbarTitleSchool.setVisibility(View.GONE);
+                    ivLogo.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -103,6 +119,23 @@ public class ListingsFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toolbarTitleSchool.setVisibility(View.GONE);
+                ivLogo.setVisibility(View.VISIBLE);
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                toolbarTitleSchool.setVisibility(View.VISIBLE);
+                ivLogo.setVisibility(View.GONE);
                 return false;
             }
         });
