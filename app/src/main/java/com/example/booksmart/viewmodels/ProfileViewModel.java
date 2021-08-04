@@ -28,6 +28,7 @@ public class ProfileViewModel extends AndroidViewModel {
     MutableLiveData<List<Item>> listings;
     MutableLiveData<List<Item>> favorites;
     ProfileRepository profileRepository;
+    List<Item> items;
 
     public ProfileViewModel(Application application) {
         super(application);
@@ -35,6 +36,7 @@ public class ProfileViewModel extends AndroidViewModel {
         profileRepository = new ProfileRepository(application.getBaseContext());
         listings = profileRepository.getListings();
         favorites = profileRepository.getFavorites();
+        items = profileRepository.getItems();
     }
 
     public LiveData<List<Item>> getListings() {
@@ -59,5 +61,9 @@ public class ProfileViewModel extends AndroidViewModel {
 
     public void refreshListings() {
         profileRepository.refreshListings();
+    }
+
+    public List<Item> getItems() {
+        return profileRepository.getItems();
     }
 }

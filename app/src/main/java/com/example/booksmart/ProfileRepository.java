@@ -1,6 +1,7 @@
 package com.example.booksmart;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -28,6 +29,7 @@ public class ProfileRepository {
 
     public ProfileRepository(Context context){
         this.context = context;
+        items = new ArrayList<>();
         listings = new MutableLiveData<>();
         favorites = new MutableLiveData<>();
         favoriteList = new ArrayList<>();
@@ -50,8 +52,9 @@ public class ProfileRepository {
 
             @Override
             public void onQueryUserFavoritesDone(List<Favorite> allFavorites, ParseException e) {
-                favoriteList = allFavorites;
-                parseFavoritesToItems(allFavorites);
+                favoriteList.clear();
+                favoriteList.addAll(allFavorites);
+                parseFavoritesToItems(favoriteList);
             }
 
             @Override
@@ -74,7 +77,7 @@ public class ProfileRepository {
     }
 
     private void parseFavoritesToItems(List<Favorite> favorites) {
-        items = new ArrayList<>();
+        items.clear();
         for (int i = 0; i < favorites.size(); i++){
             Favorite favorite = favorites.get(i);
             if (favorite.getType() == Item.TYPE_LISTING){
@@ -106,5 +109,9 @@ public class ProfileRepository {
 
     public void refreshListings() {
         parseClient.queryUserListings(ParseUser.getCurrentUser());
+    }
+
+    public List<Item> getItems() {
+        return items;
     }
 }
