@@ -22,7 +22,8 @@ public class ListingsViewModel extends AndroidViewModel {
 
     MutableLiveData<List<Item>> items;
     ItemRepository itemRepository;
-    Parcelable recyclerViewState;
+    int index = -1;
+    int top = -1;
 
     public ListingsViewModel(Application application) {
         super(application);
@@ -60,13 +61,22 @@ public class ListingsViewModel extends AndroidViewModel {
 
     public void postListing(String title, String description, String price, String course, File photoFile){
         itemRepository.onPostListing(title, description, price, course, photoFile);
+        setIndex(-1);
     }
 
-    public void setRecyclerViewState(Parcelable recyclerViewState) {
-        this.recyclerViewState = recyclerViewState;
+    public void setIndex(int index) {
+        this.index = index;
     }
 
-    public Parcelable getRecyclerViewState() {
-        return recyclerViewState;
+    public void setTop(int top) {
+        this.top = top;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public int getTop() {
+        return top;
     }
 }

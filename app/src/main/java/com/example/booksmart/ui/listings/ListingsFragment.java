@@ -122,7 +122,6 @@ public class ListingsFragment extends Fragment {
                 new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        saveRecyclerViewState();
                         Item item = listingsViewModel.getItem(position);
                         listingDetailViewModel.select(item);
                         listingDetailViewModel.setPreviousFragment(new ListingsFragment());
@@ -130,6 +129,23 @@ public class ListingsFragment extends Fragment {
                     }
                 }
         );
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        listingsViewModel.setIndex(gridLayoutManager.findFirstVisibleItemPosition());
+        View v = rvListings.getChildAt(0);
+        listingsViewModel.setTop((v == null) ? 0 : (v.getTop() - rvListings.getPaddingTop()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(listingsViewModel.getIndex() != -1)
+        {
+            gridLayoutManager.scrollToPositionWithOffset(listingsViewModel.getIndex(), listingsViewModel.getTop());
+        }
     }
 
     private void setViewModels(){
@@ -144,7 +160,6 @@ public class ListingsFragment extends Fragment {
                 // only instantiate adapter and set adapter for rv right after the fragment has been created
                 // every time after that initial set up, just notify the adapter
                 Log.i(TAG, "onChanged");
-                Log.i(TAG, String.valueOf(listRefreshed));
                 if (listRefreshed){
                     rvListings.scrollToPosition(0);
                     listRefreshed = false;
@@ -153,7 +168,6 @@ public class ListingsFragment extends Fragment {
                 adapter.clear();
                 adapter.addAll(items);
                 adapter.notifyDataSetChanged();
-                Log.i(TAG, String.valueOf(items.size()));
                 scrollListener.setLoading(false);
                 rvListings.setVisibility(View.VISIBLE);
                 pb.setVisibility(View.GONE);
@@ -193,7 +207,6 @@ public class ListingsFragment extends Fragment {
                 swipeContainer.setRefreshing(false);
                 scrollListener.resetState();
                 scrollListener.setLoading(false);
-                listingsViewModel.setRecyclerViewState(null);
                 listRefreshed = true;
             }
         });
@@ -203,11 +216,6 @@ public class ListingsFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-    }
-
-    private void saveRecyclerViewState(){
-        Parcelable recylerViewState = rvListings.getLayoutManager().onSaveInstanceState();
-        listingsViewModel.setRecyclerViewState(recylerViewState);
     }
 
     private void goListingForm(){
