@@ -2,6 +2,7 @@ package com.example.booksmart.ui.profile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,12 +45,12 @@ public class ProfileFragment extends Fragment {
     private static final String KEY_NAME = "name";
     public static final String KEY_SCHOOL = "school";
     public static final String KEY_IMAGE = "image";
+    private static final String TAG = "ProfileFragment";
 
     ProfileViewModel profileViewModel;
     ListingDetailViewModel listingDetailViewModel;
     ConversationsViewModel conversationsViewModel;
     ParseUser user;
-    Button btnLogout;
     TextView tvUsername;
     ImageView ivUserProfilePhoto;
     TextView tvUserName;
@@ -68,7 +69,6 @@ public class ProfileFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        btnLogout = view.findViewById(R.id.btnLogout);
         tvUsername = view.findViewById(R.id.tvToolbarTitleUsername);
         ivUserProfilePhoto = view.findViewById(R.id.ivProfileUserPhoto);
         tvUserName = view.findViewById(R.id.tvProfileUserName);
@@ -106,25 +106,10 @@ public class ProfileFragment extends Fragment {
                     .into(ivUserProfilePhoto);
         }
 
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ParseUser.logOut();
-                goWelcomeActivity();
-            }
-        });
-
         ibOptions.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (btnLogout.getVisibility()){
-                    case View.INVISIBLE:
-                        btnLogout.setVisibility(View.VISIBLE);
-                        break;
-                    default:
-                        btnLogout.setVisibility(View.INVISIBLE);
-                        break;
-                }
+                goSettingsFragment();
             }
         });
 
@@ -189,8 +174,10 @@ public class ProfileFragment extends Fragment {
         profileViewModel.getFavorites().observe(getViewLifecycleOwner(), new Observer<List<Item>>(){
             @Override
             public void onChanged(List<Item> items) {
-                favoriteAdapter = new HorizontalItemAdapter(getContext(), items);
-                rvFavorites.setAdapter(favoriteAdapter);
+                favoriteAdapter.clear();
+                favoriteAdapter.addAll(items.subList(0, profileViewModel.getItems().size()));
+                favoriteAdapter.notifyDataSetChanged();
+                Log.i(TAG, String.valueOf(favoriteAdapter.getItemCount()));
                 if (items.size() == 0){
                     rvFavorites.setVisibility(View.GONE);
                     tvNoFavorites.setVisibility(View.VISIBLE);
@@ -206,14 +193,13 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    public void goWelcomeActivity(){
-        Intent intent = new Intent(getContext(), WelcomeActivity.class);
-        getActivity().finish();
-        startActivity(intent);
-    }
-
     private void goDetailView(){
         Fragment fragment = new ListingDetailFragment();
+        replaceFragment(fragment);
+    }
+
+    private void goSettingsFragment(){
+        Fragment fragment = new SettingsFragment();
         replaceFragment(fragment);
     }
 
