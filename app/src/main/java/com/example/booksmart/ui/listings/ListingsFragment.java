@@ -159,7 +159,6 @@ public class ListingsFragment extends Fragment {
             public void onChanged(List<Item> items) {
                 // only instantiate adapter and set adapter for rv right after the fragment has been created
                 // every time after that initial set up, just notify the adapter
-                Log.i(TAG, "onChanged");
                 if (listRefreshed){
                     rvListings.scrollToPosition(0);
                     listRefreshed = false;
