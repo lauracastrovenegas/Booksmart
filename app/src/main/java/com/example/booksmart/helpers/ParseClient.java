@@ -52,6 +52,7 @@ public class ParseClient {
     private static final String USERNAME_TAKEN_MSG = "Sorry, that username is already taken.";
     public static final String EMAIL_TAKEN_MSG = "An account already exists for that email.";
     private static final String TITLE_KEY = "title";
+    public static final String SOLD_FAILURE = "Failed to mark listing as sold. Please try again";
 
     Context context;
     ParseUser user;
@@ -319,7 +320,7 @@ public class ParseClient {
             @Override
             public void done(ParseException e) {
                 if (e != null){
-                    Toast.makeText(context, "Failed to mark listing as sold. Please try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, SOLD_FAILURE, Toast.LENGTH_SHORT).show();
                     return;
                 }
 

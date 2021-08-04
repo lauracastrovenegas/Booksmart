@@ -70,8 +70,7 @@ public class ListingsFragment extends Fragment {
         ivLogo = view.findViewById(R.id.ivToolbarLogo);
         toolbarTitleSchool = view.findViewById(R.id.tvToolbarTitleSchool);
         searchView = view.findViewById(R.id.svToolbarSearch);
-
-        //toolbarTitleSchool.setText(ParseUser.getCurrentUser().getString(KEY_SCHOOL));
+        
         listRefreshed = true;
         currentSearchQuery = "";
 
@@ -137,6 +136,13 @@ public class ListingsFragment extends Fragment {
                 toolbarTitleSchool.setVisibility(View.VISIBLE);
                 ivLogo.setVisibility(View.GONE);
                 return false;
+            }
+        });
+
+        toolbarTitleSchool.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rvListings.smoothScrollToPosition(0);
             }
         });
 
