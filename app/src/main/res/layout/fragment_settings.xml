@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.booksmart.ui.profile.SettingsFragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/contentBodyColor">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="30dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <ImageView
+                android:id="@+id/ivCloseSettings"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:src="?attr/actionModeCloseDrawable"
+                app:tint="@color/purple_500"/>
+
+            <TextView
+                android:id="@+id/tvToolbarTitlePage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="5dp"
+                android:fontFamily="@font/work_sans_light"
+                android:gravity="center"
+                android:text="@string/settings_title_text"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_subheading" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/profileCircleImageView"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/ic_user"
+                android:layout_marginRight="10dp"/>
+
+            <TextView
+                android:id="@+id/usernameTextView"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/user_name_placeholder"
+                android:textSize="@dimen/font_size_large"
+                android:fontFamily="@font/work_sans_medium"
+                android:textColor="@color/black"
+                android:layout_toRightOf="@id/profileCircleImageView"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                style="@style/viewParent.headerText"
+                android:text="@string/edit_personal_details"
+                android:textSize="@dimen/font_size_medium"
+                android:textColor="@color/dark_gray"
+                android:layout_below="@id/usernameTextView"
+                android:layout_toRightOf="@id/profileCircleImageView"/>
+
+            <ImageView
+                style="@style/viewParent"
+                android:src="@drawable/ic_more"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+        <TextView
+            style="@style/viewParent.headerText.settingsMiniTitle"
+            android:textSize="@dimen/font_size_large"
+            android:text="@string/profile"/>
+
+        <TextView
+            style="@style/viewParent.headerText.settingsTextIcon"
+            android:drawableLeft="@drawable/ic_edit_profile"
+            android:textSize="@dimen/font_size_large"
+            android:text="@string/edit_profile" />
+
+        <TextView
+            style="@style/viewParent.headerText.settingsTextIcon"
+            android:drawableLeft="@drawable/ic_edit_password"
+            android:textSize="@dimen/font_size_large"
+            android:layout_marginTop="15dp"
+            android:text="@string/change_password" />
+
+        <TextView
+            style="@style/viewParent.headerText.settingsMiniTitle"
+            android:textSize="@dimen/font_size_large"
+            android:text="@string/notifications"/>
+
+        <Switch
+            style="@style/settingsText"
+            android:checked="true"
+            android:drawableLeft="@drawable/ic_notifications"
+            android:textSize="@dimen/font_size_large"
+            android:text="@string/notifications" />
+
+        <TextView
+            style="@style/viewParent.headerText.settingsMiniTitle"
+            android:textSize="@dimen/font_size_large"
+            android:text="@string/regional"/>
+
+        <TextView
+            style="@style/viewParent.headerText.settingsTextIcon"
+            android:textSize="@dimen/font_size_large"
+            android:drawableLeft="@drawable/ic_languages"
+            android:text="@string/language" />
+
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/logout"
+            android:drawableLeft="@drawable/ic_logout"
+            android:backgroundTint="@color/purple_500"
+            android:fontFamily="@font/work_sans"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_large"
+            app:cornerRadius="@dimen/button_corner_radius"/>
+
+    </LinearLayout>
+</ScrollView>

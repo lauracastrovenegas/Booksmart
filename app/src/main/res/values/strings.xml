@@ -77,4 +77,12 @@
     <string name="message_hint">Type a message...</string>
     <string name="message_placeholder">This is a message I am sending</string>
     <string name="save_listing">Save</string>
+    <string name="settings_title_text">Settings</string>
+    <string name="edit_personal_details">Edit personal details</string>
+    <string name="profile">Profile</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="change_password">Change Password</string>
+    <string name="notifications">Notifications</string>
+    <string name="regional">Regional</string>
+    <string name="language">Language</string>
 </resources>
