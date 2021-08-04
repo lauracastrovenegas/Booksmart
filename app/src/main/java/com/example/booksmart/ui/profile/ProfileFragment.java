@@ -178,8 +178,11 @@ public class ProfileFragment extends Fragment {
                 favoriteAdapter.addAll(items.subList(0, profileViewModel.getItems().size()));
                 favoriteAdapter.notifyDataSetChanged();
                 Log.i(TAG, String.valueOf(favoriteAdapter.getItemCount()));
-                if (items.size() == 0){
-                    rvFavorites.setVisibility(View.GONE);
+                if (favoriteAdapter.getItemCount() > 0){
+                    rvFavorites.setVisibility(View.VISIBLE);
+                    tvNoFavorites.setVisibility(View.INVISIBLE);
+                } else {
+                    rvFavorites.setVisibility(View.INVISIBLE);
                     tvNoFavorites.setVisibility(View.VISIBLE);
                 }
             }
