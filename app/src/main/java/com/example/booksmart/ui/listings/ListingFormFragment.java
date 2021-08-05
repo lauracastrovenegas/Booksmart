@@ -170,11 +170,11 @@ public class ListingFormFragment extends Fragment {
 
         if (resultCode == RESULT_OK){
             if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) { // User took image
-                selectedImage = BitmapFactory.decodeFile(camera.getPhotoFile().getAbsolutePath());
+                selectedImage = camera.rotateBitmapOrientation(camera.getPhotoFile().getAbsolutePath());
                 photoFile = camera.getPhotoFile();
             } else if (requestCode == GET_FROM_GALLERY){ // User selected an image
                 try {
-                    selectedImage = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData());
+                    selectedImage = camera.rotateBitmapOrientation(MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), data.getData()));
                     photoFile = camera.scaleImage(selectedImage, Camera.SCALE_WIDTH);
                 } catch (FileNotFoundException e) {
                     Log.e(TAG, e.getMessage());
