@@ -86,4 +86,8 @@
     <string name="notifications">Notifications</string>
     <string name="regional">Regional</string>
     <string name="language">Language</string>
+    <string name="books_a_million">Books-A-Million</string>
+    <string name="barnes_amp_noble"><![CDATA[Barnes & Noble]]></string>
+    <string name="amazon">Amazon</string>
+    <string name="google_books">Google Books</string>
 </resources>
