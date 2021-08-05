@@ -13,6 +13,7 @@ import com.example.booksmart.viewmodels.ChatViewModel;
 import com.example.booksmart.viewmodels.ConversationsViewModel;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.ParseUser;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -61,6 +62,16 @@ public class MainActivity extends AppCompatActivity {
                 Log.i("MainActivity", "onNewMessageFound");
                 conversationsViewModel.refreshConversations();
                 chatViewModel.refreshMessages();
+            }
+
+            @Override
+            protected void onConversationsUpdated() {
+                conversationsViewModel.refreshConversations();
+            }
+
+            @Override
+            protected void onConversationsRemoved() {
+                conversationsViewModel.refreshConversations();
             }
         };
 
