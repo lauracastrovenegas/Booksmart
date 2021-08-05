@@ -27,6 +27,9 @@ public class Book implements Item {
     public static final String PRICE_KEY = "listPrice";
     public static final String PRICE_AMNT_KEY = "amount";
     public static final String USER_NAME = "Google Books";
+    public static final String INDUSTRY_ID_KEY = "industryIdentifiers";
+    public static final String TYPE_KEY = "type";
+    public static final String IDENTIFIER_KEY = "identifier";
 
     String id;
     String title;
@@ -34,9 +37,12 @@ public class Book implements Item {
     String description;
     String imageLink;
     String googleLink;
-    String findPDFLink;
+    String amazonLink;
+    String barnesNoblesLink;
+    String booksMillionLink;
     String saleability;
     String price;
+    String ISBN;
 
     public static Book fromJson(JSONObject jsonObject) throws JSONException {
         Book book = new Book();
@@ -61,6 +67,21 @@ public class Book implements Item {
         } catch (JSONException e){
             book.imageLink = "";
         }
+        try {
+            JSONArray industryIdentifiers = volumeInfo.getJSONArray(INDUSTRY_ID_KEY);
+            book.ISBN = "";
+            if (industryIdentifiers.length() != 0){
+                for (int i = 0; i < industryIdentifiers.length(); i++){
+                    JSONObject identifier = industryIdentifiers.getJSONObject(i);
+                    if (identifier.getString(TYPE_KEY).equals("ISBN_13")){
+                        book.ISBN = identifier.getString(IDENTIFIER_KEY);
+                    }
+                }
+            }
+        } catch (JSONException e){
+            book.ISBN = "";
+        }
+
         JSONObject saleInfo = jsonObject.getJSONObject(SALE_INFO_KEY);
         book.saleability = saleInfo.getString(SALEABILITY_KEY);
         if (!book.saleability.equals(NOT_FOR_SALE)){
@@ -74,7 +95,14 @@ public class Book implements Item {
         }
 
         book.googleLink = "https://www.google.com/books/edition/" + book.title.replace(" ","_") + "/" + book.id + "?hl=en&kptab=getbook";
-        book.findPDFLink = "http://libgen.rs/search.php?req=" + book.title.replace(' ', '+') + "+" + (book.getAuthors().isEmpty() ? "" : book.getAuthors().get(0).replace(' ', '+')) + "&open=0&res=25&view=simple&phrase=1&column=def";
+        if (!book.ISBN.equals("")){
+            book.amazonLink = "https://www.amazon.com/s?k=" + book.ISBN + "&i=stripbooks&linkCode=qs";
+            book.barnesNoblesLink = "https://www.barnesandnoble.com/w/" + book.title.replace(" ","-") + (book.getAuthors().size() > 0 ? "-" + book.getAuthors().get(0).replace(" ", "-") : "") + "?ean=" + book.ISBN;
+            book.booksMillionLink = "https://www.booksamillion.com/search?query=" + book.ISBN;
+        } else {
+            book.amazonLink = "";
+            book.barnesNoblesLink = "";
+        }
 
         return book;
     }
@@ -123,8 +151,16 @@ public class Book implements Item {
         return googleLink;
     }
 
-    public String getFindPDFLink() {
-        return findPDFLink;
+    public String getAmazonLink() {
+        return amazonLink;
+    }
+
+    public String getBarnesNoblesLink() {
+        return barnesNoblesLink;
+    }
+
+    public String getBooksMillionLink() {
+        return booksMillionLink;
     }
 
     public String getPrice(){
