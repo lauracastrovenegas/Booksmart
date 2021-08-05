@@ -2,6 +2,7 @@ package com.example.booksmart;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -40,11 +41,6 @@ public class ConversationRepository {
             @Override
             public void onAllConversationsFetched(List<Conversation> conversation) {
                 conversations.setValue(conversation);
-            }
-
-            @Override
-            protected void onNewMessageFound(Message message) {
-                refreshConversations();
             }
 
             @Override

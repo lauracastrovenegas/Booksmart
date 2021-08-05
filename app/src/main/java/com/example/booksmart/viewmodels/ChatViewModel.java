@@ -54,4 +54,10 @@ public class ChatViewModel extends AndroidViewModel {
     public void setMessageLiveQuery() {
         chatRepository.setMessageLiveQuery();
     }
+
+    public void refreshMessages() {
+        if (messages.getValue() != null){
+            chatRepository.fetchMessages();
+        }
+    }
 }

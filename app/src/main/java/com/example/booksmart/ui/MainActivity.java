@@ -2,14 +2,21 @@ package com.example.booksmart.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.WindowManager;
 
 import com.example.booksmart.R;
+import com.example.booksmart.helpers.ParseMessageClient;
+import com.example.booksmart.models.Conversation;
+import com.example.booksmart.models.Message;
+import com.example.booksmart.viewmodels.ChatViewModel;
+import com.example.booksmart.viewmodels.ConversationsViewModel;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
@@ -18,6 +25,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int REMOVE_REQUEST = 202;
     BadgeDrawable badge;
+    ParseMessageClient parseMessageClient;
+    ConversationsViewModel conversationsViewModel;
+    ChatViewModel chatViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +47,25 @@ public class MainActivity extends AppCompatActivity {
 
         // prevent toolbar from hiding when keyboard opens
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+        conversationsViewModel = new ViewModelProvider(this).get(ConversationsViewModel.class);
+        chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
+
+        setUpMessageClient();
+    }
+
+    private void setUpMessageClient() {
+        parseMessageClient = new ParseMessageClient(getBaseContext()){
+            @Override
+            protected void onNewMessageFound(Message message) {
+                Log.i("MainActivity", "onNewMessageFound");
+                conversationsViewModel.refreshConversations();
+                chatViewModel.refreshMessages();
+            }
+        };
+
+        parseMessageClient.setMessageLiveQuery();
+        parseMessageClient.setConversationLiveQuery();
     }
 
     public void setNotification(Boolean visible){
