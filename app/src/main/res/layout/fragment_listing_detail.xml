@@ -77,6 +77,7 @@
         android:scrollbars="vertical">
 
         <RelativeLayout
+            android:id="@+id/rlContentDetail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -189,7 +190,7 @@
         layout="@layout/container_get_book_links"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_marginHorizontal="5dp"
+        android:layout_marginHorizontal="10dp"
         android:layout_above="@id/toolbar_bottom_detail"
         android:visibility="gone"
         tools:visibility="visible"/>
