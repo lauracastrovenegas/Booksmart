@@ -20,7 +20,8 @@
         android:roundIcon="@drawable/booksmart_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.Booksmart">
-        <activity android:name=".ui.WelcomeActivity">
+        <activity android:name=".ui.WelcomeActivity"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
