@@ -15,6 +15,7 @@ import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
@@ -334,7 +335,7 @@ public class ParseMessageClient {
 
     protected void setNotification(Boolean notification){}
 
-    private void sendNewMessageNotification(Message message){
+    public void sendNewMessageNotification(Message message){
         ParseUser user = message.getUser();
         try {
              user = user.fetchIfNeeded();
@@ -353,8 +354,11 @@ public class ParseMessageClient {
         }
         // Configure the push
         ParsePush push = new ParsePush();
-        push.setChannel("News");
         push.setData(data);
+
+        ParseQuery<ParseInstallation> parseQuery = ParseQuery.getQuery(ParseInstallation.class);
+        parseQuery.whereEqualTo("installationId", ParseInstallation.getCurrentInstallation().getInstallationId());
+        push.setQuery(parseQuery);
         push.sendInBackground();
     }
 
