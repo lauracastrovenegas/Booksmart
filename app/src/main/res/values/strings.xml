@@ -52,10 +52,10 @@
     <string name="edit_listing">Edit</string>
     <string name="remove_listing">Remove</string>
     <string name="sold_listing">Yes! It\'s sold</string>
-    <string name="login">Log in</string>
+    <string name="login">Log In</string>
     <string name="signup">Sign Up</string>
-    <string name="signin">Sign in</string>
-    <string name="logout">Log out</string>
+    <string name="signin">Sign In</string>
+    <string name="logout">Log Out</string>
     <string name="create_account">Create Account</string>
 
     <!-- Placeholder Strings -->
