@@ -66,15 +66,34 @@ public class ParseMessageClient {
                     return;
                 }
 
-                Boolean unread = false;
+                // notification badge not visible by default
+                setNotificationBadge(false);
+
+                // check if any conversations are marked as unread
                 for (int i = 0; i < conversations.size(); i++){
                     if (conversations.get(i).isUnread()){
-                        unread = true;
+                        // get last message
+                        ParseQuery messageQuery = ParseQuery.getQuery(Message.class);
+                        messageQuery.whereEqualTo(CONVO_KEY, conversations.get(i));
+                        messageQuery.addDescendingOrder(DESCENDING_ORDER_KEY);
+
+                        messageQuery.getFirstInBackground(new GetCallback<Message>() {
+                            @Override
+                            public void done(Message message, ParseException e) {
+                                if (e != null){
+                                    return;
+                                }
+
+                                // if last message of unread conversation was not sent by current user, set notification badge to visible
+                                if (!message.getUser().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
+                                    setNotificationBadge(true);
+                                }
+                            }
+                        });
                     }
                 }
 
                 onAllConversationsFetched(conversations);
-                setNotification(unread);
             }
         });
 
@@ -249,7 +268,7 @@ public class ParseMessageClient {
                                 public void done(ParseException e) {
                                     onNewMessageFound(message);
                                     if (!message.getUser().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
-                                        setNotification(true);
+                                        //setNotification(true);
                                         sendNewMessageNotification(message);
                                     }
                                 }
@@ -333,7 +352,7 @@ public class ParseMessageClient {
         });
     }
 
-    protected void setNotification(Boolean notification){}
+    protected void setNotificationBadge(Boolean notification){}
 
     public void sendNewMessageNotification(Message message){
         ParseUser user = message.getUser();
