@@ -8,7 +8,10 @@ import com.example.booksmart.models.Listing;
 import com.example.booksmart.models.Message;
 import com.example.booksmart.models.User;
 import com.parse.Parse;
+import com.parse.ParseInstallation;
 import com.parse.ParseObject;
+
+import java.util.ArrayList;
 
 public class BookSmart extends Application {
 
@@ -32,5 +35,13 @@ public class BookSmart extends Application {
                 .server(SERVER)
                 .build()
         );
+
+        ArrayList<String> channels = new ArrayList<>();
+        channels.add("News");
+
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("GCMSenderId", BuildConfig.SENDER_ID);
+        installation.put("channels", channels);
+        installation.saveInBackground();
     }
 }

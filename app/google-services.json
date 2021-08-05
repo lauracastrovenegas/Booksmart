@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "372811789308",
+    "project_id": "booksmart-c3dbc",
+    "storage_bucket": "booksmart-c3dbc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:372811789308:android:f6506edb41b70be358f879",
+        "android_client_info": {
+          "package_name": "com.example.booksmart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "372811789308-2p8bfju6fmc9fv43os2hdn1h5k7jn5lk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqjskY5qTVpaQGQQWFmfSclypdQALHc98"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "372811789308-2p8bfju6fmc9fv43os2hdn1h5k7jn5lk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

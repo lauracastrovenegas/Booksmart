@@ -249,6 +249,7 @@ public class ParseMessageClient {
                                     onNewMessageFound(message);
                                     if (!message.getUser().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
                                         setNotification(true);
+                                        sendNewMessageNotification(message);
                                     }
                                 }
                             });
@@ -332,6 +333,30 @@ public class ParseMessageClient {
     }
 
     protected void setNotification(Boolean notification){}
+
+    private void sendNewMessageNotification(Message message){
+        ParseUser user = message.getUser();
+        try {
+             user = user.fetchIfNeeded();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject data = new JSONObject();
+        // Put data in the JSON object
+        try {
+            data.put("alert", message.getBody());
+            data.put("title", "New Message from " + user.getString("name").split(" ")[0]);
+        } catch ( JSONException e) {
+            // should not happen
+            throw new IllegalArgumentException("unexpected parsing error", e);
+        }
+        // Configure the push
+        ParsePush push = new ParsePush();
+        push.setChannel("News");
+        push.setData(data);
+        push.sendInBackground();
+    }
 
     protected void onConversationsRemoved(Listing listing) {}
 
