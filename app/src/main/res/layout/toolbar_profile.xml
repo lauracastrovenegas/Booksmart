@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toolbar_main"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:elevation="8dp">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -15,36 +16,33 @@
         android:outlineProvider="none"
         android:theme="?attr/actionBarTheme" />
 
-    <ImageView
-        android:id="@+id/ivToolbarLogoProfile"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_centerHorizontal="false"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="20dp"
-        app:srcCompat="@drawable/ic_shopping_store" />
-
-    <TextView
-        android:id="@+id/tvToolbarTitleUsername"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/work_sans"
-        android:textColor="@color/black"
-        android:textSize="@dimen/font_size_large"
-        tools:text="@string/username_placeholder" />
+        android:layout_centerInParent="true">
 
-    <TextView
-        android:id="@+id/tvToolbarTitlePageProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/tvToolbarTitleUsername"
-        android:fontFamily="@font/work_sans_light"
-        android:text="@string/profile_toolbar_title"
-        android:textColor="@color/black"
-        android:textSize="@dimen/font_size_large" />
+        <TextView
+            android:id="@+id/tvToolbarTitleUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/tvToolbarTitlePageProfile"
+            android:fontFamily="@font/work_sans"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_size_large"
+            tools:text="@string/username_placeholder" />
+
+        <TextView
+            android:id="@+id/tvToolbarTitlePageProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/work_sans_light"
+            android:text="@string/profile_toolbar_title"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_size_subheading" />
+
+    </RelativeLayout>
 
     <ImageButton
         android:id="@+id/ibToolbarOptionsProfile"
