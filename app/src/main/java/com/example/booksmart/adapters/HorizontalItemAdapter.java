@@ -129,7 +129,7 @@ public class HorizontalItemAdapter extends RecyclerView.Adapter {
             }
 
             if (listing.isSold()){
-                ivImage.setColorFilter(R.color.sold_tint);
+                ivImage.setColorFilter(R.color.black);
             }
 
             ParseFile profileImage = user.getParseFile(Listing.KEY_IMAGE);

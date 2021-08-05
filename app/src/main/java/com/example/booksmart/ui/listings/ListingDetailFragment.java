@@ -355,7 +355,7 @@ public class ListingDetailFragment extends Fragment {
             btnSold.setText("Sold");
             btnSold.setClickable(false);
             btnSold.setBackgroundColor(getActivity().getResources().getColor(R.color.gray));
-            ivImage.setColorFilter(R.color.sold_tint);
+            ivImage.setColorFilter(R.color.black);
         }
     }
 
@@ -371,7 +371,7 @@ public class ListingDetailFragment extends Fragment {
         btnSold.setText("Sold");
         btnSold.setClickable(false);
         btnSold.setBackgroundColor(getActivity().getResources().getColor(R.color.gray));
-        ivImage.setColorFilter(R.color.sold_tint);
+        ivImage.setColorFilter(R.color.black);
     }
 
     private void showConfetti() {
