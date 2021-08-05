@@ -20,10 +20,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.booksmart.R;
@@ -84,7 +87,7 @@ public class ListingDetailFragment extends Fragment {
     TextView tvDescription;
     Button btnSave;
     Button btnMessageSeller;
-    Button btnLinkToGoogle;
+    Button btnGetBook;
     Button btnRemove;
     Button btnSold;
     ProgressBar progressBar;
@@ -92,6 +95,12 @@ public class ListingDetailFragment extends Fragment {
     Favorite favorite;
     Boolean isFavorite;
     KonfettiView konfettiView;
+    RelativeLayout content;
+    ScrollView getBookLinks;
+    RelativeLayout amazonButton;
+    RelativeLayout barnesNoblesButton;
+    RelativeLayout booksMillionButton;
+    RelativeLayout googleBooksButton;
 
     public ListingDetailFragment() {}
 
@@ -109,13 +118,19 @@ public class ListingDetailFragment extends Fragment {
         btnCourse = itemView.findViewById(R.id.btnListingCourse);
         tvDescription = itemView.findViewById(R.id.tvListingDescription);
         btnMessageSeller = itemView.findViewById(R.id.btnMessageSeller);
-        btnLinkToGoogle = itemView.findViewById(R.id.btnGoogleBooksLink);
+        btnGetBook = itemView.findViewById(R.id.btnGetBook);
         btnSave = itemView.findViewById(R.id.btnSaveItem);
         btnRemove = itemView.findViewById(R.id.btnRemove);
         btnSold = itemView.findViewById(R.id.btnSold);
         ivClose = itemView.findViewById(R.id.ivClose);
         progressBar = itemView.findViewById(R.id.pbListingDetail);
         konfettiView = itemView.findViewById(R.id.viewKonfetti);
+        content = itemView.findViewById(R.id.rlContentDetail);
+        getBookLinks = itemView.findViewById(R.id.get_book_links);
+        amazonButton = itemView.findViewById(R.id.amazon_link_button);
+        barnesNoblesButton = itemView.findViewById(R.id.barnes_nobles_link_button);
+        booksMillionButton = itemView.findViewById(R.id.books_million_link_button);
+        googleBooksButton = itemView.findViewById(R.id.google_books_link_button);
         progressBar.setVisibility(View.VISIBLE);
         isFavorite = false;
 
@@ -253,14 +268,7 @@ public class ListingDetailFragment extends Fragment {
                     tvPrice.setVisibility(View.GONE);
                 }
 
-                btnLinkToGoogle.setVisibility(View.VISIBLE);
-                btnLinkToGoogle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((Book) item).getGoogleLink())));
-                    }
-                });
-
+                btnGetBook.setVisibility(View.VISIBLE);
                 btnSave.setVisibility(View.VISIBLE);
                 btnSave.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -268,6 +276,8 @@ public class ListingDetailFragment extends Fragment {
                         toggleFavorite(item);
                     }
                 });
+
+                setGetBookLinks((Book) item, view);
             }
 
             progressBar.setVisibility(View.INVISIBLE);
@@ -372,6 +382,79 @@ public class ListingDetailFragment extends Fragment {
         btnSold.setClickable(false);
         btnSold.setBackgroundColor(getActivity().getResources().getColor(R.color.gray));
         ivImage.setColorFilter(R.color.black);
+    }
+
+    private void setGetBookLinks(Book item, View view){
+        btnGetBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (getBookLinks.getVisibility() == View.GONE){
+                    getBookLinks.setVisibility(View.VISIBLE);
+                } else {
+                    getBookLinks.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        String amazonLink = ((Book) item).getAmazonLink();
+        if (!amazonLink.equals("")){
+            amazonButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(amazonLink)));
+                    getBookLinks.setVisibility(View.GONE);
+                }
+            });
+        } else {
+            View divider = view.findViewById(R.id.divider2);
+            divider.setVisibility(View.GONE);
+            amazonButton.setVisibility(View.GONE);
+        }
+
+        String barnesNoblesLink = ((Book) item).getBarnesNoblesLink();
+        if (!barnesNoblesLink.equals("")){
+            barnesNoblesButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(barnesNoblesLink)));
+                    getBookLinks.setVisibility(View.GONE);
+                }
+            });
+        } else {
+            View divider = view.findViewById(R.id.divider3);
+            divider.setVisibility(View.GONE);
+            barnesNoblesButton.setVisibility(View.GONE);
+        }
+
+        String booksMillionLink = ((Book) item).getBooksMillionLink();
+        if (!booksMillionLink.equals("")){
+            booksMillionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(booksMillionLink)));
+                    getBookLinks.setVisibility(View.GONE);
+                }
+            });
+        } else {
+            View divider = view.findViewById(R.id.divider4);
+            divider.setVisibility(View.GONE);
+            booksMillionButton.setVisibility(View.GONE);
+        }
+
+        googleBooksButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(((Book) item).getGoogleLink())));
+                getBookLinks.setVisibility(View.GONE);
+            }
+        });
+
+        content.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getBookLinks.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void showConfetti() {
