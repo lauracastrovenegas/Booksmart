@@ -185,6 +185,15 @@
 
     </ScrollView>
 
+    <include android:id="@+id/get_book_links"
+        layout="@layout/container_get_book_links"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginHorizontal="5dp"
+        android:layout_above="@id/toolbar_bottom_detail"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
     <include
         android:id="@+id/toolbar_bottom_detail"
         layout="@layout/toolbar_bottom_detail"
