@@ -45,7 +45,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
 
             <ImageView
                 android:id="@+id/profileCircleImageView"
@@ -60,7 +61,6 @@
                 android:layout_width="wrap_content"
                 android:text="@string/user_name_placeholder"
                 android:textSize="@dimen/font_size_large"
-                android:fontFamily="@font/work_sans_medium"
                 android:textColor="@color/black"
                 android:layout_toRightOf="@id/profileCircleImageView"
                 android:layout_marginTop="10dp"/>
@@ -89,6 +89,7 @@
         <TextView
             style="@style/viewParent.headerText.settingsTextIcon"
             android:drawableLeft="@drawable/ic_edit_profile"
+            android:layout_marginTop="10dp"
             android:textSize="@dimen/font_size_large"
             android:text="@string/edit_profile" />
 
@@ -108,8 +109,8 @@
             style="@style/settingsText"
             android:checked="true"
             android:drawableLeft="@drawable/ic_notifications"
-            android:textSize="@dimen/font_size_large"
-            android:text="@string/notifications" />
+            android:text="@string/notifications"
+            android:textSize="@dimen/font_size_large" />
 
         <TextView
             style="@style/viewParent.headerText.settingsMiniTitle"
