@@ -44,18 +44,8 @@ public class ConversationRepository {
             }
 
             @Override
-            protected void onConversationsUpdated() {
-                refreshConversations();
-            }
-
-            @Override
-            protected void setNotification(Boolean isActive) {
+            protected void setNotificationBadge(Boolean isActive) {
                 notification.setValue(isActive);
-            }
-
-            @Override
-            protected void onConversationsRemoved() {
-                refreshConversations();
             }
         };
     }
@@ -64,16 +54,8 @@ public class ConversationRepository {
         return conversations;
     }
 
-    public void setMessageLiveQuery() {
-        parseClient.setMessageLiveQuery();
-    }
-
     public void refreshConversations(){
         parseClient.queryAllConversations();
-    }
-
-    public void setConversationLiveQuery() {
-        parseClient.setConversationLiveQuery();
     }
 
     public MutableLiveData<Boolean> getNotification() {

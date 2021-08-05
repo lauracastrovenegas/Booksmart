@@ -40,14 +40,6 @@ public class ConversationsViewModel extends AndroidViewModel {
         repository.refreshConversations();
     }
 
-    public void setMessageLiveQuery() {
-        repository.setMessageLiveQuery();
-    }
-
-    public void setConversationLiveQuery() {
-        repository.setConversationLiveQuery();
-    }
-
     public MutableLiveData<Boolean> getNotification() {
         return notification;
     }

@@ -40,11 +40,6 @@ public class ChatRepository {
             protected void onMessageSaved(Message message) {
                 parseClient.getMessages(conversation.getValue());
             }
-
-            @Override
-            protected void onNewMessageFound(Message message) {
-                fetchMessages();
-            }
         };
     }
 
@@ -68,9 +63,5 @@ public class ChatRepository {
 
     public void saveMessage(Message message) {
         parseClient.saveMessage(message);
-    }
-
-    public void setMessageLiveQuery() {
-        parseClient.setMessageLiveQuery();
     }
 }
