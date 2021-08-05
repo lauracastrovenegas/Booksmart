@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,9 @@ import com.example.booksmart.ui.MainActivity;
 import com.example.booksmart.ui.listings.ListingsFragment;
 import com.example.booksmart.viewmodels.ChatViewModel;
 import com.example.booksmart.viewmodels.ConversationsViewModel;
+import com.parse.ParseException;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -109,8 +112,6 @@ public class ConversationsFragment extends Fragment {
                 } else {
                     tvNoMessages.setVisibility(View.INVISIBLE);
                 }
-
-                allRead(conversations);
             }
         });
 
@@ -120,25 +121,6 @@ public class ConversationsFragment extends Fragment {
                 ((MainActivity) getActivity()).setNotification(aBoolean);
             }
         });
-    }
-
-    private void allRead(List<Conversation> conversations) {
-        ParseMessageClient parseMessageClient = new ParseMessageClient(getContext()){
-            @Override
-            protected void onMessageFetched(Message message) {
-                if (!message.getUser().getObjectId().equals(ParseUser.getCurrentUser().getObjectId())){
-                    ((MainActivity) getActivity()).setNotification(true);
-                } else {
-                    ((MainActivity) getActivity()).setNotification(false);
-                }
-            }
-        };
-
-        for (int i = 0; i < conversations.size(); i++){
-            if (conversations.get(i).isUnread()){
-                parseMessageClient.getLastMessage(conversations.get(i));
-            }
-        }
     }
 
     private void goChatView() {
