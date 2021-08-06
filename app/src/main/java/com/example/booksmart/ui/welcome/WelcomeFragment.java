@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 
 import com.example.booksmart.R;
@@ -23,6 +24,8 @@ public class WelcomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_welcome, container, false);
+        Window window = getActivity().getWindow();
+        window.setStatusBarColor(getResources().getColor(R.color.purple_500));
 
         btnLogin = view.findViewById(R.id.btnLogin);
         btnSignup = view.findViewById(R.id.btnSignup);

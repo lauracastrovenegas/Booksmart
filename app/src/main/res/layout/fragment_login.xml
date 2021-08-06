@@ -80,35 +80,42 @@
             android:textColorHint="@color/black"
             android:textSize="@dimen/font_size_medium" />
 
-        <Button
-            android:id="@+id/btnSignIn"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/etLoginPassword"
-            android:layout_alignParentStart="false"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/orange_500"
-            android:fontFamily="@font/work_sans"
-            android:text="@string/signin"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textSize="@dimen/font_size_large"
-            app:cornerRadius="@dimen/button_corner_radius" />
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_below="@id/etLoginPassword">
 
-        <ProgressBar
-            android:id="@+id/pbLoadingLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/etLoginPassword"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_toEndOf="@+id/btnSignIn"
-            android:visibility="invisible"
-            android:indeterminate="true"
-            android:indeterminateTintMode="src_atop"
-            android:indeterminateTint="@color/orange_500"/>
+            <Button
+                android:id="@+id/btnSignIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="false"
+                android:layout_centerHorizontal="true"
+                android:backgroundTint="@color/orange_500"
+                android:fontFamily="@font/work_sans"
+                android:text="@string/signin"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_size_large"
+                app:cornerRadius="@dimen/button_corner_radius" />
+
+            <ProgressBar
+                android:id="@+id/pbLoadingLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:elevation="8dp"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/white"
+                android:indeterminateTintMode="src_atop"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
 
     </RelativeLayout>
 

@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -88,6 +89,8 @@ public class SignupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
+        Window window = getActivity().getWindow();
+        window.setStatusBarColor(getResources().getColor(R.color.white));
 
         ivBack = view.findViewById(R.id.ivSignupBack);
         etName = view.findViewById(R.id.etSignupName);
