@@ -185,7 +185,12 @@ public class ListingDetailFragment extends Fragment {
                 tvTitle.setText(((Listing) item).getTitle());
                 tvPrice.setText("$" + String.valueOf(((Listing) item).getPrice()));
                 tvUserUsername.setText(((Listing) item).getUser().getUsername());
-                btnCourse.setText(((Listing) item).getCourse());
+                if (!((Listing) item).getCourse().equals("")){
+                    btnCourse.setText(((Listing) item).getCourse());
+                } else {
+                    btnCourse.setVisibility(View.GONE);
+                }
+
                 tvDescription.setText(((Listing) item).getDescription());
                 tvAuthors.setVisibility(View.GONE);
 

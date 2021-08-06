@@ -139,7 +139,7 @@ public class ListingFormFragment extends Fragment {
         price = etPrice.getText().toString();
         course = etCourse.getText().toString();
 
-        if (title.isEmpty() || description.isEmpty() || price.isEmpty() || course.isEmpty()){
+        if (title.isEmpty() || description.isEmpty() || price.isEmpty()){
             Toast.makeText(getContext(), EMPTY_FIELD, Toast.LENGTH_SHORT).show();
             return;
         }
