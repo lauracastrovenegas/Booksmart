@@ -21,7 +21,7 @@ import java.util.List;
 public class GoogleBooksClient {
 
     public static final String TAG = "GoogleBooksClient";
-    public static final int LISTING_LIMIT = 15;
+    public static final int LISTING_LIMIT = 5;
     public static final String GOOGLE_BOOKS_URL = "https://www.googleapis.com/books/v1/volumes?fields=items(id,volumeInfo,saleInfo)&printType=books&maxResults=" + String.valueOf(LISTING_LIMIT) + "&q=";
     public static final String GOOGLE_BOOKS_URL_SPECIFIC = "https://www.googleapis.com/books/v1/volumes/";
     public static final String DEFAULT_QUERY = "college+textbook";
