@@ -157,6 +157,7 @@ public class ListingDetailFragment extends Fragment {
         });
 
         listingDetailViewModel.getSelected().observe(getViewLifecycleOwner(), item -> {
+            int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getContext());
             if (item.getType() == Item.TYPE_LISTING){
                 ParseUser user = ((Listing) item).getUser();
                 try {
@@ -165,12 +166,11 @@ public class ListingDetailFragment extends Fragment {
                     parseException.printStackTrace();
                 }
 
-                ivImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                ivImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 ParseFile image = ((Listing) item).getParseFile(Listing.KEY_IMAGE);
                 if (image != null){
                     Glide.with(getContext())
                             .load(image.getUrl())
-                            .centerCrop()
                             .into(ivImage);
                 }
 
@@ -236,19 +236,15 @@ public class ListingDetailFragment extends Fragment {
                 }
             } else { // Item is a book
                 checkIfFavorite(item);
+                ivImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
                 String image = ((Book) item).getImage();
-                int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getContext());
                 if (image.isEmpty() || image == null){
                     Glide.with(getContext())
                             .load(R.drawable.book_cover_placeholder)
-                            .override(screenWidth/2 + 60, IMAGE_HEIGHT)
-                            .centerCrop()
                             .into(ivImage);
                 } else {
                     Glide.with(getContext())
                             .load(image)
-                            .override(screenWidth/2 + 60, IMAGE_HEIGHT)
-                            .centerCrop()
                             .into(ivImage);
                 }
 
